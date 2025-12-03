@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+  statuses: write
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Instalar Ferramentas
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Restaurar Dependências
+        run: dotnet restore
+
+      - name: Iniciar Análise Sonar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner begin \
+            /k:"${{ secrets.SONAR_CATALOG_PROJECT_KEY }}" \
+            /o:"${{ secrets.SONAR_ORGANIZATION }}" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
+            /d:sonar.qualitygate.wait=true
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Rodar Testes
+        run: |
+          dotnet test --no-build --configuration Release \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults \
+          --logger trx \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+      - name: Gerar Relatório
+        run: |
+          reportgenerator \
+            -reports:"./TestResults/**/coverage.opencover.xml" \
+            -targetdir:"./CoverageReports" \
+            -reporttypes:"Cobertura;HtmlInline_AzurePipelines"
+
+      - name: Verificar Porcentagem e Comentar
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERAGE_THRESHOLD: 80
+        run: |
+          if [ -f "./CoverageReports/Cobertura.xml" ]; then
+            rate=$(grep -o 'line-rate="[^"]*"' ./CoverageReports/Cobertura.xml | head -1 | cut -d'"' -f2)
+            coverage_percent=$(echo "$rate * 100" | bc -l | awk '{printf("%.0f\n",$1)}')
+          else
+            coverage_percent=0
+          fi
+          
+          threshold=${COVERAGE_THRESHOLD}
+          
+          if [ "$coverage_percent" -lt "$threshold" ]; then
+            cat > comment.md << EOF
+          ## ⚠️ Cobertura Baixa ($coverage_percent%)
+          ![Fail GIF](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWxqNTE4aGU3ZWk1NGVldTQ0eGcxMjlzN2NneGlpYzY1MjBmcHl0dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L8yQ0RQBItqso/giphy.gif)
+          Meta: $threshold%
+          EOF
+            gh pr comment ${{ github.event.pull_request.number }} --body-file comment.md
+            exit 1
+          else
+            cat > comment.md << EOF
+          ## ✅ Cobertura Atingida ($coverage_percent%)
+          ![Success GIF](https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif)
+          EOF
+            gh pr comment ${{ github.event.pull_request.number }} --body-file comment.md
+          fi
+
+      - name: Finalizar Análise Sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
