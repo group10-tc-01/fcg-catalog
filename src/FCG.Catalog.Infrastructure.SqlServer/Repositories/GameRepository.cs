@@ -1,6 +1,9 @@
 ﻿using FCG.Catalog.Domain.Catalog.Entity.Games;
 using FCG.Catalog.Domain.Enum;
-using FCG.Catalog.Domain.Repositories;
+using FCG.Catalog.Domain.Repositories.Game;
+using Microsoft.EntityFrameworkCore;
+
+
 using Microsoft.EntityFrameworkCore;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
