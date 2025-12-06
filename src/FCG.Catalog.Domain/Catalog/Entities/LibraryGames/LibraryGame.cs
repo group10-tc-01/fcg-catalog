@@ -1,4 +1,6 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
+using FCG.Catalog.Domain.Catalog.Entity.Games;
+using FCG.Catalog.Domain.Catalog.Entity.Libraries;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 
@@ -12,6 +14,9 @@ namespace FCG.Catalog.Domain.Catalog.Entities.LibraryGames
         public Guid GameId { get; private set; }
         public DateTime PurchaseDate { get; private set; }
         public Price PurchasePrice { get; private set; } = null!;
+
+        public Library Library { get; private set; } = null!;
+        public Game Game { get; private set; } = null!;
         private LibraryGame(Guid libraryId, Guid gameId, Price purchasePrice)
         {
             LibraryId = libraryId;
