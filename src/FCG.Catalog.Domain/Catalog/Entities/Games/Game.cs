@@ -11,7 +11,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
 
     public sealed class Game : BaseEntity
     {
-        public string Title { get; private set; } = string.Empty;
+        public Title Title { get; private set; }
         public string Description { get; private set; } = string.Empty;
         public Price Price { get; private set; } = null!;
         public GameCategory Category { get; private set; }  
