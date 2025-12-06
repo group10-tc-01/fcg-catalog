@@ -23,8 +23,4 @@
     <ProjectReference Include="..\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
