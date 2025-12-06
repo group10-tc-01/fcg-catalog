@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Domain.Enum;
+using FCG.Catalog.Messages;
 using FluentValidation;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
@@ -9,25 +10,19 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage(ResourceMessages.GameNameIsRequired)
+                .WithMessage(ResourceMessages.Name_Required)
                 .MaximumLength(255)
-                .WithMessage(ResourceMessages.GameNameMaxLength);
-
-            RuleFor(x => x.Description)
-                .NotEmpty()
-                .WithMessage(ResourceMessages.GameDescriptionIsRequired)
-                .MaximumLength(500)
-                .WithMessage(ResourceMessages.GameDescriptionMaxLength);
-
+                .WithMessage(ResourceMessages.Name_MaxLength);
+            
             RuleFor(x => x.Price)
                 .GreaterThan(0)
-                .WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
+                .WithMessage(ResourceMessages.Price_Invalid);
 
             RuleFor(x => x.Category)
                 .NotEmpty()
-                .WithMessage(ResourceMessages.GameCategoryIsRequired)
+                .WithMessage(ResourceMessages.Category_Required)
                 .Must(category => Enum.TryParse<GameCategory>(category, true, out _))
-                .WithMessage(ResourceMessages.GameCategoryIsRequired);
+                .WithMessage(ResourceMessages.Category_Required);
         }
     }
 }
