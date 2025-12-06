@@ -1,6 +1,5 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
-using FCG.Catalog.Domain.Catalog.Entity.Promotions;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using System.Diagnostics.CodeAnalysis;
@@ -11,11 +10,11 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
 
     public sealed class Game : BaseEntity
     {
-        public string Title { get; private set; } = string.Empty;
+        public Title Title { get; private set; }
         public string Description { get; private set; } = string.Empty;
         public Price Price { get; private set; } = null!;
         public GameCategory Category { get; private set; }  
-        public ICollection<Promotion>? Promotions { get; }
+        public ICollection<Promotions.Promotion>? Promotions { get; }
         public ICollection<LibraryGame>? LibraryGames { get; }
 
         private Game() { }
