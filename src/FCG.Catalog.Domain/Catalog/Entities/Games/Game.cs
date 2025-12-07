@@ -3,6 +3,7 @@ using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Exception;
 
 namespace FCG.Catalog.Domain.Catalog.Entity.Games
 {
@@ -23,7 +24,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
         {
             if (string.IsNullOrWhiteSpace(description))
             {
-                throw new ("Vai ser implementado");
+                throw new DomainException("Vai ser implementado");
             }
 
             Title = title;
