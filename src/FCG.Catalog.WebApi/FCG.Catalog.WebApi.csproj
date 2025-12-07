@@ -11,12 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\FCG.Catalog.Application\FCG.Catalog.Application.csproj" />
+    <ProjectReference Include="..\FCG.Catalog.Infrastructure.SqlServer\FCG.Catalog.Infrastructure.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FCG.Catalog.Application\FCG.Catalog.Application.csproj" />
-    <ProjectReference Include="..\FCG.Catalog.Infrastructure.SqlServer\FCG.Catalog.Infrastructure.SqlServer.csproj" />
+    <Folder Include="Middlewares\" />
   </ItemGroup>
 
 </Project>

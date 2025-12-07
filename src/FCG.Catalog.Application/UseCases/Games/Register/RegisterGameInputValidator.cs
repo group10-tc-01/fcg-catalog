@@ -10,19 +10,19 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage(ResourceMessages.Name_Required)
+                .WithMessage(ResourceMessages.GameNameIsRequired)
                 .MaximumLength(255)
-                .WithMessage(ResourceMessages.Name_MaxLength);
+                .WithMessage(ResourceMessages.GameCategoryMaxLength);
             
             RuleFor(x => x.Price)
                 .GreaterThan(0)
-                .WithMessage(ResourceMessages.Price_Invalid);
+                .WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
 
             RuleFor(x => x.Category)
                 .NotEmpty()
-                .WithMessage(ResourceMessages.Category_Required)
+                .WithMessage(ResourceMessages.GameCategoryIsRequired)
                 .Must(category => Enum.TryParse<GameCategory>(category, true, out _))
-                .WithMessage(ResourceMessages.Category_Required);
+                .WithMessage(ResourceMessages.GameCategoryIsRequired);
         }
     }
 }
