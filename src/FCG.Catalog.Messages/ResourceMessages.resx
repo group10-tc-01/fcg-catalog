@@ -138,4 +138,13 @@
   <data name="GameCategoryMaxLength" xml:space="preserve">
     <value>The game category must be less than 100 characters.</value>
   </data>
+  <data name="GameTitleMinLength" xml:space="preserve">
+    <value>The title must be more than three characters long</value>
+  </data>
+  <data name="GameTitleMaxLength" xml:space="preserve">
+    <value>The title must be more than 255 characteres</value>
+  </data>
+  <data name="GameValidateData" xml:space="preserve">
+    <value>Check Data</value>
+  </data>
 </root>

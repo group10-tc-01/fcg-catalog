@@ -115,6 +115,33 @@ namespace FCG.Catalog.Messages {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The title must be more than 255 characteres.
+        /// </summary>
+        public static string GameTitleMaxLength {
+            get {
+                return ResourceManager.GetString("GameTitleMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The title must be more than three characters long.
+        /// </summary>
+        public static string GameTitleMinLength {
+            get {
+                return ResourceManager.GetString("GameTitleMinLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Check Data.
+        /// </summary>
+        public static string GameValidateData {
+            get {
+                return ResourceManager.GetString("GameValidateData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Invalid access level..
         /// </summary>
         public static string InvalidAccessLevel {
