@@ -2,6 +2,8 @@
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 using FCG.Catalog.Domain.Catalog.Entity.Games;
+using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.Entity.Promotions
 {
@@ -18,7 +20,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Promotions
         {
             if (endDate <= startDate)
             {
-                throw new ArgumentException("Datas inválidas");
+                throw new DomainException(ResourceMessages.PromotionEndDateMustBeAfterStartDate);
             }
 
             GameId = gameId;

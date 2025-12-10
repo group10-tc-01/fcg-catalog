@@ -15,7 +15,6 @@ namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
 
             services.AddScoped<IWriteOnlyGameRepository, GameRepository>();
             services.AddScoped<IReadOnlyGameRepository, GameRepository>();
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

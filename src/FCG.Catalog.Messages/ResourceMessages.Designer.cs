@@ -149,5 +149,14 @@ namespace FCG.Catalog.Messages {
                 return ResourceManager.GetString("InvalidAccessLevel", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a End date must be on or after the start date..
+        /// </summary>
+        public static string PromotionEndDateMustBeAfterStartDate {
+            get {
+                return ResourceManager.GetString("PromotionEndDateMustBeAfterStartDate", resourceCulture);
+            }
+        }
     }
 }

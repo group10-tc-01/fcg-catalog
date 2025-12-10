@@ -147,4 +147,7 @@
   <data name="GameValidateData" xml:space="preserve">
     <value>Check Data</value>
   </data>
+  <data name="PromotionEndDateMustBeAfterStartDate" xml:space="preserve">
+    <value>End date must be on or after the start date.</value>
+  </data>
 </root>
