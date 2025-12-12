@@ -106,6 +106,15 @@ namespace FCG.Catalog.Messages {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Game with Not Found.
+        /// </summary>
+        public static string GameNotFound {
+            get {
+                return ResourceManager.GetString("GameNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The game price must be greater than zero..
         /// </summary>
         public static string GamePriceMustBeGreaterThanZero {

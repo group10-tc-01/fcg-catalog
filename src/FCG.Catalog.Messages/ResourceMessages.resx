@@ -156,4 +156,7 @@
   <data name="PleaseContactSupport" xml:space="preserve">
     <value>Please contact support.</value>
   </data>
+  <data name="GameNotFound" xml:space="preserve">
+    <value>Game with Not Found</value>
+  </data>
 </root>
