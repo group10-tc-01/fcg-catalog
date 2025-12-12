@@ -1,6 +1,7 @@
 ﻿using FCG.Catalog.Domain;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
+using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Messages;
 using MediatR;
@@ -40,7 +41,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
 
             if (game is not null)
             {
-              throw new Exception(string.Format(ResourceMessages.GameNameAlreadyExists, name));
+              throw new ConflictException(string.Format(ResourceMessages.GameNameAlreadyExists, name));
             }
         }
     }

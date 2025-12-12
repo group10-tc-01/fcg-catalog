@@ -3,9 +3,6 @@ using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Repositories.Game;
 using Microsoft.EntityFrameworkCore;
 
-
-using Microsoft.EntityFrameworkCore;
-
 namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 {
     public class GameRepository : IWriteOnlyGameRepository, IReadOnlyGameRepository
