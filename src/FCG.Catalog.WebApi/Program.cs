@@ -1,5 +1,6 @@
 using FCG.Catalog.Application.DependencyInjection;
 using FCG.Catalog.WebApi.DependencyInjection;
+using FCG.Catalog.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddWebApi(builder.Configuration);
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

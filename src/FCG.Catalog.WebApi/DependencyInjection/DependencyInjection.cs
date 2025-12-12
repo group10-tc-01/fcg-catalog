@@ -1,5 +1,8 @@
-﻿using FCG.Catalog.Infrastructure.SqlServer.DependencyInjection;
+﻿using FCG.Catalog.Application.DependencyInjection;
+using FCG.Catalog.Infrastructure.SqlServer.DependencyInjection;
 using FCG.Catalog.WebApi.Filter;
+using FCG.Catalog.WebApi.Middleware;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
 
@@ -11,9 +14,15 @@ namespace FCG.Catalog.WebApi.DependencyInjection
         public static IServiceCollection AddWebApi(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddInfrastructure(configuration);
+            services.AddApplication();
+
+            services.AddVersioning();
             services.AddFilters();
+            services.AddHealthChecks();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddSwaggerConfiguration();
+
+            services.AddSingleton<GlobalExceptionMiddleware>();
 
             return services;
         }
@@ -54,6 +63,17 @@ namespace FCG.Catalog.WebApi.DependencyInjection
                 });
             });
         }
+
+        private static void AddVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+            });
+        }
+
         private static void AddFilters(this IServiceCollection services)
         {
             services.AddMvc(options =>
