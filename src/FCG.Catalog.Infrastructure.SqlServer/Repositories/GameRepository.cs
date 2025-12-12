@@ -58,6 +58,12 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
                 .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
         }
 
+        //public async Task<Game> GetAllGame()
+        //{
+        //    var games = await _fcgDbContext.Games.AsNoTracking().ToListAsync();
+        //    return games;
+        //}
+
         public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _fcgDbContext.Games

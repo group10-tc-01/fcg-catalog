@@ -1,5 +1,6 @@
-using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Application.UseCases.Games.Get;
+using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Domain.Models;
 using FCG.Catalog.WebApi.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,14 @@ namespace FCG.Catalog.WebApi.Controllers.v1
             return Created($"api/v1/games/{result.Id}", response);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<GetGameOutput>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get([FromQuery] GetGameInput input)
         {
-            var result = await _mediator.Send(new GetGameInput(id), cancellationToken);
-            var response = ApiResponse<GetGameOutput>.SuccesResponse(result);
-            return Ok(response);
+            var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
+            return Ok(ApiResponse<PagedListResponse<GetGameOutput>>.SuccesResponse(output));
+
         }
     }
 }
