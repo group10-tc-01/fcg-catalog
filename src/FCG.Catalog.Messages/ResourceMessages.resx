@@ -150,4 +150,10 @@
   <data name="PromotionEndDateMustBeAfterStartDate" xml:space="preserve">
     <value>End date must be on or after the start date.</value>
   </data>
+  <data name="UnexpectedErrorOccurred" xml:space="preserve">
+    <value>An unexpected error occurred!</value>
+  </data>
+  <data name="PleaseContactSupport" xml:space="preserve">
+    <value>Please contact support.</value>
+  </data>
 </root>

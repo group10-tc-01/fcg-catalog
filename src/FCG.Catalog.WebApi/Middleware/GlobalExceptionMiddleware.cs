@@ -1,7 +1,8 @@
 using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Messages;
 using FCG.Catalog.WebApi.Models;
 using FluentValidation;
-using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace FCG.Catalog.WebApi.Middleware
@@ -9,12 +10,13 @@ namespace FCG.Catalog.WebApi.Middleware
     public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<GlobalExceptionMiddleware> _logger;
+        private readonly IHostEnvironment _env;
+        private const string CorrelationIdKey = "CorrelationId";
 
-        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+        public GlobalExceptionMiddleware(RequestDelegate next, IHostEnvironment env)
         {
             _next = next;
-            _logger = logger;
+            _env = env;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -25,39 +27,99 @@ namespace FCG.Catalog.WebApi.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occurred.");
                 await HandleExceptionAsync(context, ex);
             }
+
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
-            List<string> errors = new List<string>();
+            var traceId = context!.TraceIdentifier;
+            var correlationId = context.Items.ContainsKey(CorrelationIdKey) ? context.Items[CorrelationIdKey]?.ToString() : string.Empty;
 
-            switch (exception)
+            context!.Response.ContentType = "application/json";
+
+            if (exception is ValidationException validationException)
             {
-                case BaseException be:
-                    statusCode = be.StatusCode;
-                    errors.Add(be.Message);
-                    break;
-                case ValidationException ve:
-                    statusCode = HttpStatusCode.BadRequest;
-                    errors.AddRange(ve.Errors.Select(e => e.ErrorMessage));
-                    break;
-                default:
-                    errors.Add("An unexpected error occurred.");
-                    break;
+                await HandleValidationExceptionAsync(context, validationException, correlationId);
+                return;
             }
 
-            var apiResponse = ApiResponse<object>.ErrorResponse(errors, statusCode);
+            if (exception is BaseException apiException)
+            {
+                await HandleApiExceptionAsync(context, apiException, correlationId);
+                return;
+            }
 
-            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-            var payload = JsonSerializer.Serialize(apiResponse, options);
+            await HandleGenericExceptionAsync(context, exception, traceId, correlationId);
+        }
 
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)statusCode;
-            return context.Response.WriteAsync(payload);
+        private async Task HandleValidationExceptionAsync(HttpContext context, ValidationException exception, string? correlationId)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+            var validationErrors = exception.Errors.Select(error => error.ErrorMessage).ToList();
+            var response = ApiResponse<object>.ErrorResponse(validationErrors, System.Net.HttpStatusCode.BadRequest);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+
+            var jsonResponse = JsonSerializer.Serialize(response, options);
+
+            await context.Response.WriteAsync(jsonResponse);
+        }
+
+        private async Task HandleApiExceptionAsync(HttpContext context, BaseException exception, string? correlationId)
+        {
+            context.Response.StatusCode = (int)exception.StatusCode;
+
+            var response = ApiResponse<object>.ErrorResponse(new List<string> { exception.Message }, exception.StatusCode);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+
+            var jsonResponse = JsonSerializer.Serialize(response, options);
+
+            await context.Response.WriteAsync(jsonResponse);
+        }
+
+        private async Task HandleGenericExceptionAsync(HttpContext context, Exception exception, string traceId, string? correlationId)
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+            var problemDetails = new ProblemDetails
+            {
+                Title = ResourceMessages.UnexpectedErrorOccurred,
+                Status = context.Response.StatusCode,
+                Instance = context.Request.Path,
+                Detail = ResourceMessages.PleaseContactSupport,
+            };
+
+            problemDetails.Extensions["traceId"] = traceId;
+
+            if (!string.IsNullOrEmpty(correlationId))
+            {
+                problemDetails.Extensions["correlationId"] = correlationId;
+            }
+
+            if (_env.IsDevelopment())
+            {
+                problemDetails.Extensions["stackTrace"] = exception.StackTrace;
+            }
+
+            var jsonResponse = JsonSerializer.Serialize(problemDetails, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            });
+
+            await context.Response.WriteAsync(jsonResponse);
         }
     }
 }

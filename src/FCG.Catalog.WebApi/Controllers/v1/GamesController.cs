@@ -3,13 +3,13 @@ using FCG.Catalog.WebApi.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FCG.Catalog.WebApi.Controllers
+namespace FCG.Catalog.WebApi.Controllers.v1
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class GamesController(IMediator mediator) : FcgCatalogBaseController(mediator)
     {
         [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<RegisterGameOutput>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterGameInput input, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(input, cancellationToken);

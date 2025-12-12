@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.ValueObjects
 {
@@ -12,12 +14,12 @@ namespace FCG.Catalog.Domain.Catalog.ValueObjects
         {
             if (value < 0)
             {
-                throw new("Vai ser implementado");
+                throw new DomainException(ResourceMessages.GameMaxPriceMustBeGreaterThanMinPrice);
             }
 
             if (value == 0)
             {
-                throw new("Vai ser implementado");
+                throw new DomainException(ResourceMessages.GamePriceMustBeGreaterThanZero);
             }
 
             Value = value;

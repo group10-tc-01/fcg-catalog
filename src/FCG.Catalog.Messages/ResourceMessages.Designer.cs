@@ -151,11 +151,29 @@ namespace FCG.Catalog.Messages {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Please contact support..
+        /// </summary>
+        public static string PleaseContactSupport {
+            get {
+                return ResourceManager.GetString("PleaseContactSupport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a End date must be on or after the start date..
         /// </summary>
         public static string PromotionEndDateMustBeAfterStartDate {
             get {
                 return ResourceManager.GetString("PromotionEndDateMustBeAfterStartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a An unexpected error occurred!.
+        /// </summary>
+        public static string UnexpectedErrorOccurred {
+            get {
+                return ResourceManager.GetString("UnexpectedErrorOccurred", resourceCulture);
             }
         }
     }

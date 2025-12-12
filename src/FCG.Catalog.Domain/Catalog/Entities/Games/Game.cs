@@ -23,7 +23,10 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
 
         private Game(string title, string description, Price price, GameCategory category)
         {
-            Validate(title, price, category);
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                throw new DomainException(ResourceMessages.GameNameIsRequired);
+            }
 
             Title = title;
             Description = description;
@@ -33,21 +36,6 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
         public static Game Create(string title, string description, Price price, GameCategory category)
         {
             return new Game(title, description, price, category);
-        }
-
-        private void Validate(string title, Price price, GameCategory category)
-        {
-            if (string.IsNullOrWhiteSpace(title))
-                throw new DomainException(ResourceMessages.GameNameIsRequired);
-
-            if (title.Length < 3)
-                throw new DomainException(ResourceMessages.GameTitleMinLength);
-
-            if (price is null)
-                throw new DomainException(ResourceMessages.GamePriceMustBeGreaterThanZero);
-
-            if (category == GameCategory.None || !System.Enum.IsDefined(typeof(GameCategory), category))
-                throw new DomainException(ResourceMessages.GameCategoryIsRequired);
         }
     }
 }
