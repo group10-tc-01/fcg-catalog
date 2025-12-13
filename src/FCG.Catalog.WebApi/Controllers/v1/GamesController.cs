@@ -10,12 +10,15 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using FCG.Catalog.Domain.Services.Repositories;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
 {
     [ExcludeFromCodeCoverage]
-    public class GamesController(IMediator mediator) : FcgCatalogBaseController(mediator)
+    public class GamesController(IMediator mediator, ICatalogLoggedUser catalogLoggedUser) : FcgCatalogBaseController(mediator)
     {
+        private readonly ICatalogLoggedUser _catalogLoggedUser = catalogLoggedUser;
+
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<RegisterGameOutput>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
@@ -40,7 +43,10 @@ namespace FCG.Catalog.WebApi.Controllers.v1
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Purchase([FromRoute] Guid id)
         {
-            var input = new PurchaseGameInput(id, CurrentUserId);
+            var logged = await _catalogLoggedUser.GetLoggedUserAsync();
+            var userId = logged?.Id ?? Guid.Empty;
+
+            var input = new PurchaseGameInput(id, userId);
             var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
             return Ok(ApiResponse<PurchaseGameOutput>.SuccesResponse(output));
         }

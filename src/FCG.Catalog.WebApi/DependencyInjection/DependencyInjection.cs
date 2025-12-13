@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using FCG.Catalog.Application.DependencyInjection;
+using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.Infrastructure.SqlServer.DependencyInjection;
 using FCG.Catalog.WebApi.Filter;
+using FCG.Catalog.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
@@ -23,6 +25,9 @@ namespace FCG.Catalog.WebApi.DependencyInjection
             services.AddHealthChecks();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddSwaggerConfiguration();
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<ITokenProvider, HttpContextTokenProvider>();
 
             return services;
         }

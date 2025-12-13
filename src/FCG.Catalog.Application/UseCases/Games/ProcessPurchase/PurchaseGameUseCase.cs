@@ -8,6 +8,7 @@ using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Domain.Repositories.LibraryRepository;
 using FCG.Domain.Repositories.PromotionRepository;
+using FCG.Catalog.Domain.Services.Repositories;
 
 namespace FCG.Catalog.Application.UseCases.Games.Purchase
 {
@@ -18,20 +19,23 @@ namespace FCG.Catalog.Application.UseCases.Games.Purchase
         private readonly IReadOnlyGameRepository _readOnlyGameRepository;
         private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;
         private readonly IReadOnlyLibraryRepository _readOnlyLibraryRepository;
+        private readonly ICatalogLoggedUser _catalogLoggedUser;
 
         public PurchaseGameUseCase(IUnitOfWork unitOfWork, IReadOnlyGameRepository readOnlyGameRepository,
             IReadOnlyPromotionRepository readOnlyPromotionRepository,
-            IReadOnlyLibraryRepository readOnlyLibraryRepository)
+            IReadOnlyLibraryRepository readOnlyLibraryRepository,
+            ICatalogLoggedUser catalogLoggedUser)
         {
             _unitOfWork = unitOfWork;
             _readOnlyGameRepository = readOnlyGameRepository;
             _readOnlyPromotionRepository = readOnlyPromotionRepository;
             _readOnlyLibraryRepository = readOnlyLibraryRepository;
+            _catalogLoggedUser = catalogLoggedUser;
         }
         public async Task<PurchaseGameOutput> Handle(PurchaseGameInput request, CancellationToken cancellationToken)
         {
             var game = await _readOnlyGameRepository.GetByIdAsync(request.Id, cancellationToken);
-           
+
 
             if (game is null)
             {
@@ -39,11 +43,16 @@ namespace FCG.Catalog.Application.UseCases.Games.Purchase
             }
 
             var promotions = await _readOnlyPromotionRepository.GetByGameIdAsync(game.Id, cancellationToken);
-            var library = await _readOnlyLibraryRepository.GetByUserIdAsync(request.UserId, cancellationToken);
+
+            Guid userId = request.UserId != Guid.Empty ? request.UserId : (await _catalogLoggedUser.GetLoggedUserAsync())?.Id ?? Guid.Empty;
+            if (userId == Guid.Empty)
+                throw new UnauthorizedException("User not authenticated.");
+
+            var library = await _readOnlyLibraryRepository.GetByUserIdAsync(userId, cancellationToken);
 
             var activePromotion = promotions?.FirstOrDefault(p => p.StartDate <= DateTime.UtcNow && p.EndDate >= DateTime.UtcNow);
             var finalPrice = game.Price;
-            
+
             if (activePromotion is not null)
             {
                 var discountAmount = (game.Price * activePromotion.DiscountPercentage.Value) / 100;
@@ -52,7 +61,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Purchase
 
             if (library is null)
             {
-                throw new NotFoundException($"Library for user '{request.UserId}' was not found.");
+                throw new NotFoundException($"Library for user '{userId}' was not found.");
             }
             var gameAlreadyOwned = library?.LibraryGames?.Any(lg => lg.GameId == game.Id) ?? false;
 

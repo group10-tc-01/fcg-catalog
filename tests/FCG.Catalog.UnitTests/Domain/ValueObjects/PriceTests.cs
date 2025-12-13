@@ -76,5 +76,14 @@ namespace FCG.Catalog.UnitTests.Domain.ValueObjects
 
             price.Value.Should().Be(19.999999m);
         }
+
+        [Fact]
+        public void Given_ZeroPrice_When_Create_Then_ShouldThrowDomainException()
+        {
+            decimal zeroPrice = 0m;
+            var act = () => Price.Create(zeroPrice);
+
+            act.Should().Throw<DomainException>().WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
+        }
     }
 }
