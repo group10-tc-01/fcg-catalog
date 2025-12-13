@@ -3,7 +3,7 @@ using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 
 namespace FCG.Catalog.CommomTestsUtilities.Builders.Entities
 {
-    public class LibraryBuilder
+    public class LibraryGameBuilder
     {
         public static LibraryGame Build()
         {
@@ -11,4 +11,3 @@ namespace FCG.Catalog.CommomTestsUtilities.Builders.Entities
         }
     }
 }
-

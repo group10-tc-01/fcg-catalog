@@ -4,7 +4,7 @@ using FCG.Catalog.Messages;
 using FluentAssertions;
 using System.Globalization;
 
-namespace FCG.Catalog.Domain.ValueObjects
+namespace FCG.Catalog.UnitTests.Domain.ValueObjects
 {
     public class DiscountTests
     {

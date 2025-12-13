@@ -3,7 +3,7 @@ using FCG.Catalog.Domain.Catalog.Entity.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 
-namespace FCG.CommomTestsUtilities.Builders.Entities
+namespace FCG.Catalog.CommomTestsUtilities.Builders.Entities
 {
     public static class GameBuilder
     {

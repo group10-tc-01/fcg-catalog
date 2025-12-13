@@ -1,11 +1,11 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Games;
+﻿using FCG.Catalog.CommomTestsUtilities.Builders.Entities;
+using FCG.Catalog.Domain.Catalog.Entity.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
-using FCG.CommomTestsUtilities.Builders.Entities;
 using FluentAssertions;
 
-namespace FCG.Catalog.Domain.Catalog
+namespace FCG.Catalog.UnitTests.Domain.Catalog
 {
     public class GameTests
     {

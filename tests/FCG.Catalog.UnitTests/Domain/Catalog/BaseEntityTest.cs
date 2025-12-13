@@ -1,7 +1,7 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
 using FluentAssertions;
 
-namespace FCG.Catalog.Domain.Catalog
+namespace FCG.Catalog.UnitTests.Domain.Catalog
 {
     public class BaseEntityTests
     {

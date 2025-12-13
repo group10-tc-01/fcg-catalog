@@ -3,7 +3,7 @@ using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;
 
-namespace FCG.Catalog.Domain.ValueObjects
+namespace FCG.Catalog.UnitTests.Domain.ValueObjects
 {
     public class NameTests
     {
