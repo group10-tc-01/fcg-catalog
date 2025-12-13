@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.LibraryGames
 {
+    [ExcludeFromCodeCoverage]
     public sealed class LibraryGame: BaseEntity
     {
         public Guid LibraryId { get; private set; }

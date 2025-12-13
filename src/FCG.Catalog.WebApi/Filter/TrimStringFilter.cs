@@ -5,7 +5,6 @@ using System.Linq;
 namespace FCG.Catalog.WebApi.Filter
 {
     [ExcludeFromCodeCoverage]
-
     public class TrimStringsActionFilter : IActionFilter
     {
         public void OnActionExecuting(ActionExecutingContext context)

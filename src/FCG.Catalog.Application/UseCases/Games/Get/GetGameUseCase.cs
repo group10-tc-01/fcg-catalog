@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace FCG.Catalog.Application.UseCases.Games.Get
 {
     [ExcludeFromCodeCoverage]
-
     public class GetGameUseCase : IGetAllGamesUseCase
     {
         private readonly IReadOnlyGameRepository _readRepo;

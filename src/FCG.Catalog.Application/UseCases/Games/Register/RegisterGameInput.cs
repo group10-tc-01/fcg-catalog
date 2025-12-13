@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {
     [ExcludeFromCodeCoverage]
-
     public class RegisterGameInput : IRequest<RegisterGameOutput>
     {
         public string Name { get; init; } = string.Empty;

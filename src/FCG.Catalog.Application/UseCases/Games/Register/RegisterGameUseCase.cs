@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {
     [ExcludeFromCodeCoverage]
-
     public class RegisterGameUseCase : IRequestHandler<RegisterGameInput, RegisterGameOutput>
     {
         private readonly IWriteOnlyGameRepository _writeRepo;
@@ -26,7 +25,6 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
             _readRepo = readRepo;
             _unitOfWork = unitOfWork;
         }
-
         public async Task<RegisterGameOutput> Handle(RegisterGameInput request, CancellationToken cancellationToken)
         {
             await ValidateIfGameAlreadyExistsAsync(request.Name);
@@ -40,7 +38,6 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
 
             return new RegisterGameOutput { Id = game.Id, Name = game.Title };
         }
-
         private async Task ValidateIfGameAlreadyExistsAsync(string name)
         {
             var game = await _readRepo.GetByNameAsync(name);

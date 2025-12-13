@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {
     [ExcludeFromCodeCoverage]
-
     public class RegisterGameInputValidator : AbstractValidator<RegisterGameInput>
     {
         public RegisterGameInputValidator()

@@ -2,7 +2,7 @@
 using FCG.CommomTestsUtilities.Builders.Entities;
 using FluentAssertions;
 
-namespace FCG.UnitTests.Domain.Entities
+namespace FCG.Catalog.Domain.Catalog
 {
     public class LibraryTests
     {

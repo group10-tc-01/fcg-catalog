@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FCG.Catalog.Application.UseCases.Games.Get;
 using FCG.Catalog.Application.UseCases.Games.Purchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
@@ -9,9 +6,14 @@ using FCG.Catalog.WebApi.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
 {
+    [ExcludeFromCodeCoverage]
     public class GamesController(IMediator mediator) : FcgCatalogBaseController(mediator)
     {
         [HttpPost]

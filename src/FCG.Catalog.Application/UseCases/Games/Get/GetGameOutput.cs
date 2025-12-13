@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace FCG.Catalog.Application.UseCases.Games.Get
 {
     [ExcludeFromCodeCoverage]
-
     public class GetGameOutput
     {
         public Guid Id { get; init; }

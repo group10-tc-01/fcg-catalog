@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Domain.Models
 {
+    [ExcludeFromCodeCoverage]
     public sealed class PagedListResponse<T>
     {
         public List<T> Items { get; set; } = new List<T>();

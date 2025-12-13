@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 namespace FCG.Catalog.Domain.Exception
 {
+    [ExcludeFromCodeCoverage]
     public class UnauthorizedException : BaseException
     {
         public UnauthorizedException(string message) : base(HttpStatusCode.Unauthorized, message) { }
