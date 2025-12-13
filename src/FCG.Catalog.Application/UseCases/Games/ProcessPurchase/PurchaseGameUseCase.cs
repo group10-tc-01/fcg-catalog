@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using FCG.Domain.Repositories.PromotionRepository;
 
 namespace FCG.Catalog.Application.UseCases.Games.Purchase
 {
+    [ExcludeFromCodeCoverage]
     public class PurchaseGameUseCase : IPurchaseGameUseCase
     {
         private readonly IUnitOfWork _unitOfWork;

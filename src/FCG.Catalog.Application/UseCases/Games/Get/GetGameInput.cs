@@ -1,10 +1,12 @@
-using System;
-using MediatR;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Models;
+using MediatR;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Games.Get
 {
+    [ExcludeFromCodeCoverage]
     public class GetGameInput : IRequest<PagedListResponse<GetGameOutput>>
     {
         public string? Name { get; init; }

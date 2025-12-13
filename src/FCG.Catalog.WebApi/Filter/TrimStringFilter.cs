@@ -1,5 +1,6 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace FCG.Catalog.WebApi.Filter
 {

@@ -3,11 +3,10 @@ using FCG.Catalog.Domain.Catalog.Entity.Games;
 using FCG.Catalog.Domain.Catalog.Entity.Libraries;
 using FCG.Catalog.Domain.Catalog.Entity.Promotions;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer
 {
-    [ExcludeFromCodeCoverage]
-
     public class FcgCatalogDbContext : DbContext
     {
         public DbSet<Library> Libraries { get; set; }
