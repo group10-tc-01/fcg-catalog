@@ -1,11 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
 
 namespace FCG.Catalog.Domain.Abstractions
 {
-    [ExcludeFromCodeCoverage]
     public abstract class BaseEntity
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; protected set; } = Guid.NewGuid();
         public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; protected set; }
         public bool IsActive { get; protected set; } = true;
@@ -19,11 +18,5 @@ namespace FCG.Catalog.Domain.Abstractions
             IsActive = false;
             UpdatedAt = DateTime.UtcNow;
         }
-        protected BaseEntity() { }
-        protected BaseEntity(Guid id)
-        {
-            Id = id;
-        }
-
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.ValueObjects
 {
-    [ExcludeFromCodeCoverage]
-
     public sealed record Discount
     {
         public decimal Value { get; }
@@ -11,7 +11,7 @@ namespace FCG.Catalog.Domain.Catalog.ValueObjects
         private Discount(decimal value)
         {
             if (value < 0 || value > 100)
-               throw new("Vai ser implementado ");
+               throw new DomainException(ResourceMessages.DiscountMustBeBetweenZeroAndHundred);
 
             Value = value;
         }

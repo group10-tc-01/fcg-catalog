@@ -1,9 +1,11 @@
 ﻿using FCG.Catalog.Domain.Catalog.Entity.Promotions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {
+    [ExcludeFromCodeCoverage]
     public class PromotionConfiguration : BaseConfiguration<Promotion>
     {
         public override void Configure(EntityTypeBuilder<Promotion> builder)
