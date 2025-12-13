@@ -1,9 +1,11 @@
 ﻿using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {
+    [ExcludeFromCodeCoverage]
     public class LibraryGameConfiguration : BaseConfiguration<LibraryGame>
     {
         public override void Configure(EntityTypeBuilder<LibraryGame> builder)
