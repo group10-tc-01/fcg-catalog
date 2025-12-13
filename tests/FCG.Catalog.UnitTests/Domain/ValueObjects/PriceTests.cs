@@ -85,5 +85,24 @@ namespace FCG.Catalog.UnitTests.Domain.ValueObjects
 
             act.Should().Throw<DomainException>().WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
         }
+        [Fact]
+        public void Given_PriceObject_When_ToStringCalled_Then_ShouldReturnFormattedValue()
+        {
+            var price = Price.Create(10.5m);
+
+            var result = price.ToString();
+
+            result.Should().Be(10.5m.ToString("F2"));
+        }
+        [Fact]
+        public void Given_InvalidDecimalValue_When_ImplicitlyConvertedToPrice_Then_ShouldThrowException()
+        {
+            decimal invalidValue = -10m;
+
+            Action act = () => { Price p = invalidValue; };
+
+            act.Should().Throw<DomainException>()
+                .WithMessage(ResourceMessages.PriceCannotBeNegative);
+        }
     }
 }

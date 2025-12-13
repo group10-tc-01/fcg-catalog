@@ -60,17 +60,11 @@ namespace FCG.Catalog.UnitTests.Domain.ValueObjects
         [Fact]
         public void Given_DiscountObject_When_ToStringCalled_Then_ShouldReturnFormattedValue()
         {
-            var discount1 = Discount.Create(15.5m);
-            var discount2 = Discount.Create(15m);
-            var discount3 = Discount.Create(15.555m);
+            var discount = Discount.Create(15.5m);
 
-            var result1 = discount1.Value.ToString("F2", CultureInfo.InvariantCulture);
-            var result2 = discount2.Value.ToString("F2", CultureInfo.InvariantCulture);
-            var result3 = discount3.Value.ToString("F2", CultureInfo.InvariantCulture);
+            var result = discount.ToString();
 
-            result1.Should().Be("15.50");
-            result2.Should().Be("15.00");
-            result3.Should().Be("15.56");
+            result.Should().Be(15.5m.ToString("F2"));
         }
     }
 }

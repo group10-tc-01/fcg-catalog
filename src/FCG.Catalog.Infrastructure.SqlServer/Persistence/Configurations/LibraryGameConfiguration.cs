@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {
-    [ExcludeFromCodeCoverage]
     public class LibraryGameConfiguration : BaseConfiguration<LibraryGame>
     {
         public override void Configure(EntityTypeBuilder<LibraryGame> builder)
