@@ -1,14 +1,12 @@
-﻿using FCG.Catalog.Domain.Abstractions;
-using FCG.Catalog.Domain.Catalog.ValueObjects;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entity.Games;
+using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.Entity.Promotions
 {
-    [ExcludeFromCodeCoverage]
-
     public sealed class Promotion : BaseEntity
     {
         public Guid GameId { get; private set; }
@@ -18,7 +16,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Promotions
         public DateTime EndDate { get; private set; }
         private Promotion(Guid gameId, Discount discountPercentage, DateTime startDate, DateTime endDate)
         {
-            if (endDate <= startDate)
+            if (endDate < startDate)
             {
                 throw new DomainException(ResourceMessages.PromotionEndDateMustBeAfterStartDate);
             }

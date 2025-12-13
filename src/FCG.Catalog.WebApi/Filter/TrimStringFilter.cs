@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace FCG.Catalog.WebApi.Filter
 {
+    [ExcludeFromCodeCoverage]
+
     public class TrimStringsActionFilter : IActionFilter
     {
         public void OnActionExecuting(ActionExecutingContext context)

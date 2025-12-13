@@ -1,10 +1,12 @@
-﻿using FCG.Catalog.Application.DependencyInjection;
+﻿using System.Collections.Generic;
+using FCG.Catalog.Application.DependencyInjection;
 using FCG.Catalog.Infrastructure.SqlServer.DependencyInjection;
 using FCG.Catalog.WebApi.Filter;
-using FCG.Catalog.WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FCG.Catalog.WebApi.DependencyInjection
 {

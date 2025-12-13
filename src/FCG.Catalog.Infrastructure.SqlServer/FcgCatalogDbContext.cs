@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FCG.Catalog.Infrastructure.SqlServer
 {
+    [ExcludeFromCodeCoverage]
+
     public class FcgCatalogDbContext : DbContext
     {
         public DbSet<Library> Libraries { get; set; }

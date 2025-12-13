@@ -1,4 +1,7 @@
-﻿namespace FCG.Catalog.Domain.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace FCG.Catalog.Domain.Models
 {
     public sealed class PagedListResponse<T>
     {

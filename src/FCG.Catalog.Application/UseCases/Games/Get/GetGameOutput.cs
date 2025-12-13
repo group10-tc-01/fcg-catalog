@@ -1,7 +1,7 @@
 using System;
 
 namespace FCG.Catalog.Application.UseCases.Games.Get
-{
+{ 
     public class GetGameOutput
     {
         public Guid Id { get; init; }
@@ -11,9 +11,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Get
         public string Category { get; init; } = string.Empty;
         public bool IsActive { get; init; }
         public ActivePromotionDto? ActivePromotion { get; set; }
-
         public decimal FinalPrice { get; set; }
-
 
     }
     public class ActivePromotionDto

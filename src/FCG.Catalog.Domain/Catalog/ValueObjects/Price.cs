@@ -6,15 +6,13 @@ namespace FCG.Catalog.Domain.Catalog.ValueObjects
 {
     public sealed record Price
     {
-        [ExcludeFromCodeCoverage]
-
         public decimal Value { get; }
 
         private Price(decimal value)
         {
             if (value < 0)
             {
-                throw new DomainException(ResourceMessages.GameMaxPriceMustBeGreaterThanMinPrice);
+                throw new DomainException(ResourceMessages.PriceCannotBeNegative);
             }
 
             if (value == 0)

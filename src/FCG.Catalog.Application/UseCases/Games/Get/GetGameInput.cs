@@ -1,3 +1,4 @@
+using System;
 using MediatR;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Models;
@@ -16,7 +17,6 @@ namespace FCG.Catalog.Application.UseCases.Games.Get
 
         public GetGameInput(Guid id)
         {
-            // compatibility constructor for single id lookups - map to Name (legacy)
             Name = id.ToString();
             Pagination = new PaginationParams { PageNumber = 1, PageSize = 1 };
         }

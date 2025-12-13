@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {
+    [ExcludeFromCodeCoverage]
+
     public class RegisterGameOutput
     {
         public Guid Id { get; init; }

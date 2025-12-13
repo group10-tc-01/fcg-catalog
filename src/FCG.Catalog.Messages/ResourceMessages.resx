@@ -159,4 +159,10 @@
   <data name="GameNotFound" xml:space="preserve">
     <value>Game with Not Found</value>
   </data>
+  <data name="DiscountMustBeBetweenZeroAndHundred" xml:space="preserve">
+    <value>Discount must be between 0 and 100.</value>
+  </data>
+  <data name="PriceCannotBeNegative" xml:space="preserve">
+    <value>The price cannot be a negative value.</value>
+  </data>
 </root>

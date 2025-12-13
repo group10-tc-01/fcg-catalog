@@ -1,7 +1,10 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 namespace FCG.Catalog.WebApi.Models
 {
+    [ExcludeFromCodeCoverage]
     public class ApiResponse<T>
     {
             public bool Success { get; set; }

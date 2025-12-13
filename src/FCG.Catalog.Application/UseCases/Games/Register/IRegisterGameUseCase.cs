@@ -1,5 +1,4 @@
-﻿using FCG.Catalog.Domain.Repositories.Game;
-using MediatR;
+﻿using MediatR;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {

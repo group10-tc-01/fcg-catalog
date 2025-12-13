@@ -1,9 +1,15 @@
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Repositories.Game;
-using MediatR;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Games.Get
 {
+    [ExcludeFromCodeCoverage]
+
     public class GetGameUseCase : IGetAllGamesUseCase
     {
         private readonly IReadOnlyGameRepository _readRepo;

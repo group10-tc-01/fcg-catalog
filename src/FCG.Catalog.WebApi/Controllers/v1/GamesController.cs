@@ -1,8 +1,13 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FCG.Catalog.Application.UseCases.Games.Get;
+using FCG.Catalog.Application.UseCases.Games.Purchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.WebApi.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
@@ -27,6 +32,15 @@ namespace FCG.Catalog.WebApi.Controllers.v1
             var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
             return Ok(ApiResponse<PagedListResponse<GetGameOutput>>.SuccesResponse(output));
 
+        }
+        [HttpPost("{id}/purchase")]
+        [ProducesResponseType(typeof(ApiResponse<PurchaseGameOutput>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Purchase([FromRoute] Guid id)
+        {
+            var input = new PurchaseGameInput(id, CurrentUserId);
+            var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
+            return Ok(ApiResponse<PurchaseGameOutput>.SuccesResponse(output));
         }
     }
 }

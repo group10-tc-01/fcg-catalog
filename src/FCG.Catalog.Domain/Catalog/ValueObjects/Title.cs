@@ -3,7 +3,7 @@ using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.ValueObjects
 {
-    public record Title
+    public sealed record Title
     {
         public string Value { get; }
 

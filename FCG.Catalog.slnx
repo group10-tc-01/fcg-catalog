@@ -7,5 +7,9 @@
     <Project Path="src/FCG.Catalog.Messages/FCG.Catalog.Messages.csproj" />
     <Project Path="src/FCG.Catalog.WebApi/FCG.Catalog.WebApi.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/FCG.Catalog.CommomTestUtilities/FCG.Catalog.CommomTestUtilities.csproj" />
+    <Project Path="tests/FCG.Catalog.IntegratedTests/FCG.Catalog.IntegratedTests.csproj" />
+    <Project Path="tests/FCG.Catalog.UnitTests/FCG.Catalog.UnitTests.csproj" />
+  </Folder>
 </Solution>

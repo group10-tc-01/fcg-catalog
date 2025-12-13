@@ -1,4 +1,6 @@
-﻿namespace FCG.Catalog.Domain.Repositories.Game
+﻿using System.Threading.Tasks;
+
+namespace FCG.Catalog.Domain.Repositories.Game
 {
     public interface IWriteOnlyGameRepository
     {

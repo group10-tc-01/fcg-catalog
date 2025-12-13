@@ -1,9 +1,13 @@
 ﻿using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Messages;
 using FluentValidation;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {
+    [ExcludeFromCodeCoverage]
+
     public class RegisterGameInputValidator : AbstractValidator<RegisterGameInput>
     {
         public RegisterGameInputValidator()

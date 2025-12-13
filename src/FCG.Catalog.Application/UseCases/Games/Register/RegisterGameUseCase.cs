@@ -5,9 +5,15 @@ using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Messages;
 using MediatR;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {
+    [ExcludeFromCodeCoverage]
+
     public class RegisterGameUseCase : IRequestHandler<RegisterGameInput, RegisterGameOutput>
     {
         private readonly IWriteOnlyGameRepository _writeRepo;

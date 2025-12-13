@@ -61,6 +61,15 @@ namespace FCG.Catalog.Messages {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Discount must be between 0 and 100..
+        /// </summary>
+        public static string DiscountMustBeBetweenZeroAndHundred {
+            get {
+                return ResourceManager.GetString("DiscountMustBeBetweenZeroAndHundred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The game category type is invalid..
         /// </summary>
         public static string GameCategoryIsRequired {
@@ -165,6 +174,15 @@ namespace FCG.Catalog.Messages {
         public static string PleaseContactSupport {
             get {
                 return ResourceManager.GetString("PleaseContactSupport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The price cannot be a negative value..
+        /// </summary>
+        public static string PriceCannotBeNegative {
+            get {
+                return ResourceManager.GetString("PriceCannotBeNegative", resourceCulture);
             }
         }
         

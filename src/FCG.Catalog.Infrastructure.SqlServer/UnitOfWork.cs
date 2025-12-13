@@ -1,10 +1,13 @@
-using System.Threading;
-using System.Threading.Tasks;
 using FCG.Catalog.Domain;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FCG.Catalog.Infrastructure.SqlServer
 {
+    [ExcludeFromCodeCoverage]
+
     public class UnitOfWork : IUnitOfWork
     {
         private readonly FcgCatalogDbContext _context;
