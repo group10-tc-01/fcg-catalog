@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,7 +8,7 @@ using FCG.Catalog.Domain.Services.Repositories;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Services
 {
-
+    [ExcludeFromCodeCoverage]
     public class CatalogLoggedUser : ICatalogLoggedUser
     {
         private readonly ITokenProvider _tokenProvider;
