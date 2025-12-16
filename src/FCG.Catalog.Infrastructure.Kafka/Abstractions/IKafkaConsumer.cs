@@ -1,4 +1,4 @@
-﻿namespace FCG.Catalog.Infrastructure.Kafka.Consumers.Abstractions
+﻿namespace FCG.Catalog.Infrastructure.Kafka.Abstractions
 {
     public interface IKafkaConsumer
     {

@@ -1,19 +1,17 @@
 ﻿using System.Text.Json;
+using FCG.Catalog.Infrastructure.Kafka.Abstractions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly;
 
-namespace FCG.Catalog.Infrastructure.Kafka.Consumers.Abstractions
+namespace FCG.Catalog.Infrastructure.Kafka.Consumers
 {
-    public abstract class KafkaConsumerBase<TMessage, TCommand> : IKafkaConsumer 
-        where TMessage : class
-        where TCommand : IRequest
+    public abstract class KafkaConsumerBase<TMessage, TCommand> : IKafkaConsumer where TMessage : class where TCommand : IRequest
     {
         protected readonly IMediator _mediator;
         protected readonly ILogger _logger;
         private readonly IAsyncPolicy _retryPolicy;
         public abstract string Topic { get; }
-
 
         protected KafkaConsumerBase(IMediator mediator, ILogger logger, int maxTries = 3)
         {
@@ -51,19 +49,11 @@ namespace FCG.Catalog.Infrastructure.Kafka.Consumers.Abstractions
 
                     await _mediator.Send(command, cancellationToken);
                 });
-
-                _logger.LogInformation(
-                    "Mensagem processada com sucesso do tópico {Topic}",
-                    Topic);
             }
 
             catch (Exception ex)
             {
-                _logger.LogError(
-                    ex,
-                    "Erro ao processar mensagem do tópico {Topic}: {Message}",
-                    Topic, message);
-
+                _logger.LogError(ex, "Erro ao processar mensagem do tópico {Topic}: {Message}", Topic, message);
                 throw;
             }
         }

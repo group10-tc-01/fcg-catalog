@@ -17,4 +17,9 @@
     <ProjectReference Include="..\FCG.Catalog.Application\FCG.Catalog.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Consumers\Handlers\" />
+    <Folder Include="Messages\" />
+  </ItemGroup>
+
 </Project>

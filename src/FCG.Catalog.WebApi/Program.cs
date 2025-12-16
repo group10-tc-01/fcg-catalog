@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly); 
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
 builder.Services.AddKafkaConsumers(builder.Configuration);
