@@ -25,6 +25,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
             services.AddScoped<IReadOnlyPromotionRepository, PromotionRepository>();
             services.AddScoped<IWriteOnlyPromotionRepository, PromotionRepository>();
             services.AddScoped<ICatalogLoggedUser, CatalogLoggedUser>();
+            services.AddHttpContextAccessor();
             services.AddScoped<IReadOnlyLibraryRepository, LibraryRepository>();
             services.AddScoped<IWriteOnlyLibraryRepository, LibraryRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

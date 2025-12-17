@@ -43,11 +43,9 @@ namespace FCG.Catalog.WebApi.Controllers.v1
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Purchase([FromRoute] Guid id)
         {
-            var logged = await _catalogLoggedUser.GetLoggedUserAsync();
-            var userId = logged?.Id ?? Guid.Empty;
-
-            var input = new PurchaseGameInput(id, userId);
+            var input = new PurchaseGameInput(id);
             var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
+
             return Ok(ApiResponse<PurchaseGameOutput>.SuccesResponse(output));
         }
     }

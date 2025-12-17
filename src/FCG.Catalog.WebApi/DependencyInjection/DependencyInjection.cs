@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FCG.Catalog.Application.DependencyInjection;
 using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.Infrastructure.SqlServer.DependencyInjection;
@@ -7,8 +8,11 @@ using FCG.Catalog.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FCG.Catalog.WebApi.DependencyInjection
 {
@@ -25,13 +29,46 @@ namespace FCG.Catalog.WebApi.DependencyInjection
             services.AddHealthChecks();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddSwaggerConfiguration();
-
+            services.AddAuthenticationConfiguration(configuration);
             services.AddHttpContextAccessor();
             services.AddScoped<ITokenProvider, HttpContextTokenProvider>();
 
             return services;
         }
+        private static void AddAuthenticationConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection("JwtSettings");
+            var secretKey = jwtSettings["SecretKey"];
+            var issuer = jwtSettings["Issuer"];
+            var audience = jwtSettings["Audience"];
 
+            var key = Encoding.ASCII.GetBytes(secretKey);
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+
+                        ValidateIssuer = true,
+                        ValidIssuer = issuer,
+
+                        ValidateAudience = true,
+                        ValidAudience = audience,
+
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+        }
         private static void AddSwaggerConfiguration(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
