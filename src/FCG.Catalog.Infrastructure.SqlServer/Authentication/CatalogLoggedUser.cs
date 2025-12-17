@@ -1,39 +1,40 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
-using System.IdentityModel.Tokens.Jwt;
 using FCG.Catalog.Domain.Services;
 using FCG.Catalog.Domain.Services.Repositories;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Services
 {
     [ExcludeFromCodeCoverage]
     public class CatalogLoggedUser : ICatalogLoggedUser
     {
-        private readonly ITokenProvider _tokenProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CatalogLoggedUser(ITokenProvider tokenProvider)
+        public CatalogLoggedUser(IHttpContextAccessor httpContextAccessor)
         {
-            _tokenProvider = tokenProvider;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public Task<LoggedUserInfo?> GetLoggedUserAsync()
         {
-            var token = _tokenProvider.GetToken();
-            if (string.IsNullOrWhiteSpace(token))
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user == null || !user.Identity.IsAuthenticated)
                 return Task.FromResult<LoggedUserInfo?>(null);
 
-            var handler = new JwtSecurityTokenHandler();
-            var jwt = handler.ReadJwtToken(token);
+            var idClaim = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                          ?? user.FindFirst("sub")?.Value;
 
-            var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == "nameid" || c.Type == "sub");
-            if (idClaim == null || !Guid.TryParse(idClaim.Value, out var userId))
-                return Task.FromResult<LoggedUserInfo?>(null);
+            var role = user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
-            var role = jwt.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+            if (Guid.TryParse(idClaim, out var userId))
+            {
+                return Task.FromResult<LoggedUserInfo?>(new LoggedUserInfo { Id = userId, Role = role });
+            }
 
-            return Task.FromResult<LoggedUserInfo?>(new LoggedUserInfo { Id = userId, Role = role });
+            return Task.FromResult<LoggedUserInfo?>(null);
         }
     }
 }

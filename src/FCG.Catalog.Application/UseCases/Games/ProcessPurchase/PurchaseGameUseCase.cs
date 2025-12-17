@@ -44,9 +44,10 @@ namespace FCG.Catalog.Application.UseCases.Games.Purchase
 
             var promotions = await _readOnlyPromotionRepository.GetByGameIdAsync(game.Id, cancellationToken);
 
-            Guid userId = request.UserId != Guid.Empty ? request.UserId : (await _catalogLoggedUser.GetLoggedUserAsync())?.Id ?? Guid.Empty;
-            if (userId == Guid.Empty)
+            var loggedUser = await _catalogLoggedUser.GetLoggedUserAsync();
+            if (loggedUser == null || loggedUser.Id == Guid.Empty)
                 throw new UnauthorizedException("User not authenticated.");
+            Guid userId = loggedUser.Id;
 
             var library = await _readOnlyLibraryRepository.GetByUserIdAsync(userId, cancellationToken);
 
