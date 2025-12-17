@@ -17,8 +17,6 @@ namespace FCG.Catalog.WebApi.Controllers.v1
     [ExcludeFromCodeCoverage]
     public class GamesController(IMediator mediator, ICatalogLoggedUser catalogLoggedUser) : FcgCatalogBaseController(mediator)
     {
-        private readonly ICatalogLoggedUser _catalogLoggedUser = catalogLoggedUser;
-
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<RegisterGameOutput>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
