@@ -37,3 +37,4 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Services
             return Task.FromResult<LoggedUserInfo?>(null);
         }
     }
+}
