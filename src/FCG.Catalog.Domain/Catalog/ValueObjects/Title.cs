@@ -1,6 +1,9 @@
-﻿namespace FCG.Catalog.Domain.Catalog.ValueObjects
+﻿using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Messages;
+
+namespace FCG.Catalog.Domain.Catalog.ValueObjects
 {
-    public record Title
+    public sealed record Title
     {
         public string Value { get; }
 
@@ -12,13 +15,13 @@
         public static Title Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new("Vai ser implementado");
+                throw new DomainException(ResourceMessages.GameNameIsRequired);
 
-            if (value.Length < 2)
-                throw new("Vai ser implementado");
+            if (value.Length < 3)
+                throw new DomainException(ResourceMessages.GameTitleMinLength);
 
             if (value.Length > 255)
-                throw new ("Vai ser implementado");
+                throw new DomainException(ResourceMessages.GameTitleMaxLength);
 
             return new Title(value);
         }

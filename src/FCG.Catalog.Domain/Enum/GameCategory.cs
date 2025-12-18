@@ -2,12 +2,13 @@
 {
     public enum GameCategory
     {
-        Action = 0,
-        Adventure = 1,
-        RPG = 2,
-        Strategy = 3,
-        Simulation = 4,
-        Sports = 5,
-        Puzzle = 6
+        None = 0,
+        Action = 1,
+        Adventure = 2,
+        RPG = 3,
+        Strategy = 4,
+        Simulation = 5,
+        Sports = 6,
+        Puzzle = 7
     }
 }

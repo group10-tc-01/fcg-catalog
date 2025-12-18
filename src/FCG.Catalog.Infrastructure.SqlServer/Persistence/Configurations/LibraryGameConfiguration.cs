@@ -1,6 +1,7 @@
 ﻿using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {
@@ -26,13 +27,18 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
             builder.Property(lg => lg.PurchaseDate)
                 .HasColumnName("PurchasedAt")
                 .HasColumnType("datetime2")
+                .HasDefaultValueSql("GETUTCDATE()")
                 .IsRequired();
 
-            builder.Property(lg => lg.LibraryId)
-                .IsRequired();
+            builder.HasOne(lg => lg.Library)
+                .WithMany(l => l.LibraryGames)
+                .HasForeignKey(lg => lg.LibraryId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(lg => lg.GameId)
-                .IsRequired();
+            builder.HasOne(lg => lg.Game)
+                .WithMany()
+                .HasForeignKey(lg => lg.GameId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasIndex(lg => lg.GameId)
                 .HasDatabaseName("IX_LibraryGames_GameId");

@@ -1,13 +1,13 @@
-﻿using FCG.Catalog.Domain.Abstractions;
+﻿using System.Collections.Generic;
+using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
-using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.Entity.Games
 {
-    [ExcludeFromCodeCoverage]
-
     public sealed class Game : BaseEntity
     {
         public Title Title { get; private set; }
@@ -23,7 +23,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
         {
             if (string.IsNullOrWhiteSpace(description))
             {
-                throw new ("Vai ser implementado");
+                throw new DomainException(ResourceMessages.GameNameIsRequired);
             }
 
             Title = title;
