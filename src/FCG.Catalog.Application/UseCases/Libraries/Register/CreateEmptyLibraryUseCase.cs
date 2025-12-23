@@ -1,6 +1,7 @@
 ﻿using FCG.Catalog.Domain;
 using FCG.Catalog.Domain.Catalog.Entity.Libraries;
 using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Messages;
 using FCG.Domain.Repositories.LibraryRepository;
 using MediatR;

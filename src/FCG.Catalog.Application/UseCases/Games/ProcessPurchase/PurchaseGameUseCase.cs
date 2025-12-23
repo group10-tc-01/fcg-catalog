@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FCG.Catalog.Domain;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
-using FCG.Domain.Repositories.LibraryRepository;
+using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Domain.Repositories.PromotionRepository;
 using FCG.Catalog.Domain.Services.Repositories;
 

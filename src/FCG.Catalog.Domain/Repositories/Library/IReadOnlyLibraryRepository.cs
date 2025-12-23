@@ -1,13 +1,8 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using FCG.Catalog.Domain.Catalog.Entity.Libraries;
-
-namespace FCG.Domain.Repositories.LibraryRepository
+﻿namespace FCG.Catalog.Domain.Repositories.Library
 {
     public interface IReadOnlyLibraryRepository
     {
-        Task<Library?> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken);
-        Task<Library?> GetByUserIdWithGamesAsync(Guid userId, CancellationToken cancellationToken);
+        Task<Catalog.Entity.Libraries.Library?> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken);
+        Task<Catalog.Entity.Libraries.Library?> GetByUserIdWithGamesAsync(Guid userId, CancellationToken cancellationToken);
     }
 }

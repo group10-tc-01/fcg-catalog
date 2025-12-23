@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Services.Repositories;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
