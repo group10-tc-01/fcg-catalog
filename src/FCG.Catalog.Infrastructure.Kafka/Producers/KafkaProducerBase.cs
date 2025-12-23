@@ -3,6 +3,7 @@ using FCG.Catalog.Infrastructure.Kafka.Abstractions;
 using FCG.Catalog.Infrastructure.Kafka.Settings;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 namespace FCG.Catalog.Infrastructure.Kafka.Producers
 {
@@ -13,20 +14,21 @@ namespace FCG.Catalog.Infrastructure.Kafka.Producers
         private readonly JsonSerializerOptions _jsonOptions;
         private bool _disposed;
 
-        public KafkaProducerBase(KafkaSettings settings, ILogger<KafkaProducerBase> logger)
+        public KafkaProducerBase(IOptions<KafkaSettings> settings, ILogger<KafkaProducerBase> logger)
         {
             _logger = logger;
+            var kafkaSettings = settings.Value;
 
             var config = new ProducerConfig
             {
-                BootstrapServers = settings.BootstrapServers,
-                ClientId = $"{settings.ClientId}-producer",
-                Acks = settings.Producer.Acks,
-                EnableIdempotence = settings.Producer.EnableIdempotence,
-                MaxInFlight = settings.Producer.MaxInFlight,
-                MessageSendMaxRetries = settings.Producer.Retries,
-                RetryBackoffMs = settings.Producer.RetryBackoffMs,
-                CompressionType = settings.Producer.CompressionType
+                BootstrapServers = kafkaSettings.BootstrapServers,
+                ClientId = $"{kafkaSettings.ClientId}-producer",
+                Acks = kafkaSettings.Producer.Acks,
+                EnableIdempotence = kafkaSettings.Producer.EnableIdempotence,
+                MaxInFlight = kafkaSettings.Producer.MaxInFlight,
+                MessageSendMaxRetries = kafkaSettings.Producer.Retries,
+                RetryBackoffMs = kafkaSettings.Producer.RetryBackoffMs,
+                CompressionType = kafkaSettings.Producer.CompressionType
             };
 
             _producer = new ProducerBuilder<string, string>(config)

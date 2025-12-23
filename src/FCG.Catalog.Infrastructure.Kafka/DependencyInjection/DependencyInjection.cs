@@ -25,24 +25,6 @@ namespace FCG.Catalog.Infrastructure.Kafka.DependencyInjection
 
         public static IServiceCollection AddKafkaProducer(this IServiceCollection services, IConfiguration configuration)
         {
-            configuration.GetSection("KafkaSettings").Get<KafkaSettings>();
-
-            services.AddSingleton<IProducer<string, string>>(sp =>
-            {
-                var kafkaSettings = sp.GetRequiredService<IOptions<KafkaSettings>>().Value;
-
-                var config = new ProducerConfig
-                {
-                    BootstrapServers = kafkaSettings.BootstrapServers,
-                    Acks = kafkaSettings.Producer.Acks,
-                    EnableIdempotence = kafkaSettings.Producer.EnableIdempotence,
-                    MaxInFlight = kafkaSettings.Producer.MaxInFlight,
-                    CompressionType = kafkaSettings.Producer.CompressionType
-                };
-
-                return new ProducerBuilder<string, string>(config).Build();
-            });
-
             services.AddScoped<IKafkaProducer, KafkaProducerBase>();
 
             return services;
