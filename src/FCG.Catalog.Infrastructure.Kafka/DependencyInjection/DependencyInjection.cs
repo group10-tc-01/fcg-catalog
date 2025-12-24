@@ -1,11 +1,9 @@
-﻿using Confluent.Kafka;
-using FCG.Catalog.Infrastructure.Kafka.Abstractions;
+﻿using FCG.Catalog.Infrastructure.Kafka.Abstractions;
 using FCG.Catalog.Infrastructure.Kafka.Producers;
 using FCG.Catalog.Infrastructure.Kafka.Services;
 using FCG.Catalog.Infrastructure.Kafka.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace FCG.Catalog.Infrastructure.Kafka.DependencyInjection
@@ -19,29 +17,39 @@ namespace FCG.Catalog.Infrastructure.Kafka.DependencyInjection
 
             services.AddKafkaProducer(configuration);
             services.AddKafkaConsumers(configuration);
+            services.AddKafkaEventHandlers();
 
             return services;
         }
 
         public static IServiceCollection AddKafkaProducer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IKafkaProducer, KafkaProducerBase>();
+            services.AddSingleton<IKafkaProducer, KafkaProducerBase>();
+            services.AddSingleton<KafkaProducerService>();
 
             return services;
+        }
+
+        private static void AddKafkaEventHandlers(this IServiceCollection services)
+        {
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            });
         }
 
         private static void RegisterConsumers(IServiceCollection services)
         {
             var assembly = Assembly.GetExecutingAssembly();
+
             var consumerTypes = assembly.GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && typeof(IKafkaConsumer).IsAssignableFrom(t))
-                .ToList();
+                .Where(t => t.IsClass
+                            && !t.IsAbstract
+                            && typeof(IKafkaConsumer).IsAssignableFrom(t));
 
             foreach (var consumerType in consumerTypes)
             {
-                services.AddScoped(consumerType);
-                services.AddScoped<IKafkaConsumer>(sp =>
-                    (IKafkaConsumer)sp.GetRequiredService(consumerType));
+                services.AddScoped(typeof(IKafkaConsumer), consumerType);
             }
         }
 
