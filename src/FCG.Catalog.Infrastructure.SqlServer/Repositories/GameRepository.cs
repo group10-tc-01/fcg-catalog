@@ -68,5 +68,10 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
                 .AsNoTracking()
                 .AnyAsync(g => g.Id == id, cancellationToken);
         }
+
+        public void Update(Game game)
+        {
+            _fcgDbContext.Games.Update(game);
+        }
     }
 }

@@ -6,10 +6,12 @@ using FCG.Catalog.Infrastructure.Kafka.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace FCG.Catalog.Infrastructure.Kafka.DependencyInjection
 {
+    [ExcludeFromCodeCoverage]
     public static class DependencyInjection
     {
         public static IServiceCollection AddKafkaInfrastructure(this IServiceCollection services, IConfiguration configuration)

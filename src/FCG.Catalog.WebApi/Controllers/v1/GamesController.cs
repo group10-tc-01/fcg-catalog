@@ -1,6 +1,7 @@
 using FCG.Catalog.Application.UseCases.Games.Get;
 using FCG.Catalog.Application.UseCases.Games.Purchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.WebApi.Models;
@@ -47,6 +48,18 @@ namespace FCG.Catalog.WebApi.Controllers.v1
             var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
 
             return Ok(ApiResponse<PurchaseGameOutput>.SuccesResponse(output));
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<UpdateGameOutput>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateGameInput input, CancellationToken cancellationToken)
+        {
+            input.Id = id;
+            var result = await _mediator.Send(input, cancellationToken).ConfigureAwait(false);
+      
+            return Ok(ApiResponse<UpdateGameOutput>.SuccesResponse(result));
         }
     }
 }

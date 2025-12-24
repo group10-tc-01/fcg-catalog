@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
 {
+    [ExcludeFromCodeCoverage]
     public class CreatePromotionResponse
     {
         public Guid Id { get; set; }

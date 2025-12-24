@@ -2,10 +2,12 @@
 using FCG.Catalog.Infrastructure.Kafka.Abstractions;
 using FCG.Catalog.Infrastructure.Kafka.Settings;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace FCG.Catalog.Infrastructure.Kafka.Producers
 {
+    [ExcludeFromCodeCoverage]
     public class KafkaProducerBase : IKafkaProducer, IDisposable
     {
         private readonly IProducer<string, string> _producer;

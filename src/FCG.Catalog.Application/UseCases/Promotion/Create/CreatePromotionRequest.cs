@@ -1,8 +1,10 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
 {
+    [ExcludeFromCodeCoverage]
     public class CreatePromotionRequest : IRequest<CreatePromotionResponse>
     {
         public Guid GameId { get; set; }
