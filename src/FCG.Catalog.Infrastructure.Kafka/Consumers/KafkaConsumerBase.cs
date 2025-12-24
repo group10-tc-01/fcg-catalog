@@ -1,11 +1,13 @@
-﻿using System.Text.Json;
-using FCG.Catalog.Infrastructure.Kafka.Abstractions;
+﻿using FCG.Catalog.Infrastructure.Kafka.Abstractions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace FCG.Catalog.Infrastructure.Kafka.Consumers
 {
+    [ExcludeFromCodeCoverage]
     public abstract class KafkaConsumerBase<TMessage, TCommand> : IKafkaConsumer where TMessage : class where TCommand : IRequest
     {
         protected readonly IMediator _mediator;

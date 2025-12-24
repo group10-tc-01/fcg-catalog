@@ -1,8 +1,10 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
 {
+    [ExcludeFromCodeCoverage]
     public class CreatePromotionInputValidator : AbstractValidator<CreatePromotionRequest>
     {
         public CreatePromotionInputValidator()

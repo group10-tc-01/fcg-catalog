@@ -1,7 +1,9 @@
 ﻿using Confluent.Kafka;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.Kafka.Settings
 {
+    [ExcludeFromCodeCoverage]
     public class KafkaSettings
     {
         public string BootstrapServers { get; set; } = string.Empty;

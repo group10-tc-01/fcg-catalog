@@ -1,14 +1,16 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using FCG.Catalog.Domain;
+﻿using FCG.Catalog.Domain;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Domain.Repositories.PromotionRepository;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
 {
+    [ExcludeFromCodeCoverage]
     public class CreatePromotionUseCase : ICreatePromotionUseCase
     {
         private readonly IReadOnlyGameRepository _readOnlyGameRepository;

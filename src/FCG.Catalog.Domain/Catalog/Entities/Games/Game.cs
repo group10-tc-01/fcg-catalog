@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Domain.Catalog.Entity.Games
 {
+
     public sealed class Game : BaseEntity
     {
         public Title Title { get; private set; }
@@ -21,10 +23,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
 
         private Game(string title, string description, Price price, GameCategory category)
         {
-            if (string.IsNullOrWhiteSpace(description))
-            {
-                throw new DomainException(ResourceMessages.GameNameIsRequired);
-            }
+            Validate(description, price, title);
 
             Title = title;
             Description = description;
@@ -34,6 +33,34 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
         public static Game Create(string title, string description, Price price, GameCategory category)
         {
             return new Game(title, description, price, category);
+        }
+
+        public void Update(string title, string description, decimal price, GameCategory category)
+        {
+            Validate(description, price, title);
+
+            Title = title;
+            Description = description;
+            Price = Price.Create(price);
+            Category = category;
+        }
+
+        private void Validate(string description, decimal price, string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new DomainException(ResourceMessages.GameNameIsRequired);
+            }
+
+            if (price < 0)
+            {
+                throw new DomainException(ResourceMessages.GamePriceMustBeGreaterThanZero);
+            }
+
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                throw new DomainException(ResourceMessages.GameNameIsRequired);
+            }
         }
     }
 }
