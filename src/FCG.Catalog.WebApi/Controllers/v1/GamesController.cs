@@ -1,4 +1,5 @@
 using FCG.Catalog.Application.UseCases.Games.Get;
+using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Application.UseCases.Games.Purchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Application.UseCases.Games.Update;
@@ -60,6 +61,16 @@ namespace FCG.Catalog.WebApi.Controllers.v1
             var result = await _mediator.Send(input, cancellationToken).ConfigureAwait(false);
       
             return Ok(ApiResponse<UpdateGameOutput>.SuccesResponse(result));
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<GetGameIdOutput>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            var input = new GetGameIdInput(id);
+            var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
+            return Ok(ApiResponse<GetGameIdOutput>.SuccesResponse(output));
         }
     }
 }

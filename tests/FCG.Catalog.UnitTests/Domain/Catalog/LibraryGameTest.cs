@@ -92,7 +92,6 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
             // Arrange
             var game = GameBuilder.Build();
 
-            // Cenário 1: Nome vazio/nulo
             var actNullName = () => game.Update("", "Description", 100, GameCategory.Action);
 
             // Act & Assert
