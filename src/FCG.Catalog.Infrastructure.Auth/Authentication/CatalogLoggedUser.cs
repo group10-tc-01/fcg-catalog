@@ -1,11 +1,11 @@
 ﻿using System;
-using FCG.Catalog.Domain.Services;
-using FCG.Catalog.Domain.Services.Repositories;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using FCG.Catalog.Domain.Services;
+using FCG.Catalog.Domain.Services.Repositories;
 
-namespace FCG.Catalog.Infrastructure.SqlServer.Services
+namespace FCG.Catalog.Infrastructure.Auth.Authentication
 {
     [ExcludeFromCodeCoverage]
     public class CatalogLoggedUser : ICatalogLoggedUser

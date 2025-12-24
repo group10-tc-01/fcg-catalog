@@ -2,7 +2,6 @@
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Catalog.Infrastructure.SqlServer.Repositories;
-using FCG.Catalog.Infrastructure.SqlServer.Services;
 using FCG.Domain.Repositories.LibraryRepository;
 using FCG.Domain.Repositories.PromotionRepository;
 using Microsoft.EntityFrameworkCore;
@@ -25,8 +24,6 @@ namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
             services.AddScoped<IReadOnlyGameRepository, GameRepository>();
             services.AddScoped<IReadOnlyPromotionRepository, PromotionRepository>();
             services.AddScoped<IWriteOnlyPromotionRepository, PromotionRepository>();
-            services.AddScoped<ICatalogLoggedUser, CatalogLoggedUser>();
-            services.AddHttpContextAccessor();
             services.AddScoped<IReadOnlyLibraryRepository, LibraryRepository>();
             services.AddScoped<IWriteOnlyLibraryRepository, LibraryRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

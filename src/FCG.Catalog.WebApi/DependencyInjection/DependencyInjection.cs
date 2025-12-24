@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using FCG.Catalog.Infrastructure.Auth.DependencyInjection;
 
 namespace FCG.Catalog.WebApi.DependencyInjection
 {
@@ -30,6 +31,7 @@ namespace FCG.Catalog.WebApi.DependencyInjection
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddSwaggerConfiguration();
             services.AddAuthenticationConfiguration(configuration);
+            services.AddAuthInfrastructure(configuration);
             services.AddHttpContextAccessor();
             services.AddScoped<ITokenProvider, HttpContextTokenProvider>();
 
