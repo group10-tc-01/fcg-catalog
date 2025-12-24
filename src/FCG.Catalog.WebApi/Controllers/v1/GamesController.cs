@@ -2,15 +2,16 @@ using FCG.Catalog.Application.UseCases.Games.Get;
 using FCG.Catalog.Application.UseCases.Games.Purchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Domain.Models;
+using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.WebApi.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using FCG.Catalog.Domain.Services.Repositories;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
 {
@@ -28,6 +29,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(ApiResponse<GetGameOutput>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromQuery] GetGameInput input)
