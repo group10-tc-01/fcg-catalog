@@ -77,7 +77,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
             var newCategory = GameCategory.Simulation;
 
             // Act
-            game.Update(newTitle, newDescription, newPrice, newCategory);
+            game.Update(newTitle, newDescription, newPrice, newCategory, DateTime.UtcNow);
 
             // Assert
             game.Title.Value.Should().Be(newTitle);
@@ -92,8 +92,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
             // Arrange
             var game = GameBuilder.Build();
 
-            // Cenário 1: Nome vazio/nulo
-            var actNullName = () => game.Update("", "Description", 100, GameCategory.Action);
+            var actNullName = () => game.Update("", "Description", 100, GameCategory.Action, DateTime.UtcNow);
 
             // Act & Assert
             actNullName.Should().Throw<DomainException>()
@@ -108,7 +107,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
             var invalidPrice = -10.00m;
 
             // Act
-            var act = () => game.Update("Valid Title", "Description", invalidPrice, GameCategory.Action);
+            var act = () => game.Update("Valid Title", "Description", invalidPrice, GameCategory.Action, DateTime.UtcNow);
 
             // Assert
             act.Should().Throw<DomainException>()

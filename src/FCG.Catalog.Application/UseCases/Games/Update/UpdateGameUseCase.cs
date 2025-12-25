@@ -37,13 +37,14 @@ namespace FCG.Catalog.Application.UseCases.Games.Update
                 request.Title,
                 request.Description,
                 request.Price,
-                request.Category
+                request.Category,
+                DateTime.UtcNow
             );
 
             _writeOnlyGameRepository.Update(game); 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new UpdateGameOutput(game.Id, game.Title, game.Price.Value, game.Description, game.Category.ToString());
+            return new UpdateGameOutput(game.Id, game.Title, game.Price.Value, game.Description, game.Category.ToString(),  game.UpdatedAt);
         }
     }
 }

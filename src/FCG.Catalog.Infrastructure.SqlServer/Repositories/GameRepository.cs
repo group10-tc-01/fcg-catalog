@@ -58,8 +58,9 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
         public async Task<Game?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _fcgDbContext.Games
-                .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
+            .AsNoTracking()
+            .Include(g => g.Promotions)
+            .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
         }
 
         public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)

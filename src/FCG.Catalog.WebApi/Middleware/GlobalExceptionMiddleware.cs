@@ -38,7 +38,6 @@ namespace FCG.Catalog.WebApi.Middleware
             {
                 await HandleExceptionAsync(context, ex);
             }
-
         }
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
