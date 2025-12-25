@@ -1,5 +1,6 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
+using FCG.Catalog.Domain.Catalog.Entity.Promotions;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
@@ -35,7 +36,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
             return new Game(title, description, price, category);
         }
 
-        public void Update(string title, string description, decimal price, GameCategory category)
+        public void Update(string title, string description, decimal price, GameCategory category, DateTime updatedAt)
         {
             Validate(description, price, title);
 
@@ -43,8 +44,29 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
             Description = description;
             Price = Price.Create(price);
             Category = category;
+            UpdatedAt = updatedAt;
+        }
+        public Promotion? GetActivePromotion()
+        {
+            if (Promotions is null || !Promotions.Any())
+                return null;
+
+            var today = DateTime.UtcNow;
+
+            return Promotions
+                .Where(p => p.StartDate <= today && p.EndDate >= today)
+                .OrderByDescending(p => p.DiscountPercentage)
+                .FirstOrDefault();
         }
 
+        public decimal CalculateDiscountedPrice(Promotion? activePromotion)
+        {
+            if (activePromotion is null)
+                return Price.Value;
+
+            var discountAmount = Price.Value * (activePromotion.DiscountPercentage / 100m);
+            return Price.Value - discountAmount;
+        }
         private void Validate(string description, decimal price, string title)
         {
             if (string.IsNullOrWhiteSpace(title))
