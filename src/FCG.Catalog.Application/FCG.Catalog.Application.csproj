@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
+    <ProjectReference Include="..\FCG.Catalog.Infrastructure.SqlServer\FCG.Catalog.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\FCG.Catalog.Messages\FCG.Catalog.Messages.csproj" />
   </ItemGroup>
 
