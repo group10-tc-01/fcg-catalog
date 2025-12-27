@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FCG.Catalog.Domain
+namespace FCG.Catalog.Domain.Abstractions
 {
     public interface IUnitOfWork
     {

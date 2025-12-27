@@ -165,4 +165,7 @@
   <data name="PriceCannotBeNegative" xml:space="preserve">
     <value>The price cannot be a negative value.</value>
   </data>
+  <data name="LibraryAlreadyExists" xml:space="preserve">
+    <value>Library already exists for user {0}.</value>
+  </data>
 </root>

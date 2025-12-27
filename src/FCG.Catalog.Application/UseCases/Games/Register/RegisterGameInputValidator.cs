@@ -24,7 +24,6 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
             RuleFor(x => x.Category)
                 .NotEmpty()
                 .WithMessage(ResourceMessages.GameCategoryIsRequired)
-                .Must(category => Enum.TryParse<GameCategory>(category, true, out _))
                 .WithMessage(ResourceMessages.GameCategoryIsRequired);
         }
     }

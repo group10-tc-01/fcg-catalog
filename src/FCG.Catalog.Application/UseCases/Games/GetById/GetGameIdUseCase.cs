@@ -32,7 +32,7 @@ namespace FCG.Catalog.Application.UseCases.Games.GetById
             {
                 Title = game.Title.Value,
                 Description = game.Description,
-                Category = game.Category,
+                Category = game.Category.ToString(),
                 OriginalPrice = game.Price.Value,
                 DiscountedPrice = activePromotion != null ? finalPrice : null,
                 HasActivePromotion = activePromotion != null,

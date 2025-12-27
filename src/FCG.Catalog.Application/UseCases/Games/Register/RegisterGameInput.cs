@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FCG.Catalog.Domain.Enum;
+using MediatR;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
@@ -9,6 +10,6 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
         public string Name { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
         public decimal Price { get; init; }
-        public string Category { get; init; } = string.Empty;
+        public GameCategory Category { get; init; }
     }
 }

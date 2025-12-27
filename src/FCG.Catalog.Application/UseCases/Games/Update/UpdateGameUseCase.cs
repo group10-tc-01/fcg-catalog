@@ -1,4 +1,6 @@
 ﻿using FCG.Catalog.Domain;
+using FCG.Catalog.Domain.Abstractions;
+using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Services.Repositories;
@@ -33,6 +35,11 @@ namespace FCG.Catalog.Application.UseCases.Games.Update
                 throw new NotFoundException($"Game id '{request.Id}' not found.");
             }
 
+            if (!Enum.IsDefined(typeof(GameCategory), request.Category))
+            {
+                throw new DomainException($"Invalid category: '{request.Category}'. Available categories are: Action, Adventure, RPG...");
+            }
+
             game.Update(
                 request.Title,
                 request.Description,
@@ -44,7 +51,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Update
             _writeOnlyGameRepository.Update(game); 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new UpdateGameOutput(game.Id, game.Title, game.Price.Value, game.Description, game.Category.ToString(),  game.UpdatedAt);
+            return new UpdateGameOutput(game.Id, game.Title, game.Price.Value, game.Description, game.Category.ToString(), game.UpdatedAt);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.Domain;
+﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
@@ -30,8 +30,16 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
             await ValidateIfGameAlreadyExistsAsync(request.Name);
 
             var price = Price.Create(request.Price);
-            var category = Enum.Parse<GameCategory>(request.Category, true);
-            var game = Domain.Catalog.Entity.Games.Game.Create(request.Name, request.Description, price, category);
+            //if (!Enum.TryParse<GameCategory>(request.Category, true, out var categoryEnum))
+            //{
+            //    throw new DomainException($"Invalid category: '{request.Category}'. Available categories are: Action, Adventure, RPG...");
+            //}
+
+            if (!Enum.IsDefined(typeof(GameCategory), request.Category))
+            {
+                throw new DomainException($"Invalid category: '{request.Category}'. Available categories are: Action, Adventure, RPG...");
+            }
+            var game = Domain.Catalog.Entity.Games.Game.Create(request.Name, request.Description, price, request.Category);
 
             await _writeRepo.AddAsync(game);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
