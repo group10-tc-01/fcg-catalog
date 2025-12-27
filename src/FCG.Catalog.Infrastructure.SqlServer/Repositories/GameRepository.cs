@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static Azure.Core.HttpHeader;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 {
@@ -73,6 +74,12 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
         public void Update(Game game)
         {
             _fcgDbContext.Games.Update(game);
+        }
+
+        public async Task Delete(Game game, CancellationToken cancellationToken = default)
+        {
+            _fcgDbContext.Games.Remove(game);
+            await Task.CompletedTask;
         }
     }
 }
