@@ -15,7 +15,7 @@ namespace FCG.Catalog.Application.UseCases.Games.GetById
     {
         public string Title { get; init; }
         public string Description { get; init; } = string.Empty;
-        public GameCategory Category { get; init; }
+        public string Category { get; init; }
         public decimal OriginalPrice { get; init; }
         public decimal? DiscountedPrice { get; init; }
         public bool HasActivePromotion { get; init; }

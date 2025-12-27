@@ -63,9 +63,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Services
 
             if (handler == null)
             {
-                _logger.LogWarning(
-                    "Handler não encontrado para o tópico {Topic}. " +
-                    "Certifique-se de que o handler está registrado no DI.",
+                _logger.LogWarning("Handler não encontrado para o tópico {Topic}. " + "Certifique-se de que o handler está registrado no DI.",
                     topicConfig.TopicName);
                 return;
             }

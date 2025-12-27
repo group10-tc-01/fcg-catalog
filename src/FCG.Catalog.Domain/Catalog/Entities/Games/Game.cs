@@ -24,7 +24,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
 
         private Game(string title, string description, Price price, GameCategory category)
         {
-            Validate(description, price, title);
+            Validate(description, price.Value, title);
 
             Title = title;
             Description = description;
@@ -36,10 +36,9 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
             return new Game(title, description, price, category);
         }
 
-        public void Update(string title, string description, decimal price, GameCategory category, DateTime updatedAt)
+        public void Update(string title, string description, Price price, GameCategory category, DateTime updatedAt)
         {
-            Validate(description, price, title);
-
+            Validate(description, price.Value, title);
             Title = title;
             Description = description;
             Price = Price.Create(price);

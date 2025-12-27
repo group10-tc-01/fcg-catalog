@@ -36,10 +36,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Settings
     {
         public List<ConsumerTopicConfiguration> ConsumerTopics { get; set; } = [];
 
-        public Dictionary<string, string> ProducerTopics { get; set; } = new()
-        {
-            { "UserCreated", "user-created" }
-        };
+        public Dictionary<string, string> ProducerTopics { get; set; } = new();
     }
 
     public class ConsumerTopicConfiguration

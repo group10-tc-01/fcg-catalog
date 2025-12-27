@@ -9,6 +9,8 @@
         Strategy = 4,
         Simulation = 5,
         Sports = 6,
-        Puzzle = 7
+        Puzzle = 7,
+        Racing = 8,
+        Outher = 9
     }
 }

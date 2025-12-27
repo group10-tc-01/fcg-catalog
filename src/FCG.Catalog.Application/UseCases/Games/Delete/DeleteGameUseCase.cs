@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Domain;
+using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Messages;
