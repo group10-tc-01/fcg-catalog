@@ -1,16 +1,18 @@
 ﻿using FCG.Catalog.Domain.Repositories.Library;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
+using System.Reflection.PortableExecutable;
 using System.Text.Json;
+using FCG.Catalog.Infrastructure.Redis.Interface;
 
 namespace FCG.Catalog.Application.UseCases.Libraries.Get
 {
     public class GetLibraryUseCase : IRequestHandler<GetLibraryByUserIdQuery, GetLibraryByUserIdResponse>
     {
         private readonly IReadOnlyLibraryRepository _readOnlyLibraryRepository;
-        private readonly IDistributedCache _cache;
+        private readonly ICaching _cache;
 
-        public GetLibraryUseCase(IReadOnlyLibraryRepository readRepo, IDistributedCache cache)
+        public GetLibraryUseCase(IReadOnlyLibraryRepository readRepo, ICaching cache)
         {
             _readOnlyLibraryRepository = readRepo;
             _cache = cache;
@@ -18,12 +20,13 @@ namespace FCG.Catalog.Application.UseCases.Libraries.Get
 
         public async Task<GetLibraryByUserIdResponse> Handle(GetLibraryByUserIdQuery request, CancellationToken cancellationToken)
         {
-            string cacheKey = $"library:{request.UserId}";
-            var cachedData = await _cache.GetStringAsync(cacheKey, cancellationToken);
+            string cacheKey = $"Endpoint:Library - User:{request.UserId}";
 
-            if (!string.IsNullOrEmpty(cachedData))
+            var cachedJson = await _cache.GetAsync(cacheKey);
+
+            if (!string.IsNullOrEmpty(cachedJson))
             {
-                return JsonSerializer.Deserialize<GetLibraryByUserIdResponse>(cachedData);
+                return JsonSerializer.Deserialize<GetLibraryByUserIdResponse>(cachedJson);
             }
 
             var library = await _readOnlyLibraryRepository.GetByUserIdWithGamesAsync(request.UserId, cancellationToken);
@@ -43,28 +46,21 @@ namespace FCG.Catalog.Application.UseCases.Libraries.Get
                     GameId = lg.GameId,
                     Title = lg.Game.Title.Value,
                     Description = lg.Game.Description,
-                    PurchasePrice = lg.PurchasePrice.Value, 
+                    PurchasePrice = lg.PurchasePrice.Value,
                     PurchaseDate = lg.PurchaseDate
                 })
-                .OrderByDescending(g => g.PurchaseDate) 
+                .OrderByDescending(g => g.PurchaseDate)
                 .ToList();
 
-            var response =  new GetLibraryByUserIdResponse
+            var response = new GetLibraryByUserIdResponse
             {
                 LibraryId = library.Id,
                 LibraryGames = gamesDto ?? new List<LibraryGameDto>()
             };
-            var cacheOptions = new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(120)
-            };
-            await _cache.SetStringAsync(
-                cacheKey,
-                JsonSerializer.Serialize(response),
-                cacheOptions,
-                cancellationToken);
+
+            await _cache.SetAsync(cacheKey, JsonSerializer.Serialize(response));
 
             return response;
         }
     }
-    }
+}
