@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Infrastructure.Kafka.Abstractions;
+using FCG.Catalog.Infrastructure.Kafka.Consumers;
 using FCG.Catalog.Infrastructure.Kafka.Producers;
 using FCG.Catalog.Infrastructure.Kafka.Services;
 using FCG.Catalog.Infrastructure.Kafka.Settings;
@@ -52,7 +53,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.DependencyInjection
 
             foreach (var consumerType in consumerTypes)
             {
-                services.AddScoped(typeof(IKafkaConsumer), consumerType);
+                services.AddSingleton(typeof(IKafkaConsumer), consumerType);
             }
         }
 

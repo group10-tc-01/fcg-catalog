@@ -19,7 +19,6 @@ namespace FCG.Catalog.Infrastructure.Kafka.Services
             _settings = options.Value;
             _logger = logger;
         }
-
         public async Task PublishAsync<T>(string topicKey, T message, CancellationToken cancellationToken = default)
         {
             if (!_settings.Topics.ProducerTopics.TryGetValue(topicKey, out var topicName))

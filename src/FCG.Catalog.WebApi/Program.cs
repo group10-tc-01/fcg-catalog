@@ -9,8 +9,15 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Esta opção faz o serializador ignorar a propriedade que causa o loop
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+
+        // Opcional: Para formatar o JSON bonitinho
+        options.JsonSerializerOptions.WriteIndented = true;
+    }); builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplication();
 builder.Services.AddWebApi(builder.Configuration);
 builder.Services.AddSwaggerGen();

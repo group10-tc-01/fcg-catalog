@@ -9,7 +9,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Producers.Handlers
     {
         private readonly KafkaProducerService _kafkaProducerService;
         private readonly ILogger<OrderPlacedEventHandler> _logger;
-        private const string TOPIC_KEY = "OrderPlaced";
+        private const string TOPIC_KEY = "order-placed";
 
         public OrderPlacedEventHandler(KafkaProducerService kafkaProducerService, ILogger<OrderPlacedEventHandler> logger)
         {

@@ -52,7 +52,6 @@ namespace FCG.Catalog.Infrastructure.Kafka.Services
 
             await Task.WhenAll(_consumerTasks);
         }
-
         private async Task ConsumeTopicAsync(ConsumerTopicConfiguration topicConfig, CancellationToken cancellationToken)
         {
             using var scope = _serviceProvider.CreateScope();

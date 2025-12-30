@@ -30,10 +30,6 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
             await ValidateIfGameAlreadyExistsAsync(request.Name);
 
             var price = Price.Create(request.Price);
-            //if (!Enum.TryParse<GameCategory>(request.Category, true, out var categoryEnum))
-            //{
-            //    throw new DomainException($"Invalid category: '{request.Category}'. Available categories are: Action, Adventure, RPG...");
-            //}
 
             if (!Enum.IsDefined(typeof(GameCategory), request.Category))
             {
