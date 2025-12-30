@@ -2,5 +2,11 @@
 
 namespace FCG.Catalog.Domain.Catalog.Events
 {
-    public record OrderPlacedEvent(Guid LibraryId, Guid GameId, DateTime OrderDate) : IDomainEvent;
+    public record OrderPlacedEvent(
+        Guid OrderId,            
+        Guid UserId,              
+        Guid GameId,             
+        decimal Amount,         
+        DateTimeOffset OccurredOn 
+    ) : IDomainEvent;
 }

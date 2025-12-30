@@ -53,8 +53,6 @@ namespace FCG.Catalog.Infrastructure.Kafka.Producers
                 WriteIndented = false,
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
             };
-            
-
         }
 
         public async Task<DeliveryResult<string, string>> ProduceAsync<T>(string topic, T message, CancellationToken cancellationToken = default)
@@ -91,7 +89,6 @@ namespace FCG.Catalog.Infrastructure.Kafka.Producers
                 throw;
             }
         }
-
         public void Dispose()
         {
             if (_disposed)

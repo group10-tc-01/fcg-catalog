@@ -1,6 +1,4 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
-using FCG.Catalog.Domain.Repositories.Library;
-using FCG.Domain.Repositories.LibraryRepository;
+﻿using FCG.Catalog.Domain.Repositories.Library;
 using MediatR;
 
 namespace FCG.Catalog.Application.UseCases.Libraries.Get
@@ -23,14 +21,26 @@ namespace FCG.Catalog.Application.UseCases.Libraries.Get
                 return new GetLibraryByUserIdResponse
                 {
                     LibraryId = Guid.Empty,
-                    LibraryGames = new List<LibraryGame>()
+                    LibraryGames = new List<LibraryGameDto>()
                 };
             }
+
+            var gamesDto = library.LibraryGames?
+                .Select(lg => new LibraryGameDto
+                {
+                    GameId = lg.GameId,
+                    Title = lg.Game.Title.Value,
+                    Description = lg.Game.Description,
+                    PurchasePrice = lg.PurchasePrice.Value, 
+                    PurchaseDate = lg.PurchaseDate
+                })
+                .OrderByDescending(g => g.PurchaseDate) 
+                .ToList();
 
             return new GetLibraryByUserIdResponse
             {
                 LibraryId = library.Id,
-                LibraryGames = library.LibraryGames?.ToList()
+                LibraryGames = gamesDto ?? new List<LibraryGameDto>()
             };
         }
     }
