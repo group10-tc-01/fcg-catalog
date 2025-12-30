@@ -6,6 +6,7 @@ using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Infrastructure.SqlServer.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
 {
@@ -14,6 +15,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
         private readonly IReadOnlyLibraryRepository _readOnlyLibraryRepository;
         private readonly IReadOnlyLibraryGameRepository _readOnlyLibraryGameRepository;
         private readonly IWriteOnlyLibraryGameRepository _writeOnlyLibraryGameRepository;
+        private readonly IDistributedCache _cache;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ProcessPaymentResultUseCase> _logger;
 
@@ -22,11 +24,13 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
             IReadOnlyLibraryGameRepository readOnlyLibraryGameRepository,
             IWriteOnlyLibraryGameRepository writeOnlyLibraryGameRepository,
             IUnitOfWork unitOfWork,
+            IDistributedCache cache,
             ILogger<ProcessPaymentResultUseCase> logger)
         {
             _readOnlyLibraryRepository = readOnlyLibraryRepository;
             _readOnlyLibraryGameRepository = readOnlyLibraryGameRepository;
             _writeOnlyLibraryGameRepository = writeOnlyLibraryGameRepository;
+            _cache = cache;
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
@@ -58,6 +62,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
 
             await _writeOnlyLibraryGameRepository.AddAsync(libraryGame, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cache.RemoveAsync($"library:{request.UserId}", cancellationToken);
 
             _logger.LogInformation("Jogo {GameId} liberado com sucesso na biblioteca {LibraryId} (User {UserId}).", request.GameId, library.Id, request.UserId);
         }

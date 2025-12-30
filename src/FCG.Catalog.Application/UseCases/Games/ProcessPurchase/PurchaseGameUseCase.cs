@@ -79,6 +79,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
                 Math.Round(game.Price, 2),
                 Math.Round(finalPrice, 2)
             );
+
         }
         private async Task<decimal> CalculateFinalPriceAsync(Game game, CancellationToken cancellationToken)
         {
