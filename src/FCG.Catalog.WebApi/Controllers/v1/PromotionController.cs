@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FCG.Catalog.Application.UseCases.Promotion.Create;
 using FCG.Catalog.WebApi.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
     public class PromotionController(IMediator mediator) : FcgCatalogBaseController(mediator)
     {
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<CreatePromotionResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreatePromotionRequest input)
