@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
 {
     [ExcludeFromCodeCoverage]
-    public class CreatePromotionInputValidator : AbstractValidator<CreatePromotionRequest>
+    public class CreatePromotionInputValidator : AbstractValidator<CreatePromotionInput>
     {
         public CreatePromotionInputValidator()
         {

@@ -33,7 +33,7 @@ namespace FCG.Catalog.Application.UseCases.Promotion.Create
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreatePromotionResponse> Handle(CreatePromotionRequest request, CancellationToken cancellationToken)
+        public async Task<CreatePromotionOutput> Handle(CreatePromotionInput request, CancellationToken cancellationToken)
         {
             var gameExists = await _readOnlyGameRepository.ExistsAsync(request.GameId, cancellationToken);
 
@@ -58,7 +58,7 @@ namespace FCG.Catalog.Application.UseCases.Promotion.Create
             await _writeOnlyPromotionRepository.AddAsync(promotion, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new CreatePromotionResponse
+            return new CreatePromotionOutput
             {
                 Id = promotion.Id,
                 GameId = promotion.GameId,
