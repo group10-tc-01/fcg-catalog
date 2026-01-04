@@ -1,12 +1,15 @@
-﻿using MediatR;
+using MediatR;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
-namespace FCG.Catalog.Application.UseCases.Promotion.Create
+namespace FCG.Catalog.Application.UseCases.Promotion.Update
 {
     [ExcludeFromCodeCoverage]
-    public class CreatePromotionRequest : IRequest<CreatePromotionResponse>
+    public class UpdatePromotionInput : IRequest<UpdatePromotionOutput>
     {
+        [JsonIgnore]
+        public Guid Id { get; set; }
         public Guid GameId { get; set; }
         public decimal DiscountPercentage { get; set; }
         public DateTime StartDate { get; set; }

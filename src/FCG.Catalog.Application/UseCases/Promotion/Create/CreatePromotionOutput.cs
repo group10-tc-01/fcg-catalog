@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
 {
     [ExcludeFromCodeCoverage]
-    public class CreatePromotionResponse
+    public class CreatePromotionOutput
     {
         public Guid Id { get; set; }
         public Guid GameId { get; set; }

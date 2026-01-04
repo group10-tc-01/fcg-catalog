@@ -2,6 +2,6 @@
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
 {
-    public interface ICreatePromotionUseCase : IRequestHandler<CreatePromotionRequest, CreatePromotionResponse> { }
+    public interface ICreatePromotionUseCase : IRequestHandler<CreatePromotionInput, CreatePromotionOutput> { }
 
 }
