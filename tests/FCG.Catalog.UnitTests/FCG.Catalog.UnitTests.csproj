@@ -28,6 +28,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\src\FCG.Catalog.Application\FCG.Catalog.Application.csproj" />
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
 	  <ProjectReference Include="..\FCG.Catalog.CommomTestUtilities\FCG.Catalog.CommomTestUtilities.csproj" />
 	</ItemGroup>

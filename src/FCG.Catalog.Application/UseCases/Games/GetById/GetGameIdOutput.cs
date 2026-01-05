@@ -1,5 +1,4 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Promotions;
-using FCG.Catalog.Domain.Catalog.ValueObjects;
+﻿using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using System;
 using System.Collections.Generic;

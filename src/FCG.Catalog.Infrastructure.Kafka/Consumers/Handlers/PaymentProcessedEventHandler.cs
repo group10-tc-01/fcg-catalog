@@ -1,11 +1,9 @@
 ﻿using FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult;
-using FCG.Catalog.Infrastructure.Kafka.Consumers.Handlers;
 using FCG.Catalog.Infrastructure.Kafka.Messages;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace FCG.Catalog.Infrastructure.Kafka.Consumers
+namespace FCG.Catalog.Infrastructure.Kafka.Consumers.Handlers
 {
     public class PaymentProcessedEventHandler : KafkaConsumerBase<PaymentProcessedMessage, ProcessPaymentResultInput>
     {

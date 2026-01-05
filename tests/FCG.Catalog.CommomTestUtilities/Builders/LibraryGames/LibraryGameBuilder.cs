@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 
-namespace FCG.Catalog.CommomTestsUtilities.Builders.Entities
+namespace FCG.Catalog.CommomTestUtilities.Builders.LibraryGames
 {
     public class LibraryGameBuilder
     {

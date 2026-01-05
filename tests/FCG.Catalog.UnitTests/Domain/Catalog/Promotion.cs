@@ -1,5 +1,5 @@
-﻿using FCG.Catalog.CommomTestsUtilities.Builders.Entities;
-using FCG.Catalog.Domain.Catalog.Entity.Promotions;
+﻿using FCG.Catalog.CommomTestUtilities.Builders.Games;
+using FCG.Catalog.Domain.Catalog.Entities.Promotions;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;
@@ -11,7 +11,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         [Fact]
         public void Given_ValidParameters_When_Create_Then_ShouldSetAllPropertiesCorrectly()
         {
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
             var discountValue = 25.5m;
             var startDate = DateTime.UtcNow.Date;
             var endDate = DateTime.UtcNow.Date.AddDays(7);
@@ -29,7 +29,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         [Fact]
         public void Given_ZeroAndMaxDiscount_When_Create_Then_ShouldHandleBothValues()
         {
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
             var startDate = DateTime.UtcNow.Date;
             var endDate = DateTime.UtcNow.Date.AddDays(3);
             var zeroDiscount = 0m;
@@ -45,7 +45,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         [Fact]
         public void Given_EndDateBeforeStartDate_When_Create_Then_ShouldThrowDomainException()
         {
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
             var discount = 20m;
             var startDate = DateTime.UtcNow;
             var endDate = DateTime.UtcNow.AddDays(-1);
@@ -58,7 +58,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         [Fact]
         public void Given_DiscountOutOfRange_When_Create_Then_ShouldThrowDomainException()
         {
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
             var startDate = DateTime.UtcNow;
             var endDate = DateTime.UtcNow.AddDays(2);
             var negativeDiscount = -5m;
@@ -75,7 +75,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         [Fact]
         public void Given_SameStartAndEndDate_When_Create_Then_ShouldCreateSuccessfully()
         {
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
             var discount = 30m;
             var sameDate = DateTime.UtcNow.Date;
 
@@ -88,7 +88,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         [Fact]
         public void Given_TwoPromotionsWithSameData_When_Create_Then_ShouldHaveDifferentIds()
         {
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
             var discount = 25m;
             var startDate = DateTime.UtcNow.Date;
             var endDate = DateTime.UtcNow.Date.AddDays(7);

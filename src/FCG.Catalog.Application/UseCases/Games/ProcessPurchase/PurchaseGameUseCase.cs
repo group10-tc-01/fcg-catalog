@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FCG.Catalog.Application.UseCases.Games.Purchase; 
 using FCG.Catalog.Domain.Abstractions;
-using FCG.Catalog.Domain.Catalog.Entity.Games;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Library;
@@ -11,6 +10,7 @@ using FCG.Catalog.Domain.Repositories.LibraryGame;
 using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Domain.Repositories.PromotionRepository;
 using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
 using MediatR; 
 using FCG.Catalog.Domain.Catalog.Events;
 

@@ -4,8 +4,8 @@ namespace FCG.Catalog.Domain.Repositories.Game
 {
     public interface IWriteOnlyGameRepository
     {
-        public Task AddAsync(Catalog.Entity.Games.Game game);
-        public void Update(Catalog.Entity.Games.Game game);
+        public Task AddAsync(Catalog.Entities.Games.Game game);
+        public void Update(Catalog.Entities.Games.Game game);
 
     }
 }

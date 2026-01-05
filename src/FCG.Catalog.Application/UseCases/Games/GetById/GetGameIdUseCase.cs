@@ -1,12 +1,7 @@
 ﻿using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Messages;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Games.GetById
 {
@@ -18,7 +13,7 @@ namespace FCG.Catalog.Application.UseCases.Games.GetById
         {
             _gameRepository = gameRepository;
         }
-        public async Task<GetGameIdOutput?> Handle(GetGameIdInput input, CancellationToken cancellationToken)
+        public async Task<GetGameIdOutput> Handle(GetGameIdInput input, CancellationToken cancellationToken)
         {
             var game = await _gameRepository.GetByIdAsync(input.Id, cancellationToken);
 

@@ -16,4 +16,8 @@
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Builders\Libraries\" />
+	</ItemGroup>
+
 </Project>

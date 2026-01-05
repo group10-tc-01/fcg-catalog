@@ -54,7 +54,7 @@ namespace FCG.Catalog.Application.UseCases.Promotion.Create
             }
 
             var discount = Discount.Create(request.DiscountPercentage);
-            var promotion = Domain.Catalog.Entity.Promotions.Promotion.Create(request.GameId, discount, request.StartDate, request.EndDate);
+            var promotion = Domain.Catalog.Entities.Promotions.Promotion.Create(request.GameId, discount, request.StartDate, request.EndDate);
             await _writeOnlyPromotionRepository.AddAsync(promotion, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 

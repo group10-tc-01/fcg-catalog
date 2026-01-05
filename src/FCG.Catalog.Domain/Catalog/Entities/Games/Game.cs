@@ -1,14 +1,12 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
-using FCG.Catalog.Domain.Catalog.Entity.Promotions;
+using FCG.Catalog.Domain.Catalog.Entities.Promotions;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
-namespace FCG.Catalog.Domain.Catalog.Entity.Games
+namespace FCG.Catalog.Domain.Catalog.Entities.Games
 {
 
     public sealed class Game : BaseEntity
@@ -16,8 +14,10 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
         public Title Title { get; private set; }
         public string Description { get; private set; } = string.Empty;
         public Price Price { get; private set; } = null!;
-        public GameCategory Category { get; private set; }  
-        public ICollection<Promotions.Promotion>? Promotions { get; }
+        public GameCategory Category { get; private set; }
+
+        private readonly List<Promotion> _promotions = new(); 
+        public ICollection<Promotion> Promotions => _promotions; 
         public ICollection<LibraryGame>? LibraryGames { get; }
 
         private Game() { }
@@ -31,6 +31,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
             Price = price;
             Category = category;
         }
+
         public static Game Create(string title, string description, Price price, GameCategory category)
         {
             return new Game(title, description, price, category);
@@ -45,9 +46,10 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
             Category = category;
             UpdatedAt = updatedAt;
         }
+
         public Promotion? GetActivePromotion()
         {
-            if (Promotions is null || !Promotions.Any())
+            if (!Promotions.Any())
                 return null;
 
             var today = DateTime.UtcNow;
@@ -66,6 +68,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
             var discountAmount = Price.Value * (activePromotion.DiscountPercentage / 100m);
             return Price.Value - discountAmount;
         }
+
         private void Validate(string description, decimal price, string title)
         {
             if (string.IsNullOrWhiteSpace(title))

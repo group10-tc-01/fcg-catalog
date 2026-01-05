@@ -1,5 +1,5 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
-using FCG.Catalog.Domain.Catalog.Entity.Libraries;
+using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Messages;
