@@ -15,6 +15,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using FCG.Catalog.Application.UseCases.Games.ProcessPurchase;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
 {

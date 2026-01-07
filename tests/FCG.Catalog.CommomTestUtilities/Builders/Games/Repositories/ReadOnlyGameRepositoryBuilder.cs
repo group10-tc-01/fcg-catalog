@@ -68,5 +68,10 @@ namespace FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories
         {
             _mock.Verify(repo => repo.GetByIdAsync(id, It.IsAny<CancellationToken>()), times);
         }
+
+        public static void VerifyGetByIdActiveAsyncWasCalled(Guid id, Times times)
+        {
+            _mock.Verify(repo => repo.GetByIdActiveAsync(id, It.IsAny<CancellationToken>()), times);
+        }
     }
 }

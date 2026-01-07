@@ -13,12 +13,10 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
     public class GetGameIdUseCaseTests
     {
         private readonly GameBuilder _gameBuilder;
-        private readonly PromotionBuilder _promotionBuilder;
 
         public GetGameIdUseCaseTests()
         {
             _gameBuilder = new GameBuilder();
-            _promotionBuilder = new PromotionBuilder();
             ReadOnlyGameRepositoryBuilder.Reset();
         }
 
@@ -274,7 +272,7 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             // Arrange
             var game = _gameBuilder.BuildWithPromotion(
                 price: 200m,
-                discountPercentage: 75m // 75% de desconto
+                discountPercentage: 75m 
             );
 
             var gameId = game.Id;

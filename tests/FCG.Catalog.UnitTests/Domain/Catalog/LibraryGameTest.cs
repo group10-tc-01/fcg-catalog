@@ -111,7 +111,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
 
             // Assert
             act.Should().Throw<DomainException>()
-                .WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
+                .WithMessage(ResourceMessages.PriceCannotBeNegative);
         }
 
   

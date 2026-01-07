@@ -1,5 +1,4 @@
 ﻿using FCG.Catalog.Domain.Repositories.Promotion;
-using FCG.Domain.Repositories.PromotionRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

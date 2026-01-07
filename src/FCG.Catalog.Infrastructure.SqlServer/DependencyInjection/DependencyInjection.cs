@@ -6,7 +6,6 @@ using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.Infrastructure.SqlServer.Repositories;
 using FCG.Domain.Repositories.LibraryRepository;
-using FCG.Domain.Repositories.PromotionRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
