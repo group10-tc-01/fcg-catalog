@@ -3,5 +3,9 @@
 namespace FCG.Catalog.Application.UseCases.Games.Purchase
 {
     [ExcludeFromCodeCoverage]
-    public record PurchaseGameOutput(string GameName, decimal OriginalPrice, decimal FinalPrice);
-}
+    public record PurchaseGameOutput(
+        Guid TransactionId,
+        string Status,
+        string Title,
+        decimal FinalPrice
+    );}

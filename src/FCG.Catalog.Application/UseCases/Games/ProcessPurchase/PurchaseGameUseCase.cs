@@ -13,6 +13,7 @@ using FCG.Domain.Repositories.PromotionRepository;
 using System.Diagnostics.CodeAnalysis;
 using MediatR; 
 using FCG.Catalog.Domain.Catalog.Events;
+using FCG.Catalog.Infrastructure.Redis.Interface;
 
 namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
 {
@@ -23,27 +24,37 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
         private readonly IReadOnlyLibraryGameRepository _readOnlyLibraryGameRepository;
         private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;
         private readonly IReadOnlyLibraryRepository _readOnlyLibraryRepository;
+        private readonly IWriteOnlyPurchaseTransactionRepository _writeOnlyPurchaseTransactionRepository;
+        private readonly ICaching _cache;
         private readonly ICatalogLoggedUser _catalogLoggedUser;
         private readonly IMediator _mediator;
+        private readonly IUnitOfWork _unitOfWork;
 
         public PurchaseGameUseCase(
             IReadOnlyGameRepository readOnlyGameRepository,
             IReadOnlyLibraryGameRepository readOnlyLibraryGameRepository,
             IReadOnlyPromotionRepository readOnlyPromotionRepository,
             IReadOnlyLibraryRepository readOnlyLibraryRepository,
+            IReadOnlyPurchaseTransactionRepository readOnlyPurchaseTransactionRepository,
+            IWriteOnlyPurchaseTransactionRepository writeOnlyPurchaseTransactionRepository,
+            ICaching cache,
             ICatalogLoggedUser catalogLoggedUser,
+            IUnitOfWork unitOfWork,
             IMediator mediator) 
         {
             _readOnlyGameRepository = readOnlyGameRepository;
             _readOnlyPromotionRepository = readOnlyPromotionRepository;
             _readOnlyLibraryGameRepository = readOnlyLibraryGameRepository;
+            _writeOnlyPurchaseTransactionRepository = writeOnlyPurchaseTransactionRepository;
             _readOnlyLibraryRepository = readOnlyLibraryRepository;
             _catalogLoggedUser = catalogLoggedUser;
+            _unitOfWork = unitOfWork;
             _mediator = mediator;
         }
 
         public async Task<PurchaseGameOutput> Handle(PurchaseGameInput request, CancellationToken cancellationToken)
         {
+            var correlationId = Guid.NewGuid();
             var loggedUser = await _catalogLoggedUser.GetLoggedUserAsync();
             if (loggedUser?.Id == Guid.Empty || loggedUser is null)
                 throw new UnauthorizedException("User not authenticated.");
@@ -63,9 +74,14 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
                 throw new DomainException($"User already owns the game: {game.Title}");
 
             var finalPrice = await CalculateFinalPriceAsync(game, cancellationToken);
-
+            
+            var transaction = new PurchaseTransaction(correlationId, loggedUser.Id, game.Id, finalPrice);
+            
+            await _writeOnlyPurchaseTransactionRepository.AddAsync(transaction, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            
             var orderEvent = new OrderPlacedEvent(
-                Guid.NewGuid(),
+                correlationId,
                 loggedUser.Id,
                 game.Id,
                 finalPrice,
@@ -73,13 +89,15 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
             );
 
             await _mediator.Publish(orderEvent, cancellationToken);
-
+            
             return new PurchaseGameOutput(
+                correlationId,
+                transaction.Status,
                 game.Title,
-                Math.Round(game.Price, 2),
                 Math.Round(finalPrice, 2)
+                
             );
-
+            
         }
         private async Task<decimal> CalculateFinalPriceAsync(Game game, CancellationToken cancellationToken)
         {

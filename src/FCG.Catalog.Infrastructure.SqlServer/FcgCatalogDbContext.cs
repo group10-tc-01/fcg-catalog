@@ -13,6 +13,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer
         public DbSet<Game> Games { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<LibraryGame> LibraryGames { get; set; }
+        public DbSet<PurchaseTransaction> PurchaseTransactions { get; set; }
         public FcgCatalogDbContext(DbContextOptions<FcgCatalogDbContext> options) : base(options)
         {
         }

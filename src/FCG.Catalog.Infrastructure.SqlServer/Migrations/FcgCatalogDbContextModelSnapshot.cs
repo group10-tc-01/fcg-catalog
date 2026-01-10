@@ -116,6 +116,53 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FCG.Catalog.Domain.Catalog.Entity.Games.PurchaseTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CorrelationId");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PurchaseTransactions", "Catalog");
+                });
+
             modelBuilder.Entity("FCG.Catalog.Domain.Catalog.Entity.Libraries.Library", b =>
                 {
                     b.Property<Guid>("Id")
@@ -209,7 +256,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("FCG.Catalog.Domain.Catalog.Entities.LibraryGames.LibraryGame.PurchasePrice#FCG.Catalog.Domain.Catalog.ValueObjects.Price", "PurchasePrice", b1 =>
+                    b.OwnsOne("FCG.Catalog.Domain.Catalog.ValueObjects.Price", "PurchasePrice", b1 =>
                         {
                             b1.Property<Guid>("LibraryGameId")
                                 .HasColumnType("uniqueidentifier");
@@ -236,7 +283,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Migrations
 
             modelBuilder.Entity("FCG.Catalog.Domain.Catalog.Entity.Games.Game", b =>
                 {
-                    b.OwnsOne("FCG.Catalog.Domain.Catalog.Entity.Games.Game.Price#FCG.Catalog.Domain.Catalog.ValueObjects.Price", "Price", b1 =>
+                    b.OwnsOne("FCG.Catalog.Domain.Catalog.ValueObjects.Price", "Price", b1 =>
                         {
                             b1.Property<Guid>("GameId")
                                 .HasColumnType("uniqueidentifier");
@@ -253,7 +300,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Migrations
                                 .HasForeignKey("GameId");
                         });
 
-                    b.OwnsOne("FCG.Catalog.Domain.Catalog.Entity.Games.Game.Title#FCG.Catalog.Domain.Catalog.ValueObjects.Title", "Title", b1 =>
+                    b.OwnsOne("FCG.Catalog.Domain.Catalog.ValueObjects.Title", "Title", b1 =>
                         {
                             b1.Property<Guid>("GameId")
                                 .HasColumnType("uniqueidentifier");
@@ -287,7 +334,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("FCG.Catalog.Domain.Catalog.Entity.Promotions.Promotion.DiscountPercentage#FCG.Catalog.Domain.Catalog.ValueObjects.Discount", "DiscountPercentage", b1 =>
+                    b.OwnsOne("FCG.Catalog.Domain.Catalog.ValueObjects.Discount", "DiscountPercentage", b1 =>
                         {
                             b1.Property<Guid>("PromotionId")
                                 .HasColumnType("uniqueidentifier");
