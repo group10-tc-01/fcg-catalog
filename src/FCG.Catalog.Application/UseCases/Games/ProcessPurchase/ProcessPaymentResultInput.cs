@@ -1,14 +1,11 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
+using MediatR;
 
 namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
 {
     public class ProcessPaymentResultInput : IRequest
     {
+        public Guid CorrelationId { get; set; }
         public Guid UserId { get; set; }
         public Guid GameId { get; set; }
         public decimal Amount { get; set; }

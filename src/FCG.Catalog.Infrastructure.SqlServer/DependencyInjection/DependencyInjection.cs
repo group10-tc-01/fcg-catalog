@@ -1,16 +1,15 @@
-﻿using FCG.Catalog.Domain.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
 using FCG.Catalog.Domain.Repositories.Promotion;
-using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.Infrastructure.SqlServer.Repositories;
 using FCG.Domain.Repositories.LibraryRepository;
 using FCG.Domain.Repositories.PromotionRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
 {
@@ -29,6 +28,8 @@ namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
             services.AddScoped<IWriteOnlyLibraryRepository, LibraryRepository>();
             services.AddScoped<IReadOnlyLibraryGameRepository, LibraryGameRepository>();
             services.AddScoped<IWriteOnlyLibraryGameRepository, LibraryGameRepository>();
+            services.AddScoped<IReadOnlyPurchaseTransactionRepository, PurchaseTransactionRepository>();
+            services.AddScoped<IWriteOnlyPurchaseTransactionRepository, PurchaseTransactionRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
