@@ -9,7 +9,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Consumers.Handlers
     {
         public PaymentProcessedEventHandler(
             IServiceScopeFactory serviceScopeFactory,
-            ILogger<UserCreatedEventHandler> logger)
+            ILogger<PaymentProcessedEventHandler> logger)
             : base(serviceScopeFactory, logger)
         {
         }
@@ -22,6 +22,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Consumers.Handlers
 
             return new ProcessPaymentResultInput
             {
+                CorrelationId = message.CorrelationId,
                 UserId = message.UserId,
                 GameId = message.GameId,
                 Amount = message.Amount,
