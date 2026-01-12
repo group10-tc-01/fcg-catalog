@@ -1,4 +1,4 @@
-using FCG.Catalog.Domain.Catalog.Entity.Games;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Repositories.Game;
 using Microsoft.EntityFrameworkCore;
 

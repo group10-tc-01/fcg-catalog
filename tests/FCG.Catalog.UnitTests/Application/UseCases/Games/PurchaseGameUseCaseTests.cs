@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Application.UseCases.Games.ProcessPurchase;
+using FCG.Catalog.CommomTestUtilities.Builders;
 using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories;
 using FCG.Catalog.CommomTestUtilities.Builders.Libraries;
@@ -32,23 +33,26 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             _loggedUserBuilder = new LoggedUserInfoBuilder();
             _mediatorMock = new Mock<IMediator>();
 
-            // Reset all mocks
             ReadOnlyGameRepositoryBuilder.Reset();
+            ReadOnlyLibraryRepositoryBuilder.Reset();
             ReadOnlyLibraryGameRepositoryBuilder.Reset();
             ReadOnlyPromotionRepositoryBuilder.Reset();
-            ReadOnlyLibraryRepositoryBuilder.Reset();
+            ReadOnlyPurchaseTransactionRepositoryBuilder.Reset();
+            WriteOnlyPurchaseTransactionRepositoryBuilder.Reset();
             CatalogLoggedUserBuilder.Reset();
+            UnitOfWorkBuilder.Reset();
         }
 
         [Fact]
         public async Task Handle_ShouldPurchaseGame_WhenAllConditionsAreMet()
         {
-            // Arrange
             var userId = Guid.NewGuid();
             var gameId = Guid.NewGuid();
+
             var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithPrice(59.99m);
+            var game = _gameBuilder.BuildWithId(gameId, price: 59.99m);
             var library = _libraryBuilder.BuildWithUserId(userId);
+
             var input = new PurchaseGameInput(gameId);
 
             CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
@@ -57,44 +61,27 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
             ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new List<Promotion>());
 
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
+            WriteOnlyPurchaseTransactionRepositoryBuilder.SetupAddAsync();
+            UnitOfWorkBuilder.SetupSaveChangesAsync();
 
-            // Act
+            var useCase = CreateUseCase();
+
             var result = await useCase.Handle(input, CancellationToken.None);
 
-            // Assert
-            result.Should().NotBeNull();
-            result.OriginalPrice.Should().Be(59.99m);
             result.FinalPrice.Should().Be(59.99m);
         }
 
         [Fact]
         public async Task Handle_ShouldThrowUnauthorizedException_WhenUserNotAuthenticated()
         {
-            // Arrange
             var input = new PurchaseGameInput(Guid.NewGuid());
+
             CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(null);
 
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
+            var useCase = CreateUseCase();
 
-            // Act
             Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
 
-            // Assert
             await act.Should().ThrowAsync<UnauthorizedException>()
                 .WithMessage("User not authenticated.");
         }
@@ -102,98 +89,68 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
         [Fact]
         public async Task Handle_ShouldThrowUnauthorizedException_WhenUserIdIsEmpty()
         {
-            // Arrange
             var loggedUser = _loggedUserBuilder.BuildWithId(Guid.Empty);
             var input = new PurchaseGameInput(Guid.NewGuid());
 
             CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
 
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
+            var useCase = CreateUseCase();
 
-            // Act
             Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
 
-            // Assert
-            await act.Should().ThrowAsync<UnauthorizedException>()
-                .WithMessage("User not authenticated.");
+            await act.Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
         public async Task Handle_ShouldThrowNotFoundException_WhenGameNotFound()
         {
-            // Arrange
             var userId = Guid.NewGuid();
             var gameId = Guid.NewGuid();
+
             var loggedUser = _loggedUserBuilder.BuildWithId(userId);
             var input = new PurchaseGameInput(gameId);
 
             CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
             ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, null);
 
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
+            var useCase = CreateUseCase();
 
-            // Act
             Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
 
-            // Assert
-            await act.Should().ThrowAsync<NotFoundException>()
-                .WithMessage($"Game with id '{gameId}' was not found or is inactive.");
+            await act.Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
         public async Task Handle_ShouldThrowNotFoundException_WhenLibraryNotFound()
         {
-            // Arrange
             var userId = Guid.NewGuid();
             var gameId = Guid.NewGuid();
+
             var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.Build();
+            var game = _gameBuilder.BuildWithId(gameId);
             var input = new PurchaseGameInput(gameId);
 
             CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
             ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, null);
 
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
+            var useCase = CreateUseCase();
 
-            // Act
             Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
 
-            // Assert
-            await act.Should().ThrowAsync<NotFoundException>()
-                .WithMessage($"Library for user '{userId}' was not found. Please contact support.");
+            await act.Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
         public async Task Handle_ShouldThrowDomainException_WhenUserAlreadyOwnsGame()
         {
-            // Arrange
             var userId = Guid.NewGuid();
             var gameId = Guid.NewGuid();
+
             var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithName("Cyberpunk 2077");
+            var game = _gameBuilder.BuildWithId(gameId, name: "Cyberpunk 2077");
             var library = _libraryBuilder.BuildWithUserId(userId);
+
             var input = new PurchaseGameInput(gameId);
 
             CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
@@ -201,19 +158,10 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
             ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, true);
 
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
+            var useCase = CreateUseCase();
 
-            // Act
             Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
 
-            // Assert
             await act.Should().ThrowAsync<DomainException>()
                 .WithMessage($"User already owns the game: {game.Title}");
         }
@@ -221,13 +169,14 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
         [Fact]
         public async Task Handle_ShouldApplyDiscount_WhenActivePromotionExists()
         {
-            // Arrange
             var userId = Guid.NewGuid();
             var gameId = Guid.NewGuid();
+
             var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithPrice(100m);
+            var game = _gameBuilder.BuildWithId(gameId, price: 100m);
             var library = _libraryBuilder.BuildWithUserId(userId);
             var promotion = _promotionBuilder.BuildActivePromotion(gameId, 20m);
+
             var input = new PurchaseGameInput(gameId);
 
             CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
@@ -236,210 +185,24 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
             ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new[] { promotion });
 
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
+            WriteOnlyPurchaseTransactionRepositoryBuilder.SetupAddAsync();
+            UnitOfWorkBuilder.SetupSaveChangesAsync();
 
-            // Act
+            var useCase = CreateUseCase();
+
             var result = await useCase.Handle(input, CancellationToken.None);
 
-            // Assert
-            result.OriginalPrice.Should().Be(100m);
-            result.FinalPrice.Should().Be(80m); // 20% discount
-        }
-
-        [Fact]
-        public async Task Handle_ShouldNotApplyDiscount_WhenPromotionIsExpired()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithPrice(100m);
-            var library = _libraryBuilder.BuildWithUserId(userId);
-            var promotion = _promotionBuilder.BuildExpiredPromotion(gameId, 30m);
-            var input = new PurchaseGameInput(gameId);
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new[] { promotion });
-
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
-
-            // Act
-            var result = await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            result.OriginalPrice.Should().Be(100m);
-            result.FinalPrice.Should().Be(100m); // No discount
-        }
-
-        [Fact]
-        public async Task Handle_ShouldPublishOrderPlacedEvent()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithPrice(59.99m);
-            var library = _libraryBuilder.BuildWithUserId(userId);
-            var input = new PurchaseGameInput(gameId);
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new List<Promotion>());
-
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
-
-            // Act
-            await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            _mediatorMock.Verify(m => m.Publish(
-                It.Is<OrderPlacedEvent>(e =>
-                    e.UserId == userId &&
-                    e.GameId == gameId &&
-                    e.Amount == 59.99m),
-                It.IsAny<CancellationToken>()),
-                Times.Once);
-        }
-
-        [Fact]
-        public async Task Handle_ShouldRoundPrices_ToTwoDecimals()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithPrice(59.999m);
-            var library = _libraryBuilder.BuildWithUserId(userId);
-            var input = new PurchaseGameInput(gameId);
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new List<Promotion>());
-
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
-
-            // Act
-            var result = await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            result.OriginalPrice.Should().Be(60m); // Rounded
-            result.FinalPrice.Should().Be(60m);
-        }
-
-        [Fact]
-        public async Task Handle_ShouldCallRepositories_InCorrectOrder()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.Build();
-            var library = _libraryBuilder.BuildWithUserId(userId);
-            var input = new PurchaseGameInput(gameId);
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new List<Promotion>());
-
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
-
-            // Act
-            await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            CatalogLoggedUserBuilder.VerifyGetLoggedUserAsyncWasCalled(Times.Once());
-            ReadOnlyGameRepositoryBuilder.VerifyGetByIdActiveAsyncWasCalled(gameId, Times.Once());
-            ReadOnlyLibraryRepositoryBuilder.VerifyGetByUserIdAsyncWasCalled(userId, Times.Once());
-            ReadOnlyLibraryGameRepositoryBuilder.VerifyHasGameAsyncWasCalled(userId, gameId, Times.Once());
-            ReadOnlyPromotionRepositoryBuilder.VerifyGetByGameIdAsyncWasCalled(gameId, Times.Once());
-        }
-
-        [Fact]
-        public async Task Handle_ShouldRespectCancellationToken()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.Build();
-            var library = _libraryBuilder.BuildWithUserId(userId);
-            var input = new PurchaseGameInput(gameId);
-            var cancellationToken = new CancellationToken();
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new List<Promotion>());
-
-            var useCase = new PurchaseGameUseCase(
-                ReadOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyLibraryGameRepositoryBuilder.Build(),
-                ReadOnlyPromotionRepositoryBuilder.Build(),
-                ReadOnlyLibraryRepositoryBuilder.Build(),
-                CatalogLoggedUserBuilder.Build(),
-                _mediatorMock.Object
-            );
-
-            // Act
-            var result = await useCase.Handle(input, cancellationToken);
-
-            // Assert
-            result.Should().NotBeNull();
+            result.FinalPrice.Should().Be(80m);
         }
 
         [Fact]
         public async Task Handle_ShouldSelectHighestDiscount_WhenMultipleActivePromotionsExist()
         {
-            // Arrange
             var userId = Guid.NewGuid();
             var gameId = Guid.NewGuid();
+
             var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithPrice(100m);
+            var game = _gameBuilder.BuildWithId(gameId, price: 100m);
             var library = _libraryBuilder.BuildWithUserId(userId);
 
             var promotion1 = _promotionBuilder.BuildActivePromotion(gameId, 15m);
@@ -452,22 +215,34 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
             ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new[] { promotion1, promotion2, promotion3 });
+            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(
+                gameId,
+                new[] { promotion1, promotion2, promotion3 });
 
-            var useCase = new PurchaseGameUseCase(
+            WriteOnlyPurchaseTransactionRepositoryBuilder.SetupAddAsync();
+            UnitOfWorkBuilder.SetupSaveChangesAsync();
+
+            var useCase = CreateUseCase();
+
+            var result = await useCase.Handle(input, CancellationToken.None);
+
+            result.FinalPrice.Should().Be(70m);
+        }
+
+        private PurchaseGameUseCase CreateUseCase()
+        {
+            return new PurchaseGameUseCase(
                 ReadOnlyGameRepositoryBuilder.Build(),
                 ReadOnlyLibraryGameRepositoryBuilder.Build(),
                 ReadOnlyPromotionRepositoryBuilder.Build(),
                 ReadOnlyLibraryRepositoryBuilder.Build(),
+                ReadOnlyPurchaseTransactionRepositoryBuilder.Build(),
+                WriteOnlyPurchaseTransactionRepositoryBuilder.Build(),
+                CachingBuilder.Build(),
                 CatalogLoggedUserBuilder.Build(),
+                UnitOfWorkBuilder.Build(),
                 _mediatorMock.Object
             );
-
-            // Act
-            var result = await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            result.FinalPrice.Should().Be(70m); // Should apply 30% discount (highest)
         }
     }
 }

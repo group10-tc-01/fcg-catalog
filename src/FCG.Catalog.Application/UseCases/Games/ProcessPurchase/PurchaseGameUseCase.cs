@@ -1,5 +1,4 @@
-﻿using FCG.Catalog.Application.UseCases.Games.Purchase;
-using FCG.Catalog.Domain.Catalog.Entities.Games;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.Events;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
@@ -9,6 +8,7 @@ using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Catalog.Domain.Services.Repositories;
 using MediatR;
 using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Abstractions;
 using MediatR; 
 using FCG.Catalog.Domain.Catalog.Events;
 using FCG.Catalog.Infrastructure.Redis.Interface;
@@ -100,8 +100,9 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
         private async Task<decimal> CalculateFinalPriceAsync(Game game, CancellationToken cancellationToken)
         {
             var promotions = await _readOnlyPromotionRepository.GetByGameIdAsync(game.Id, cancellationToken);
-            var activePromotion = promotions?.FirstOrDefault(p => p.StartDate <= DateTime.UtcNow && p.EndDate >= DateTime.UtcNow);
-
+            var activePromotion = promotions.Where(p => p.StartDate <= DateTime.UtcNow && p.EndDate >= DateTime.UtcNow)
+                                                                    .OrderByDescending(x => x.DiscountPercentage.Value)
+                                                                    .FirstOrDefault();
             if (activePromotion is null)
                 return game.Price;
 

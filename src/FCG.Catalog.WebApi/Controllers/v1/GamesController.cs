@@ -1,7 +1,6 @@
 using FCG.Catalog.Application.UseCases.Games.Delete;
 using FCG.Catalog.Application.UseCases.Games.Get;
 using FCG.Catalog.Application.UseCases.Games.GetById;
-using FCG.Catalog.Application.UseCases.Games.Purchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Domain.Models;

@@ -17,6 +17,16 @@ namespace FCG.Catalog.CommomTestUtilities.Builders.Libraries
             return Library.Create(userId);
         }
 
+        public Library BuildWithId(Guid id, Guid userId)
+        {
+            var library = Library.Create(userId);
+
+            var idProperty = typeof(Library).BaseType?.GetProperty("Id");
+            idProperty?.SetValue(library, id);
+
+            return library;
+        }
+
         public Library BuildWithGame(Guid userId, Guid gameId, decimal purchasePrice)
         {
             var library = Library.Create(userId);
