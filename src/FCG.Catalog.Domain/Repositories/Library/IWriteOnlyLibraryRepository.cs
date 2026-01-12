@@ -1,6 +1,6 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Libraries;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 
-namespace FCG.Domain.Repositories.LibraryRepository
+namespace FCG.Catalog.Domain.Repositories.Library
 {
     public interface IWriteOnlyLibraryRepository
     {

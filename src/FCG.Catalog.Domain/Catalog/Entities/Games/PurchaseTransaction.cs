@@ -1,6 +1,6 @@
 using FCG.Catalog.Domain.Abstractions;
 
-namespace FCG.Catalog.Domain.Catalog.Entity.Games;
+namespace FCG.Catalog.Domain.Catalog.Entities.Games;
 
 public sealed class PurchaseTransaction : BaseEntity
 {

@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Promotions;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Promotion;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Diagnostics.CodeAnalysis;

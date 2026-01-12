@@ -1,7 +1,7 @@
 ﻿using FCG.Catalog.Domain.Services.Repositories;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FCG.Catalog.WebApi.Services
+namespace FCG.Catalog.WebApi.Context
 {
     [ExcludeFromCodeCoverage]
     public sealed class HttpContextTokenProvider : ITokenProvider

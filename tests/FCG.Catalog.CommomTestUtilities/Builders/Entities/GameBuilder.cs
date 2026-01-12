@@ -1,9 +1,9 @@
 ﻿using Bogus;
-using FCG.Catalog.Domain.Catalog.Entity.Games;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 
-namespace FCG.Catalog.CommomTestsUtilities.Builders.Entities
+namespace FCG.Catalog.CommomTestUtilities.Builders.Entities
 {
     public static class GameBuilder
     {

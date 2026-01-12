@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
-namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
+namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
 {
     public class ProcessPaymentResultUseCase : IRequestHandler<ProcessPaymentResultInput>
     {

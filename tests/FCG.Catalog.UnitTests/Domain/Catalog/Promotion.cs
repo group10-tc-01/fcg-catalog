@@ -1,5 +1,5 @@
-﻿using FCG.Catalog.CommomTestsUtilities.Builders.Entities;
-using FCG.Catalog.Domain.Catalog.Entity.Promotions;
+﻿using FCG.Catalog.CommomTestUtilities.Builders.Entities;
+using FCG.Catalog.Domain.Catalog.Entities.Promotion;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;

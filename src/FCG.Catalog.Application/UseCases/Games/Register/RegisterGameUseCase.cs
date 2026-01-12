@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
@@ -32,7 +33,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
             {
                 throw new DomainException($"Invalid category: '{request.Category}'. Available categories are: Action, Adventure, RPG...");
             }
-            var game = Domain.Catalog.Entity.Games.Game.Create(request.Name, request.Description, price, request.Category);
+            var game = Game.Create(request.Name, request.Description, price, request.Category);
 
             await _writeRepo.AddAsync(game);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

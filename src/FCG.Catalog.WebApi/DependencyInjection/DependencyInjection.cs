@@ -2,8 +2,8 @@
 using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.Infrastructure.Auth.DependencyInjection;
 using FCG.Catalog.Infrastructure.SqlServer.DependencyInjection;
+using FCG.Catalog.WebApi.Context;
 using FCG.Catalog.WebApi.Filter;
-using FCG.Catalog.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

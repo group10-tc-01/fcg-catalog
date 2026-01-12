@@ -1,6 +1,6 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
-using FCG.Catalog.Domain.Catalog.Entity.Games;
-using FCG.Catalog.Domain.Catalog.Entity.Libraries;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
+using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.LibraryGames

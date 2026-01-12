@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Games;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Games;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Diagnostics.CodeAnalysis;

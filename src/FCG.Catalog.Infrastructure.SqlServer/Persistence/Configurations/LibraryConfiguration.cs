@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Libraries;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Diagnostics.CodeAnalysis;

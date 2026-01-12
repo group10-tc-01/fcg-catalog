@@ -3,7 +3,6 @@ using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Promotion;
-using FCG.Domain.Repositories.PromotionRepository;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
@@ -51,7 +50,7 @@ namespace FCG.Catalog.Application.UseCases.Promotion.Create
             }
 
             var discount = Discount.Create(request.DiscountPercentage);
-            var promotion = Domain.Catalog.Entity.Promotions.Promotion.Create(request.GameId, discount, request.StartDate, request.EndDate);
+            var promotion = Domain.Catalog.Entities.Promotion.Promotion.Create(request.GameId, discount, request.StartDate, request.EndDate);
             await _writeOnlyPromotionRepository.AddAsync(promotion, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 

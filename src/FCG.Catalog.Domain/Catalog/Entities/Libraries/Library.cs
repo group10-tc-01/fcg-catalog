@@ -4,7 +4,7 @@ using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 
-namespace FCG.Catalog.Domain.Catalog.Entity.Libraries
+namespace FCG.Catalog.Domain.Catalog.Entities.Libraries
 {
     public sealed class Library : BaseEntity
     {

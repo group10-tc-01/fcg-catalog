@@ -1,6 +1,5 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Libraries;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Repositories.Library;
-using FCG.Domain.Repositories.LibraryRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 

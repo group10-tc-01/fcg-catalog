@@ -1,6 +1,6 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Promotions;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Promotion;
 
-namespace FCG.Domain.Repositories.PromotionRepository
+namespace FCG.Catalog.Domain.Repositories.Promotion
 {
     public interface IReadOnlyPromotionRepository
     {

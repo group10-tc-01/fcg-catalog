@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Libraries;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;

@@ -3,7 +3,7 @@ using FCG.Catalog.Infrastructure.Redis.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FCG.Catalog.Infrastructure.Redis
+namespace FCG.Catalog.Infrastructure.Redis.DependencyInjection
 {
     public static class DependencyInjection
     {

@@ -2,7 +2,6 @@ using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Promotion;
-using FCG.Domain.Repositories.PromotionRepository;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Update

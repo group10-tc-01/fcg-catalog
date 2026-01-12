@@ -1,10 +1,10 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
-using FCG.Catalog.Domain.Catalog.Entity.Games;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 
-namespace FCG.Catalog.Domain.Catalog.Entity.Promotions
+namespace FCG.Catalog.Domain.Catalog.Entities.Promotion
 {
     public sealed class Promotion : BaseEntity
     {

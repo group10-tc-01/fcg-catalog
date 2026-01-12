@@ -1,6 +1,5 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Promotions;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Promotion;
 using FCG.Catalog.Domain.Repositories.Promotion;
-using FCG.Domain.Repositories.PromotionRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 

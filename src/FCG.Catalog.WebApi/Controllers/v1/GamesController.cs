@@ -1,6 +1,8 @@
 using FCG.Catalog.Application.UseCases.Games.Delete;
 using FCG.Catalog.Application.UseCases.Games.Get;
 using FCG.Catalog.Application.UseCases.Games.GetById;
+using FCG.Catalog.Application.UseCases.Games.GetPurchaseStatus;
+using FCG.Catalog.Application.UseCases.Games.ProcessPurchase;
 using FCG.Catalog.Application.UseCases.Games.ProcessPurchase.GetPurchaseStatus;
 using FCG.Catalog.Application.UseCases.Games.Purchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
