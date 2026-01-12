@@ -3,11 +3,8 @@ using FCG.Catalog.Infrastructure.Kafka.DependencyInjection;
 using FCG.Catalog.Infrastructure.Redis;
 using FCG.Catalog.Infrastructure.Redis.Redis;
 using FCG.Catalog.WebApi.DependencyInjection;
+using FCG.Catalog.WebApi.Extensions;
 using FCG.Catalog.WebApi.Middleware;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +31,7 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
+    app.ApplyMigrations();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

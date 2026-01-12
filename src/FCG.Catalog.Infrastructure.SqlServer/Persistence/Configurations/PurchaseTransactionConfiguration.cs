@@ -31,7 +31,7 @@ public class PurchaseTransactionConfiguration : IEntityTypeConfiguration<Purchas
             .IsRequired();
 
         builder.Property(t => t.UpdatedAt);
-       
+
         builder.Property(t => t.Amount)
             .HasPrecision(18, 2)
             .IsRequired();
