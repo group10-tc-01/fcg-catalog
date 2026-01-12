@@ -1,7 +1,5 @@
-﻿using System;
+﻿using FCG.Catalog.Domain.Services.Repositories;
 using System.Diagnostics.CodeAnalysis;
-using FCG.Catalog.Domain.Services.Repositories;
-using Microsoft.AspNetCore.Http;
 
 namespace FCG.Catalog.WebApi.Services
 {

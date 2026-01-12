@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FCG.Catalog.Infrastructure.Redis.Redis
+﻿namespace FCG.Catalog.Infrastructure.Redis.Redis
 {
     public class CacheSettings
     {

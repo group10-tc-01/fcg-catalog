@@ -1,7 +1,6 @@
 ﻿using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {

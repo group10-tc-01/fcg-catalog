@@ -1,7 +1,5 @@
-﻿using FCG.Catalog.Application.Abstractions.Messaging;
-using FCG.Catalog.Domain.Enum;
+﻿using FCG.Catalog.Domain.Enum;
 using MediatR;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 

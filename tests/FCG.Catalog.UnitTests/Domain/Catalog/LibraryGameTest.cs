@@ -114,7 +114,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
                 .WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
         }
 
-  
+
     }
 }
 

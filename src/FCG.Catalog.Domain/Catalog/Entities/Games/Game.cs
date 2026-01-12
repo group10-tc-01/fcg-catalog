@@ -14,7 +14,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Games
         public Title Title { get; private set; }
         public string Description { get; private set; } = string.Empty;
         public Price Price { get; private set; } = null!;
-        public GameCategory Category { get; private set; }  
+        public GameCategory Category { get; private set; }
         public ICollection<Promotions.Promotion>? Promotions { get; }
         public ICollection<LibraryGame>? LibraryGames { get; }
 

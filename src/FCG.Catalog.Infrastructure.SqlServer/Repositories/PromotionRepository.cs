@@ -2,12 +2,7 @@
 using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Domain.Repositories.PromotionRepository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 {

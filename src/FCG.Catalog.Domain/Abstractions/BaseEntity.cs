@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FCG.Catalog.Domain.Abstractions
+﻿namespace FCG.Catalog.Domain.Abstractions
 {
     public abstract class BaseEntity
     {

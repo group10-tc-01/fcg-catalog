@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.WebApi.Middleware
 {

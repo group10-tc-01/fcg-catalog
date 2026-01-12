@@ -40,7 +40,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
             builder.HasOne(e => e.Game)
                 .WithMany(g => g.Promotions)
                 .HasForeignKey(e => e.GameId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(e => e.GameId)
                 .HasDatabaseName("IX_Promotions_GameId");

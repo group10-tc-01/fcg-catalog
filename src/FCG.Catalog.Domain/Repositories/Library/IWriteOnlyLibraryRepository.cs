@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FCG.Catalog.Domain.Catalog.Entity.Libraries;
+﻿using FCG.Catalog.Domain.Catalog.Entity.Libraries;
 
 namespace FCG.Domain.Repositories.LibraryRepository
 {

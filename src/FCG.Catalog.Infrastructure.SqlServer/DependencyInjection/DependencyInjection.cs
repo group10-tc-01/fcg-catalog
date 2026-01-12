@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
@@ -10,6 +9,7 @@ using FCG.Domain.Repositories.PromotionRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
 {

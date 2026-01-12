@@ -5,10 +5,7 @@ using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Messages;
 using MediatR;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {
@@ -48,7 +45,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
 
             if (game is not null)
             {
-              throw new ConflictException(string.Format(ResourceMessages.GameNameAlreadyExists, name));
+                throw new ConflictException(string.Format(ResourceMessages.GameNameAlreadyExists, name));
             }
         }
     }

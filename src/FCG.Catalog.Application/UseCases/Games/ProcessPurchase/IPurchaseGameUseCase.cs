@@ -6,5 +6,5 @@ namespace FCG.Catalog.Application.UseCases.Games.Purchase
     {
     }
 
-    
+
 }

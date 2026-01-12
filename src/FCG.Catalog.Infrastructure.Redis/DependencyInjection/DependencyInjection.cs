@@ -2,7 +2,6 @@
 using FCG.Catalog.Infrastructure.Redis.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace FCG.Catalog.Infrastructure.Redis
 {

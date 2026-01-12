@@ -45,7 +45,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Consumers
                 {
                     var options = new JsonSerializerOptions
                     {
-                        PropertyNameCaseInsensitive = true 
+                        PropertyNameCaseInsensitive = true
                     };
 
                     var kafkaMessage = JsonSerializer.Deserialize<TMessage>(message, options);
@@ -54,13 +54,13 @@ namespace FCG.Catalog.Infrastructure.Kafka.Consumers
                         throw new InvalidOperationException("Mensagem invalida ou nula.");
 
                     var command = MapToCommand(kafkaMessage);
-                    
+
                     using var scope = _serviceScopeFactory.CreateScope();
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                     await mediator.Send(command, cancellationToken);
-                    
+
                     _logger.LogInformation(
-                        "Mensagem processada com sucesso no tópico {Topic}", 
+                        "Mensagem processada com sucesso no tópico {Topic}",
                         Topic);
 
                 });

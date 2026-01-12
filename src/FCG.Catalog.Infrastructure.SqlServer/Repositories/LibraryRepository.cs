@@ -1,11 +1,8 @@
 ﻿using FCG.Catalog.Domain.Catalog.Entity.Libraries;
+using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Domain.Repositories.LibraryRepository;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
-using FCG.Catalog.Domain.Repositories.Library;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 {

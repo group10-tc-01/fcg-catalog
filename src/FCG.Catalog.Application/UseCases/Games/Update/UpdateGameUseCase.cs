@@ -1,13 +1,9 @@
-﻿using FCG.Catalog.Domain;
-using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
-using FCG.Catalog.Domain.Services.Repositories;
 using MediatR;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Games.Update
 {
@@ -48,7 +44,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Update
                 DateTime.UtcNow
             );
 
-            _writeOnlyGameRepository.Update(game); 
+            _writeOnlyGameRepository.Update(game);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new UpdateGameOutput(game.Id, game.Title, game.Price.Value, game.Description, game.Category.ToString(), game.UpdatedAt);

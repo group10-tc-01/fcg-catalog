@@ -4,4 +4,5 @@ namespace FCG.Catalog.Domain.Repositories.Game;
 
 public interface IReadOnlyPurchaseTransactionRepository
 {
-    Task<PurchaseTransaction?> GetByCorrelationIdAsync(Guid correlationId, CancellationToken ct);}
+    Task<PurchaseTransaction?> GetByCorrelationIdAsync(Guid correlationId, CancellationToken ct);
+}

@@ -2,12 +2,7 @@
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Repositories.Game;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using static Azure.Core.HttpHeader;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 {

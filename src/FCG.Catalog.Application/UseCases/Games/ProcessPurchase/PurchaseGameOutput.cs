@@ -8,4 +8,5 @@ namespace FCG.Catalog.Application.UseCases.Games.Purchase
         string Status,
         string Title,
         decimal FinalPrice
-    );}
+    );
+}

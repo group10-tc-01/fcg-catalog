@@ -1,6 +1,7 @@
 using FCG.Catalog.Application.UseCases.Games.Delete;
 using FCG.Catalog.Application.UseCases.Games.Get;
 using FCG.Catalog.Application.UseCases.Games.GetById;
+using FCG.Catalog.Application.UseCases.Games.ProcessPurchase.GetPurchaseStatus;
 using FCG.Catalog.Application.UseCases.Games.Purchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Application.UseCases.Games.Update;
@@ -9,14 +10,8 @@ using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.WebApi.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
-using FCG.Catalog.Application.UseCases.Games.ProcessPurchase;
-using FCG.Catalog.Application.UseCases.Games.ProcessPurchase.GetPurchaseStatus;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
 {
@@ -24,7 +19,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
     public class GamesController(IMediator mediator, ICatalogLoggedUser catalogLoggedUser) : FcgCatalogBaseController(mediator)
     {
         [HttpPost]
-       // [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<RegisterGameOutput>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterGameInput input, CancellationToken cancellationToken)
@@ -45,7 +40,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
 
         }
         [HttpPost("{id}/purchase")]
-       // [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<PurchaseGameOutput>), StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Purchase([FromRoute] Guid id)
@@ -54,20 +49,20 @@ namespace FCG.Catalog.WebApi.Controllers.v1
             var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
 
             return Accepted(ApiResponse<PurchaseGameOutput>.SuccesResponse(output));
-        } 
-       
-       [HttpGet("purchase/status/{transactionId}")]
-       [ProducesResponseType(typeof(ApiResponse<PurchaseStatusOutput>), StatusCodes.Status200OK)]
-       public async Task<IActionResult> GetPurchaseStatus([FromRoute] Guid transactionId)
-       {
-           var input = new GetPurchaseStatusInput(transactionId);
-           var output = await _mediator.Send(input);
-           
-           return Ok(ApiResponse<PurchaseStatusOutput>.SuccesResponse(output));
-       }
+        }
+
+        [HttpGet("purchase/status/{transactionId}")]
+        [ProducesResponseType(typeof(ApiResponse<PurchaseStatusOutput>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPurchaseStatus([FromRoute] Guid transactionId)
+        {
+            var input = new GetPurchaseStatusInput(transactionId);
+            var output = await _mediator.Send(input);
+
+            return Ok(ApiResponse<PurchaseStatusOutput>.SuccesResponse(output));
+        }
 
         [HttpPut("{id}")]
-      //  [Authorize(Roles = "Admin")]
+        //  [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<UpdateGameOutput>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
@@ -75,7 +70,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
         {
             input.Id = id;
             var result = await _mediator.Send(input, cancellationToken).ConfigureAwait(false);
-      
+
             return Ok(ApiResponse<UpdateGameOutput>.SuccesResponse(result));
         }
 
@@ -90,7 +85,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
         }
 
         [HttpDelete("{id}")]
-       // [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)

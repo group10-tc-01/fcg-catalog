@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FCG.Catalog.Domain.Catalog.Entity.Games;
-using FCG.Catalog.Domain.Enum;
+﻿using FCG.Catalog.Domain.Enum;
 
 namespace FCG.Catalog.Domain.Repositories.Game
 {

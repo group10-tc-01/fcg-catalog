@@ -2,15 +2,9 @@ using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FCG.Catalog.WebApi.Models;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.WebApi.Middleware
 {

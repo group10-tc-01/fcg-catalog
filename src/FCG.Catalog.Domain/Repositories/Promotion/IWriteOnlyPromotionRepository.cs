@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace FCG.Catalog.Domain.Repositories.Promotion
+﻿namespace FCG.Catalog.Domain.Repositories.Promotion
 {
     public interface IWriteOnlyPromotionRepository
     {

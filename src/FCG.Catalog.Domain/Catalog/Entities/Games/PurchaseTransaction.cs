@@ -7,14 +7,14 @@ public sealed class PurchaseTransaction : BaseEntity
     public Guid CorrelationId => Id;
     public Guid UserId { get; private set; }
     public Guid GameId { get; private set; }
-    public decimal Amount { get; private set; } 
+    public decimal Amount { get; private set; }
     public string Status { get; private set; }
     public string? Message { get; private set; }
 
     private PurchaseTransaction() : base() { }
 
     public PurchaseTransaction(Guid correlationId, Guid userId, Guid gameId, decimal amount)
-        : base(correlationId) 
+        : base(correlationId)
     {
         UserId = userId;
         GameId = gameId;

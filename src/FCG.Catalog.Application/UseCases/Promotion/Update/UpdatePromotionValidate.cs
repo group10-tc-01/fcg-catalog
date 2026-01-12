@@ -1,11 +1,5 @@
-﻿using FCG.Catalog.Application.UseCases.Games.Update;
-using FCG.Catalog.Messages;
+﻿using FCG.Catalog.Messages;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Update
 {
@@ -21,7 +15,7 @@ namespace FCG.Catalog.Application.UseCases.Promotion.Update
 
             RuleFor(x => x.StartDate)
                 .LessThan(x => x.EndDate).WithMessage(ResourceMessages.PromotionEndDateMustBeAfterStartDate);
-            
+
             RuleFor(x => x.EndDate)
                 .GreaterThan(x => x.StartDate).WithMessage(ResourceMessages.PromotionEndDateMustBeAfterStartDate);
         }
