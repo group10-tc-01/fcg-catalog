@@ -1,6 +1,5 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
-using FCG.Catalog.Domain.Catalog.Entity.Games;
 using FCG.Catalog.Domain.Catalog.Events;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;

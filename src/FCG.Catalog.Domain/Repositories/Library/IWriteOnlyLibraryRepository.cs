@@ -1,9 +1,7 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.Libraries;
-
-namespace FCG.Catalog.Domain.Repositories.Library
+﻿namespace FCG.Catalog.Domain.Repositories.Library
 {
     public interface IWriteOnlyLibraryRepository
     {
-        Task AddAsync(Library library);
+        Task AddAsync(FCG.Catalog.Domain.Catalog.Entities.Libraries.Library library);
     }
 }

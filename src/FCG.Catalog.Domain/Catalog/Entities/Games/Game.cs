@@ -1,6 +1,5 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
-using FCG.Catalog.Domain.Catalog.Entities.Promotion;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
@@ -15,7 +14,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
         public string Description { get; private set; } = string.Empty;
         public Price Price { get; private set; } = null!;
         public GameCategory Category { get; private set; }
-        public ICollection<Promotion>? Promotions { get; }
+        public ICollection<FCG.Catalog.Domain.Catalog.Entities.Promotion.Promotion>? Promotions { get; }
         public ICollection<LibraryGame>? LibraryGames { get; }
 
         private Game() { }
@@ -43,7 +42,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
             Category = category;
             UpdatedAt = updatedAt;
         }
-        public Promotion? GetActivePromotion()
+        public FCG.Catalog.Domain.Catalog.Entities.Promotion.Promotion? GetActivePromotion()
         {
             if (Promotions is null || !Promotions.Any())
                 return null;
@@ -56,7 +55,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
                 .FirstOrDefault();
         }
 
-        public decimal CalculateDiscountedPrice(Promotion? activePromotion)
+        public decimal CalculateDiscountedPrice(FCG.Catalog.Domain.Catalog.Entities.Promotion.Promotion? activePromotion)
         {
             if (activePromotion is null)
                 return Price.Value;
