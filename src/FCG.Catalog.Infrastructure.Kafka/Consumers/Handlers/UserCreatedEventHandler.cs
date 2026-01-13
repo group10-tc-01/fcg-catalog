@@ -18,10 +18,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Consumers.Handlers
 
         protected override CreateEmptyLibraryCommand MapToCommand(UserCreatedMessage message)
         {
-            return new CreateEmptyLibraryCommand()
-            {
-                UserId = message.UserId
-            };
+            return new CreateEmptyLibraryCommand(message.UserId);
         }
     }
 }

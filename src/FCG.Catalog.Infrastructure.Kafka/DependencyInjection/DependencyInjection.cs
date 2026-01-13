@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using FCG.Catalog.Infrastructure.Kafka.Services.Interfaces;
 
 namespace FCG.Catalog.Infrastructure.Kafka.DependencyInjection
 {
@@ -28,8 +29,8 @@ namespace FCG.Catalog.Infrastructure.Kafka.DependencyInjection
 
         public static IServiceCollection AddKafkaProducer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IKafkaProducer, KafkaProducerBase>();
-            services.AddSingleton<KafkaProducerService>();
+            services.AddSingleton<IKafkaProducer, KafkaProducerBase>(); 
+            services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
 
             return services;
         }
