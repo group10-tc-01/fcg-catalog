@@ -1,10 +1,6 @@
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Repositories.Game;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Games.Get
 {

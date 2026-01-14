@@ -1,6 +1,5 @@
 using FCG.Catalog.Domain.Abstractions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Diagnostics.CodeAnalysis;
 
@@ -61,7 +60,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer
 
         private async Task PublishDomainEventsAsync(CancellationToken cancellationToken)
         {
-            var domainEvents = _context.ChangeTracker 
+            var domainEvents = _context.ChangeTracker
                 .Entries<BaseEntity>()
                 .Select(entry => entry.Entity)
                 .SelectMany(entity =>

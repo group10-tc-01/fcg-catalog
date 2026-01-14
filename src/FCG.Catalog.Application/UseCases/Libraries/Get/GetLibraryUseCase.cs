@@ -1,9 +1,7 @@
 ﻿using FCG.Catalog.Domain.Repositories.Library;
-using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
-using System.Reflection.PortableExecutable;
-using System.Text.Json;
 using FCG.Catalog.Infrastructure.Redis.Interface;
+using MediatR;
+using System.Text.Json;
 
 namespace FCG.Catalog.Application.UseCases.Libraries.Get
 {

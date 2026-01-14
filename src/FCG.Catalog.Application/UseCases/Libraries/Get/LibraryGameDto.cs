@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FCG.Catalog.Application.UseCases.Libraries.Get
+﻿namespace FCG.Catalog.Application.UseCases.Libraries.Get
 {
     public class LibraryGameDto
     {

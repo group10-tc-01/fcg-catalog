@@ -1,5 +1,4 @@
-﻿using System;
-using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
@@ -7,7 +6,7 @@ using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.LibraryGames
 {
-    public sealed class LibraryGame: BaseEntity
+    public sealed class LibraryGame : BaseEntity
     {
         public Guid LibraryId { get; private set; }
         public Guid GameId { get; private set; }

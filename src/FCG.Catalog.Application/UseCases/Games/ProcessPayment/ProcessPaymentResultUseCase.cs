@@ -2,14 +2,13 @@
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
-using FCG.Catalog.Domain.Repositories.LibraryGame;
 using FCG.Catalog.Domain.Repositories.Library;
-using FCG.Catalog.Infrastructure.SqlServer.Repositories;
+using FCG.Catalog.Domain.Repositories.LibraryGame;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 
-namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
+namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
 {
     public class ProcessPaymentResultUseCase : IRequestHandler<ProcessPaymentResultInput>
     {
@@ -33,7 +32,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
             _readOnlyLibraryRepository = readOnlyLibraryRepository;
             _readOnlyLibraryGameRepository = readOnlyLibraryGameRepository;
             _writeOnlyLibraryGameRepository = writeOnlyLibraryGameRepository;
-            _writeOnlyPurchaseTransactionRepository =  writeOnlyPurchaseTransactionRepository;
+            _writeOnlyPurchaseTransactionRepository = writeOnlyPurchaseTransactionRepository;
             _cache = cache;
             _unitOfWork = unitOfWork;
             _logger = logger;

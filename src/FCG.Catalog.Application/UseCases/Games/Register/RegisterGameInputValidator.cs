@@ -1,7 +1,5 @@
-﻿using FCG.Catalog.Domain.Enum;
-using FCG.Catalog.Messages;
+﻿using FCG.Catalog.Messages;
 using FluentValidation;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
@@ -16,7 +14,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
                 .WithMessage(ResourceMessages.GameNameIsRequired)
                 .MaximumLength(255)
                 .WithMessage(ResourceMessages.GameCategoryMaxLength);
-            
+
             RuleFor(x => x.Price)
                 .GreaterThan(0)
                 .WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);

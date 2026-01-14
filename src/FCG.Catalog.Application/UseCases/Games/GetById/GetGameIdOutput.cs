@@ -1,11 +1,4 @@
-﻿using FCG.Catalog.Domain.Catalog.ValueObjects;
-using FCG.Catalog.Domain.Enum;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Games.GetById
 {

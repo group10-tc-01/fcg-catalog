@@ -2,7 +2,6 @@ using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;
-using System.Globalization;
 
 namespace FCG.Catalog.UnitTests.Domain.ValueObjects
 {

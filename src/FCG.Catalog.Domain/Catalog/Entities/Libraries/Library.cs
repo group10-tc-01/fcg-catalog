@@ -31,7 +31,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Libraries
             if (gameAlreadyExists)
             {
                 throw new DomainException(ResourceMessages.GameNameAlreadyExists);
-            }   
+            }
 
             var libraryGame = LibraryGame.Create(Id, gameId, purchasePrice);
 

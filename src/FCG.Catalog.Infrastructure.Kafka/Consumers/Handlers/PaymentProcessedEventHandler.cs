@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult;
+﻿using FCG.Catalog.Application.UseCases.Games.ProcessPayment;
 using FCG.Catalog.Infrastructure.Kafka.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

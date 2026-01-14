@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using FCG.Catalog.Application.Abstractions.Messaging;
 
 namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase

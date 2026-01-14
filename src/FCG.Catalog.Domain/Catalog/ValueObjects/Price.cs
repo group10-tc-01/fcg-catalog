@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using FCG.Catalog.Domain.Exception;
+﻿using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.ValueObjects

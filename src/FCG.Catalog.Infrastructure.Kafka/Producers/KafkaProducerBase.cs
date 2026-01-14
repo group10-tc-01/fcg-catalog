@@ -2,9 +2,9 @@
 using FCG.Catalog.Infrastructure.Kafka.Abstractions;
 using FCG.Catalog.Infrastructure.Kafka.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using Microsoft.Extensions.Options;
 
 namespace FCG.Catalog.Infrastructure.Kafka.Producers
 {

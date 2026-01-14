@@ -1,7 +1,6 @@
 ﻿using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Repositories.Game;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;

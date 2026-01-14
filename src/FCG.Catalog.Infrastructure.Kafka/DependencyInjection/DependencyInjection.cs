@@ -1,11 +1,9 @@
 ﻿using FCG.Catalog.Infrastructure.Kafka.Abstractions;
-using FCG.Catalog.Infrastructure.Kafka.Consumers;
 using FCG.Catalog.Infrastructure.Kafka.Producers;
 using FCG.Catalog.Infrastructure.Kafka.Services;
 using FCG.Catalog.Infrastructure.Kafka.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using FCG.Catalog.Infrastructure.Kafka.Services.Interfaces;

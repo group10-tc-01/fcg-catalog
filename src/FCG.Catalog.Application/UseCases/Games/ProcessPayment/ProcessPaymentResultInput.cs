@@ -1,7 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using MediatR;
+﻿using MediatR;
 
-namespace FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult
+namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
 {
     public class ProcessPaymentResultInput : IRequest
     {

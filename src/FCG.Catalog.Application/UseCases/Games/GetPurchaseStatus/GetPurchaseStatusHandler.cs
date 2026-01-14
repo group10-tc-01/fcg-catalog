@@ -2,7 +2,7 @@ using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Infrastructure.Redis.Interface;
 using MediatR;
 
-namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase.GetPurchaseStatus;
+namespace FCG.Catalog.Application.UseCases.Games.GetPurchaseStatus;
 
 public class GetPurchaseStatusHandler : IRequestHandler<GetPurchaseStatusInput, PurchaseStatusOutput>
 {

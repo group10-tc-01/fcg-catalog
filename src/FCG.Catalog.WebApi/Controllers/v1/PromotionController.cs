@@ -1,12 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using FCG.Catalog.Application.UseCases.Promotion.Create;
-using FCG.Catalog.Application.UseCases.Promotion.Update;
+﻿using FCG.Catalog.Application.UseCases.Promotion.Create;
 using FCG.Catalog.Application.UseCases.Promotion.Delete;
+using FCG.Catalog.Application.UseCases.Promotion.Update;
 using FCG.Catalog.WebApi.Models;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
@@ -16,7 +12,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
     public class PromotionController(IMediator mediator) : FcgCatalogBaseController(mediator)
     {
         [HttpPost]
-       // [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<CreatePromotionOutput>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreatePromotionInput input)
@@ -26,7 +22,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
         }
 
         [HttpPut("{id}")]
-       // [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<UpdatePromotionOutput>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdatePromotionInput input, CancellationToken cancellationToken)

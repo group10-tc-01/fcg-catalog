@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using FCG.Catalog.Application.UseCases.Games.ProcessPaymentResult;
+using FCG.Catalog.Application.UseCases.Games.ProcessPayment;
 using FCG.Catalog.Infrastructure.Kafka.Consumers.Handlers;
 using FCG.Catalog.Infrastructure.Kafka.Messages;
 using FluentAssertions;

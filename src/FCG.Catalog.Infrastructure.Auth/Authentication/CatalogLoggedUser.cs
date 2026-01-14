@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using FCG.Catalog.Domain.Services;
+﻿using FCG.Catalog.Domain.Services;
 using FCG.Catalog.Domain.Services.Repositories;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.Auth.Authentication
 {

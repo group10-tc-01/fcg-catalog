@@ -1,12 +1,6 @@
-﻿using FCG.Catalog.Domain.Enum;
-using FCG.Catalog.Messages;
+﻿using FCG.Catalog.Messages;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Games.Update
 {

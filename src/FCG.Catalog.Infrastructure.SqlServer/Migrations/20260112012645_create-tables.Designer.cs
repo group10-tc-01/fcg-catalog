@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FCG.Catalog.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(FcgCatalogDbContext))]
-    [Migration("20251210014313_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260112012645_create-tables")]
+    partial class createtables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -117,6 +117,53 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Migrations
                         {
                             t.HasCheckConstraint("CK_Game_Price", "Price > 0");
                         });
+                });
+
+            modelBuilder.Entity("FCG.Catalog.Domain.Catalog.Entity.Games.PurchaseTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CorrelationId");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PurchaseTransactions", "Catalog");
                 });
 
             modelBuilder.Entity("FCG.Catalog.Domain.Catalog.Entity.Libraries.Library", b =>

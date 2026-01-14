@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {

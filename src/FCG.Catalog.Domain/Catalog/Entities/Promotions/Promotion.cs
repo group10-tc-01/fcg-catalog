@@ -3,8 +3,6 @@ using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.Promotions
 {
@@ -39,7 +37,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Promotions
         {
 
             Validate(gameId, startDate, endDate);
-            
+
             GameId = gameId;
             DiscountPercentage = discount;
             StartDate = startDate;
@@ -52,7 +50,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Promotions
                 throw new DomainException(ResourceMessages.PromotionEndDateMustBeAfterStartDate);
             }
 
-            if( gameId == Guid.Empty)
+            if (gameId == Guid.Empty)
             {
                 throw new DomainException(ResourceMessages.GameNotFound);
             }

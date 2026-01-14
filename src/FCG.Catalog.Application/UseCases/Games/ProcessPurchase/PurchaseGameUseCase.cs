@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.Games;
+﻿using FCG.Catalog.Domain.Abstractions;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.Events;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
@@ -6,12 +7,9 @@ using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
 using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Catalog.Domain.Services.Repositories;
+using FCG.Catalog.Infrastructure.Redis.Interface;
 using MediatR;
 using System.Diagnostics.CodeAnalysis;
-using FCG.Catalog.Domain.Abstractions;
-using MediatR; 
-using FCG.Catalog.Domain.Catalog.Events;
-using FCG.Catalog.Infrastructure.Redis.Interface;
 
 namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
 {
@@ -38,7 +36,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
             ICaching cache,
             ICatalogLoggedUser catalogLoggedUser,
             IUnitOfWork unitOfWork,
-            IMediator mediator) 
+            IMediator mediator)
         {
             _readOnlyGameRepository = readOnlyGameRepository;
             _readOnlyPromotionRepository = readOnlyPromotionRepository;
@@ -72,12 +70,12 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
                 throw new DomainException($"User already owns the game: {game.Title}");
 
             var finalPrice = await CalculateFinalPriceAsync(game, cancellationToken);
-            
+
             var transaction = new PurchaseTransaction(correlationId, loggedUser.Id, game.Id, finalPrice);
-            
+
             await _writeOnlyPurchaseTransactionRepository.AddAsync(transaction, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            
+
             var orderEvent = new OrderPlacedEvent(
                 correlationId,
                 loggedUser.Id,
@@ -87,15 +85,15 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
             );
 
             await _mediator.Publish(orderEvent, cancellationToken);
-            
+
             return new PurchaseGameOutput(
                 correlationId,
                 transaction.Status,
                 game.Title,
                 Math.Round(finalPrice, 2)
-                
+
             );
-            
+
         }
         private async Task<decimal> CalculateFinalPriceAsync(Game game, CancellationToken cancellationToken)
         {

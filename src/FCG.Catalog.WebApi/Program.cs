@@ -1,8 +1,9 @@
 using FCG.Catalog.Application.DependencyInjection;
 using FCG.Catalog.Infrastructure.Kafka.DependencyInjection;
-using FCG.Catalog.Infrastructure.Redis;
+using FCG.Catalog.Infrastructure.Redis.DependencyInjection;
 using FCG.Catalog.Infrastructure.Redis.Redis;
 using FCG.Catalog.WebApi.DependencyInjection;
+using FCG.Catalog.WebApi.Extensions;
 using FCG.Catalog.WebApi.Middleware;
 using System.Text.Json.Serialization;
 using FCG.Catalog.Infrastructure.Redis.DependencyInjection;
@@ -35,11 +36,12 @@ namespace FCG.Catalog.WebApi
 
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+if (app.Environment.IsDevelopment())
+{
+    app.ApplyMigrations();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
             app.UseHttpsRedirection();
 

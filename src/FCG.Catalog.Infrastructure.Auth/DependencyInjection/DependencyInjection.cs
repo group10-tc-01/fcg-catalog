@@ -1,7 +1,7 @@
 ﻿using FCG.Catalog.Domain.Services.Repositories;
+using FCG.Catalog.Infrastructure.Auth.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using FCG.Catalog.Infrastructure.Auth.Authentication;
 namespace FCG.Catalog.Infrastructure.Auth.DependencyInjection
 {
     public static class DependencyInjection

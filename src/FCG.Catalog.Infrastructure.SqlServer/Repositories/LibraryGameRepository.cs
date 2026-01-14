@@ -1,8 +1,4 @@
-﻿using System; 
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
+﻿using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +28,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
         public async Task<IEnumerable<LibraryGame>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
         {
             return await _fcgDbContext.LibraryGames
-                .AsNoTracking() 
+                .AsNoTracking()
                 .Include(x => x.Game)
                 .Where(x => x.LibraryId == userId)
                 .ToListAsync(cancellationToken);
