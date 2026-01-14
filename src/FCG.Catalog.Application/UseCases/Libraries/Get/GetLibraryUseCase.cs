@@ -24,7 +24,7 @@ namespace FCG.Catalog.Application.UseCases.Libraries.Get
 
             if (!string.IsNullOrEmpty(cachedJson))
             {
-                return JsonSerializer.Deserialize<GetLibraryByUserIdResponse>(cachedJson);
+                return JsonSerializer.Deserialize<GetLibraryByUserIdResponse>(cachedJson) ?? throw new InvalidOperationException();
             }
 
             var library = await _readOnlyLibraryRepository.GetByUserIdWithGamesAsync(request.UserId, cancellationToken);
@@ -38,8 +38,7 @@ namespace FCG.Catalog.Application.UseCases.Libraries.Get
                 };
             }
 
-            var gamesDto = library.LibraryGames?
-                .Select(lg => new LibraryGameDto
+            var gamesDto = library.LibraryGames.Select(lg => new LibraryGameDto
                 {
                     GameId = lg.GameId,
                     Title = lg.Game.Title.Value,
@@ -53,7 +52,7 @@ namespace FCG.Catalog.Application.UseCases.Libraries.Get
             var response = new GetLibraryByUserIdResponse
             {
                 LibraryId = library.Id,
-                LibraryGames = gamesDto ?? new List<LibraryGameDto>()
+                LibraryGames = gamesDto
             };
 
             await _cache.SetAsync(cacheKey, JsonSerializer.Serialize(response));

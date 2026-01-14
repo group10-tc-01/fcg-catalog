@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Infrastructure.Kafka.Abstractions;
+using FCG.Catalog.Infrastructure.Kafka.Services.Interfaces;
 using FCG.Catalog.Infrastructure.Kafka.Settings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -7,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FCG.Catalog.Infrastructure.Kafka.Services
 {
     [ExcludeFromCodeCoverage]
-    public class KafkaProducerService
+    public class KafkaProducerService : IKafkaProducerService
     {
         private readonly IKafkaProducer _producer;
         private readonly KafkaSettings _settings;

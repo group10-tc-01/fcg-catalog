@@ -1,11 +1,10 @@
 using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Promotion;
-using System.Diagnostics.CodeAnalysis;
+
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Delete
 {
-    [ExcludeFromCodeCoverage]
     public class DeletePromotionUseCase : IDeletePromotionUseCase
     {
         private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;

@@ -1,5 +1,6 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
+using FCG.Catalog.Domain.Catalog.Entities.Promotions;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
@@ -14,7 +15,9 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
         public string Description { get; private set; } = string.Empty;
         public Price Price { get; private set; } = null!;
         public GameCategory Category { get; private set; }
-        public ICollection<FCG.Catalog.Domain.Catalog.Entities.Promotion.Promotion>? Promotions { get; }
+
+        private readonly List<Promotion> _promotions = new(); 
+        public ICollection<Promotion> Promotions => _promotions; 
         public ICollection<LibraryGame>? LibraryGames { get; }
 
         private Game() { }
@@ -28,6 +31,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
             Price = price;
             Category = category;
         }
+
         public static Game Create(string title, string description, Price price, GameCategory category)
         {
             return new Game(title, description, price, category);
@@ -42,9 +46,10 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
             Category = category;
             UpdatedAt = updatedAt;
         }
-        public FCG.Catalog.Domain.Catalog.Entities.Promotion.Promotion? GetActivePromotion()
+
+        public Promotion? GetActivePromotion()
         {
-            if (Promotions is null || !Promotions.Any())
+            if (!Promotions.Any())
                 return null;
 
             var today = DateTime.UtcNow;
@@ -55,7 +60,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
                 .FirstOrDefault();
         }
 
-        public decimal CalculateDiscountedPrice(FCG.Catalog.Domain.Catalog.Entities.Promotion.Promotion? activePromotion)
+        public decimal CalculateDiscountedPrice(Promotion? activePromotion)
         {
             if (activePromotion is null)
                 return Price.Value;
@@ -63,6 +68,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
             var discountAmount = Price.Value * (activePromotion.DiscountPercentage / 100m);
             return Price.Value - discountAmount;
         }
+
         private void Validate(string description, decimal price, string title)
         {
             if (string.IsNullOrWhiteSpace(title))

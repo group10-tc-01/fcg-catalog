@@ -98,8 +98,9 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
         private async Task<decimal> CalculateFinalPriceAsync(Game game, CancellationToken cancellationToken)
         {
             var promotions = await _readOnlyPromotionRepository.GetByGameIdAsync(game.Id, cancellationToken);
-            var activePromotion = promotions?.FirstOrDefault(p => p.StartDate <= DateTime.UtcNow && p.EndDate >= DateTime.UtcNow);
-
+            var activePromotion = promotions.Where(p => p.StartDate <= DateTime.UtcNow && p.EndDate >= DateTime.UtcNow)
+                                                                    .OrderByDescending(x => x.DiscountPercentage.Value)
+                                                                    .FirstOrDefault();
             if (activePromotion is null)
                 return game.Price;
 

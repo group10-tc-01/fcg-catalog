@@ -2,8 +2,5 @@
 
 namespace FCG.Catalog.Application.UseCases.Libraries.Register
 {
-    public record CreateEmptyLibraryCommand : IRequest
-    {
-        public Guid UserId { get; set; }
-    }
+    public record CreateEmptyLibraryCommand(Guid UserId) : IRequest;
 }

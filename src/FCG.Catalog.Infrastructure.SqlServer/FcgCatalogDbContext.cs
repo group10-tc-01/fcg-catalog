@@ -1,7 +1,7 @@
 ﻿using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
-using FCG.Catalog.Domain.Catalog.Entities.Promotion;
+using FCG.Catalog.Domain.Catalog.Entities.Promotions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FCG.Catalog.Infrastructure.SqlServer

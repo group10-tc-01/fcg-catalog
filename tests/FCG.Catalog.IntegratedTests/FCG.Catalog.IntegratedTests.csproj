@@ -21,6 +21,13 @@
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
+	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.SqlServer\FCG.Catalog.Infrastructure.SqlServer.csproj" />
+	  <ProjectReference Include="..\..\src\FCG.Catalog.WebApi\FCG.Catalog.WebApi.csproj" />
+	  <ProjectReference Include="..\FCG.Catalog.CommomTestUtilities\FCG.Catalog.CommomTestUtilities.csproj" />
+	</ItemGroup>
+
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>

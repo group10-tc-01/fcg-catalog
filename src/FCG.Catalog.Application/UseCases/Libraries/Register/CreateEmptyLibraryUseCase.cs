@@ -3,6 +3,7 @@ using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Messages;
+using FCG.Domain.Repositories.LibraryRepository;
 using MediatR;
 
 namespace FCG.Catalog.Application.UseCases.Libraries.Register

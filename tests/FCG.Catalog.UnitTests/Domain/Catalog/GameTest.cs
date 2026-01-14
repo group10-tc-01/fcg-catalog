@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.CommomTestUtilities.Builders.Entities;
+﻿using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
@@ -13,7 +13,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         public void Given_ValidGameParameters_When_Create_Then_ShouldInstantiateGameCorrectly()
         {
             // Arrange
-            var gameEntity = GameBuilder.Build();
+            var gameEntity = new GameBuilder().Build();
 
             // Act
             var game = Game.Create(Title.Create(gameEntity.Title), gameEntity.Description, Price.Create(gameEntity.Price), gameEntity.Category);
@@ -31,7 +31,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         public void Given_InvalidName_When_Create_Then_ShouldThrowDomainException()
         {
             // Arrange
-            var gameEntity = GameBuilder.Build();
+            var gameEntity = new GameBuilder().Build();
             var actShortName = () => Game.Create(Title.Create("A"), gameEntity.Description, Price.Create(gameEntity.Price), gameEntity.Category);
             var actNullName = () => Game.Create(Title.Create(""), gameEntity.Description, Price.Create(gameEntity.Price), gameEntity.Category);
 

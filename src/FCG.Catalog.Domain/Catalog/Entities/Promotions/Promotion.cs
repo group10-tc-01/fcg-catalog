@@ -4,7 +4,7 @@ using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 
-namespace FCG.Catalog.Domain.Catalog.Entities.Promotion
+namespace FCG.Catalog.Domain.Catalog.Entities.Promotions
 {
     public sealed class Promotion : BaseEntity
     {

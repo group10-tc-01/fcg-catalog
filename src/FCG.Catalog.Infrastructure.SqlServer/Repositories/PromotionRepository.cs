@@ -1,7 +1,10 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.Promotion;
-using FCG.Catalog.Domain.Repositories.Promotion;
+﻿using FCG.Catalog.Domain.Repositories.Promotion;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using FCG.Catalog.Domain.Catalog.Entities.Promotions;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 {

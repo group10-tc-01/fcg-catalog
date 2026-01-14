@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.CommomTestUtilities.Builders.Entities;
+﻿using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
@@ -69,7 +69,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         public void Given_ValidParameters_When_Update_Then_ShouldUpdateGameProperties()
         {
             // Arrange
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
 
             var newTitle = "Resident Evil 4 Remake";
             var newDescription = "Survival horror game developed by Capcom.";
@@ -90,7 +90,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         public void Given_InvalidName_When_Update_Then_ShouldThrowDomainException()
         {
             // Arrange
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
 
             var actNullName = () => game.Update("", "Description", 100, GameCategory.Action, DateTime.UtcNow);
 
@@ -103,7 +103,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
         public void Given_InvalidPrice_When_Update_Then_ShouldThrowDomainException()
         {
             // Arrange
-            var game = GameBuilder.Build();
+            var game = new GameBuilder().Build();
             var invalidPrice = -10.00m;
 
             // Act
@@ -111,7 +111,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
 
             // Assert
             act.Should().Throw<DomainException>()
-                .WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
+                .WithMessage(ResourceMessages.PriceCannotBeNegative);
         }
 
 

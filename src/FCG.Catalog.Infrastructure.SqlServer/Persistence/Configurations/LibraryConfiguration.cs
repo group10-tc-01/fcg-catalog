@@ -1,7 +1,7 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.Libraries;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {

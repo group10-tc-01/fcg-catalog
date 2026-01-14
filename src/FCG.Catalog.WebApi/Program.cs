@@ -6,28 +6,35 @@ using FCG.Catalog.WebApi.DependencyInjection;
 using FCG.Catalog.WebApi.Extensions;
 using FCG.Catalog.WebApi.Middleware;
 using System.Text.Json.Serialization;
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+using FCG.Catalog.Infrastructure.Redis.DependencyInjection;
+namespace FCG.Catalog.WebApi
+{
+    public class Program
     {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.WriteIndented = true;
-    }); builder.Services.AddEndpointsApiExplorer();
+        protected Program() { }
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApplication();
-builder.Services.AddWebApi(builder.Configuration);
-builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                }); builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddKafkaInfrastructure(builder.Configuration);
-builder.Services.AddRedisInfrastructure(builder.Configuration);
-builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
+            builder.Services.AddApplication();
+            builder.Services.AddWebApi(builder.Configuration);
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddKafkaInfrastructure(builder.Configuration);
+            builder.Services.AddRedisInfrastructure(builder.Configuration);
+            builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
 
 
-var app = builder.Build();
+            var app = builder.Build();
 
-app.UseMiddleware<GlobalExceptionMiddleware>();
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
@@ -36,10 +43,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
-app.UseAuthorization();
+            app.UseAuthorization();
 
-app.MapControllers();
+            app.MapControllers();
 
-app.Run();
+            app.Run();
+        }
+    }
+}
+
