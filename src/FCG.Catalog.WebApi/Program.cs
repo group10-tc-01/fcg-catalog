@@ -34,9 +34,14 @@ namespace FCG.Catalog.WebApi
 
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
+            var logger = app.Services.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation("Application started successfully");
+            logger.LogInformation("Environment: {Environment}", app.Environment.EnvironmentName);
+
             if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
             {
                 app.ApplyMigrations();
+                logger.LogInformation("Migrations applied");
             }
 
             app.UseSwagger();
