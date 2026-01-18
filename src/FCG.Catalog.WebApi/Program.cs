@@ -6,7 +6,6 @@ using FCG.Catalog.WebApi.DependencyInjection;
 using FCG.Catalog.WebApi.Extensions;
 using FCG.Catalog.WebApi.Middleware;
 using System.Text.Json.Serialization;
-using FCG.Catalog.Infrastructure.Redis.DependencyInjection;
 namespace FCG.Catalog.WebApi
 {
     public class Program
@@ -31,17 +30,17 @@ namespace FCG.Catalog.WebApi
             builder.Services.AddRedisInfrastructure(builder.Configuration);
             builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
 
-
             var app = builder.Build();
 
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
-if (app.Environment.IsDevelopment())
-{
-    app.ApplyMigrations();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+            if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
+            {
+                app.ApplyMigrations();
+            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
