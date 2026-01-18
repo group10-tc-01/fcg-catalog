@@ -5,7 +5,6 @@ using FCG.Catalog.WebApi.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
 {
@@ -14,6 +13,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
     public class LibraryController(IMediator mediator, ICatalogLoggedUser catalogLoggedUser) : FcgCatalogBaseController(mediator)
     {
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(ApiResponse<GetLibraryByUserIdResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
