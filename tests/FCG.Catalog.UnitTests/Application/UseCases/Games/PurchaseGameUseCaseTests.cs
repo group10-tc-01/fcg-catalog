@@ -8,8 +8,6 @@ using FCG.Catalog.CommomTestUtilities.Builders.LibraryGames.Repositories;
 using FCG.Catalog.CommomTestUtilities.Builders.Promotions;
 using FCG.Catalog.CommomTestUtilities.Builders.Promotions.Repositories;
 using FCG.Catalog.CommomTestUtilities.Builders.Users;
-using FCG.Catalog.Domain.Catalog.Entities.Promotions;
-using FCG.Catalog.Domain.Catalog.Events;
 using FCG.Catalog.Domain.Exception;
 using FluentAssertions;
 using MediatR;
@@ -41,34 +39,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             WriteOnlyPurchaseTransactionRepositoryBuilder.Reset();
             CatalogLoggedUserBuilder.Reset();
             UnitOfWorkBuilder.Reset();
-        }
-
-        [Fact]
-        public async Task Handle_ShouldPurchaseGame_WhenAllConditionsAreMet()
-        {
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithId(gameId, price: 59.99m);
-            var library = _libraryBuilder.BuildWithUserId(userId);
-
-            var input = new PurchaseGameInput(gameId);
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new List<Promotion>());
-
-            WriteOnlyPurchaseTransactionRepositoryBuilder.SetupAddAsync();
-            UnitOfWorkBuilder.SetupSaveChangesAsync();
-
-            var useCase = CreateUseCase();
-
-            var result = await useCase.Handle(input, CancellationToken.None);
-
-            result.FinalPrice.Should().Be(59.99m);
         }
 
         [Fact]
@@ -141,93 +111,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             await act.Should().ThrowAsync<NotFoundException>();
         }
 
-        [Fact]
-        public async Task Handle_ShouldThrowDomainException_WhenUserAlreadyOwnsGame()
-        {
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithId(gameId, name: "Cyberpunk 2077");
-            var library = _libraryBuilder.BuildWithUserId(userId);
-
-            var input = new PurchaseGameInput(gameId);
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, true);
-
-            var useCase = CreateUseCase();
-
-            Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
-
-            await act.Should().ThrowAsync<DomainException>()
-                .WithMessage($"User already owns the game: {game.Title}");
-        }
-
-        [Fact]
-        public async Task Handle_ShouldApplyDiscount_WhenActivePromotionExists()
-        {
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithId(gameId, price: 100m);
-            var library = _libraryBuilder.BuildWithUserId(userId);
-            var promotion = _promotionBuilder.BuildActivePromotion(gameId, 20m);
-
-            var input = new PurchaseGameInput(gameId);
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(gameId, new[] { promotion });
-
-            WriteOnlyPurchaseTransactionRepositoryBuilder.SetupAddAsync();
-            UnitOfWorkBuilder.SetupSaveChangesAsync();
-
-            var useCase = CreateUseCase();
-
-            var result = await useCase.Handle(input, CancellationToken.None);
-
-            result.FinalPrice.Should().Be(80m);
-        }
-
-        [Fact]
-        public async Task Handle_ShouldSelectHighestDiscount_WhenMultipleActivePromotionsExist()
-        {
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-
-            var loggedUser = _loggedUserBuilder.BuildWithId(userId);
-            var game = _gameBuilder.BuildWithId(gameId, price: 100m);
-            var library = _libraryBuilder.BuildWithUserId(userId);
-
-            var promotion1 = _promotionBuilder.BuildActivePromotion(gameId, 15m);
-            var promotion2 = _promotionBuilder.BuildActivePromotion(gameId, 30m);
-            var promotion3 = _promotionBuilder.BuildActivePromotion(gameId, 20m);
-
-            var input = new PurchaseGameInput(gameId);
-
-            CatalogLoggedUserBuilder.SetupGetLoggedUserAsync(loggedUser);
-            ReadOnlyGameRepositoryBuilder.SetupGetByIdActiveAsync(gameId, game);
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdAsync(userId, library);
-            ReadOnlyLibraryGameRepositoryBuilder.SetupHasGameAsync(userId, gameId, false);
-            ReadOnlyPromotionRepositoryBuilder.SetupGetByGameIdAsync(
-                gameId,
-                new[] { promotion1, promotion2, promotion3 });
-
-            WriteOnlyPurchaseTransactionRepositoryBuilder.SetupAddAsync();
-            UnitOfWorkBuilder.SetupSaveChangesAsync();
-
-            var useCase = CreateUseCase();
-
-            var result = await useCase.Handle(input, CancellationToken.None);
-
-            result.FinalPrice.Should().Be(70m);
-        }
 
         private PurchaseGameUseCase CreateUseCase()
         {

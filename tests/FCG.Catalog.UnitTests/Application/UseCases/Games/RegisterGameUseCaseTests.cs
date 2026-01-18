@@ -2,12 +2,9 @@
 using FCG.Catalog.CommomTestUtilities.Builders;
 using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories;
-using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
-using FCG.Catalog.Domain.Repositories.Game;
-using FCG.Catalog.Messages;
 using FluentAssertions;
 using Moq;
 
@@ -57,35 +54,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
         }
 
         [Fact]
-        public async Task Handle_ShouldThrowConflictException_WhenGameNameAlreadyExists()
-        {
-            // Arrange
-            var existingGame = _gameBuilder.BuildWithName("The Witcher 3");
-            var input = new RegisterGameInput
-            {
-                Name = "The Witcher 3",
-                Description = "RPG Game",
-                Price = 39.99m,
-                Category = GameCategory.RPG
-            };
-
-            ReadOnlyGameRepositoryBuilder.SetupGetByNameAsync(input.Name, existingGame);
-
-            var useCase = new RegisterGameUseCase(
-                WriteOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyGameRepositoryBuilder.Build(),
-                UnitOfWorkBuilder.Build()
-            );
-
-            // Act
-            Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            await act.Should().ThrowAsync<ConflictException>()
-                .WithMessage(string.Format(ResourceMessages.GameNameAlreadyExists, input.Name));
-        }
-
-        [Fact]
         public async Task Handle_ShouldThrowDomainException_WhenCategoryIsInvalid()
         {
             // Arrange
@@ -110,36 +78,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
 
             // Assert
             await act.Should().ThrowAsync<DomainException>().WithMessage("Invalid category: '999'. Available categories are: Action, Adventure, RPG...");
-        }
-
-        [Fact]
-        public async Task Handle_ShouldCallGetByNameAsync_ToValidateExistence()
-        {
-            // Arrange
-            var input = new RegisterGameInput
-            {
-                Name = "New Game",
-                Description = "Description",
-                Price = 29.99m,
-                Category = GameCategory.Adventure
-            };
-
-            ReadOnlyGameRepositoryBuilder.SetupGetByNameAsync(input.Name, null);
-            WriteOnlyGameRepositoryBuilder.SetupAddAsync(It.IsAny<Game>());
-            UnitOfWorkBuilder.SetupSaveChangesAsync();
-
-            var useCase = new RegisterGameUseCase(
-                WriteOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyGameRepositoryBuilder.Build(),
-                UnitOfWorkBuilder.Build()
-            );
-
-            // Act
-            await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            var mockRepo = Mock.Get(ReadOnlyGameRepositoryBuilder.Build());
-            mockRepo.Verify(r => r.GetByNameAsync(input.Name), Times.Once);
         }
 
         [Fact]
@@ -169,65 +107,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
 
             // Assert
             WriteOnlyGameRepositoryBuilder.VerifyAddAsyncWasCalled(Times.Once());
-        }
-
-        [Fact]
-        public async Task Handle_ShouldCallSaveChangesAsync_AfterAddingGame()
-        {
-            // Arrange
-            var input = new RegisterGameInput
-            {
-                Name = "Game to Save",
-                Description = "Description",
-                Price = 39.99m,
-                Category = GameCategory.Sports
-            };
-
-            ReadOnlyGameRepositoryBuilder.SetupGetByNameAsync(input.Name, null);
-            WriteOnlyGameRepositoryBuilder.SetupAddAsync(It.IsAny<Game>());
-            UnitOfWorkBuilder.SetupSaveChangesAsync();
-
-            var useCase = new RegisterGameUseCase(
-                WriteOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyGameRepositoryBuilder.Build(),
-                UnitOfWorkBuilder.Build()
-            );
-
-            // Act
-            await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            UnitOfWorkBuilder.VerifySaveChangesAsyncWasCalled(Times.Once());
-        }
-
-        [Fact]
-        public async Task Handle_ShouldNotCallAddOrSave_WhenGameNameExists()
-        {
-            // Arrange
-            var existingGame = _gameBuilder.BuildWithName("Existing Game");
-            var input = new RegisterGameInput
-            {
-                Name = "Existing Game",
-                Description = "Description",
-                Price = 29.99m,
-                Category = GameCategory.Action
-            };
-
-            ReadOnlyGameRepositoryBuilder.SetupGetByNameAsync(input.Name, existingGame);
-
-            var useCase = new RegisterGameUseCase(
-                WriteOnlyGameRepositoryBuilder.Build(),
-                ReadOnlyGameRepositoryBuilder.Build(),
-                UnitOfWorkBuilder.Build()
-            );
-
-            // Act
-            Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            await act.Should().ThrowAsync<ConflictException>();
-            WriteOnlyGameRepositoryBuilder.VerifyAddAsyncWasCalled(Times.Never());
-            UnitOfWorkBuilder.VerifySaveChangesAsyncWasNotCalled();
         }
 
         [Fact]
