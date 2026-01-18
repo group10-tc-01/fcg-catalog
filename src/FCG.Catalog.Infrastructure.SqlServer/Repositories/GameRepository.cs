@@ -1,12 +1,12 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Games;
-using FCG.Catalog.Domain.Enum;
+﻿using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Repositories.Game;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
+using static Azure.Core.HttpHeader;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 {
@@ -58,8 +58,16 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
         public async Task<Game?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _fcgDbContext.Games
+            .AsNoTracking()
+            .Include(g => g.Promotions)
+            .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
+        }
+
+        public async Task<Game?> GetByIdActiveAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _fcgDbContext.Games
                 .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
+                .FirstOrDefaultAsync(g => g.Id == id && g.IsActive, cancellationToken);
         }
 
         public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
@@ -67,6 +75,17 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
             return await _fcgDbContext.Games
                 .AsNoTracking()
                 .AnyAsync(g => g.Id == id, cancellationToken);
+        }
+
+        public void Update(Game game)
+        {
+            _fcgDbContext.Games.Update(game);
+        }
+
+        public async Task Delete(Game game, CancellationToken cancellationToken = default)
+        {
+            _fcgDbContext.Games.Remove(game);
+            await Task.CompletedTask;
         }
     }
 }

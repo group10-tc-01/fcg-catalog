@@ -1,7 +1,7 @@
-﻿using FCG.Catalog.Domain.Catalog.Entity.Games;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {
@@ -15,7 +15,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
             builder.ToTable("Games", t => t.HasCheckConstraint("CK_Game_Price", "Price > 0"));
 
             builder.Property(g => g.Description)
-                .HasMaxLength(2000) 
+                .HasMaxLength(2000)
                 .IsRequired(false);
 
             builder.OwnsOne(g => g.Title, titleBuilder =>
@@ -35,7 +35,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
             });
 
             builder.Property(g => g.Category)
-                .HasConversion<string>() 
+                .HasConversion<string>()
                 .HasMaxLength(50)
                 .IsRequired();
 

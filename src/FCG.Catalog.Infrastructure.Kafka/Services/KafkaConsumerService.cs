@@ -5,9 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.Kafka.Services
 {
+    [ExcludeFromCodeCoverage]
     public class KafkaConsumerService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
@@ -50,7 +52,6 @@ namespace FCG.Catalog.Infrastructure.Kafka.Services
 
             await Task.WhenAll(_consumerTasks);
         }
-
         private async Task ConsumeTopicAsync(ConsumerTopicConfiguration topicConfig, CancellationToken cancellationToken)
         {
             using var scope = _serviceProvider.CreateScope();
@@ -61,9 +62,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Services
 
             if (handler == null)
             {
-                _logger.LogWarning(
-                    "Handler não encontrado para o tópico {Topic}. " +
-                    "Certifique-se de que o handler está registrado no DI.",
+                _logger.LogWarning("Handler não encontrado para o tópico {Topic}. " + "Certifique-se de que o handler está registrado no DI.",
                     topicConfig.TopicName);
                 return;
             }

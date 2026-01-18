@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 
-namespace FCG.Catalog.Domain.Catalog.Entity.Libraries
+namespace FCG.Catalog.Domain.Catalog.Entities.Libraries
 {
     public sealed class Library : BaseEntity
     {
@@ -34,7 +31,7 @@ namespace FCG.Catalog.Domain.Catalog.Entity.Libraries
             if (gameAlreadyExists)
             {
                 throw new DomainException(ResourceMessages.GameNameAlreadyExists);
-            }   
+            }
 
             var libraryGame = LibraryGame.Create(Id, gameId, purchasePrice);
 

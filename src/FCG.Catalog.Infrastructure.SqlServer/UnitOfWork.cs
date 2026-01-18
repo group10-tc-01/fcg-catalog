@@ -1,26 +1,31 @@
-using FCG.Catalog.Domain;
+using FCG.Catalog.Domain.Abstractions;
+using MediatR;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Infrastructure.SqlServer
 {
     [ExcludeFromCodeCoverage]
-
     public class UnitOfWork : IUnitOfWork
     {
         private readonly FcgCatalogDbContext _context;
+        private readonly IPublisher _publisher;
         private IDbContextTransaction? _currentTransaction;
 
-        public UnitOfWork(FcgCatalogDbContext context)
+        public UnitOfWork(FcgCatalogDbContext context, IPublisher publisher)
         {
             _context = context;
+            _publisher = publisher;
         }
 
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return _context.SaveChangesAsync(cancellationToken);
+            var result = await _context.SaveChangesAsync(cancellationToken);
+            if (_currentTransaction == null)
+            {
+                await PublishDomainEventsAsync(cancellationToken);
+            }
+            return result;
         }
 
         public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
@@ -37,6 +42,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer
                 return;
 
             await _context.SaveChangesAsync(cancellationToken);
+            await PublishDomainEventsAsync(cancellationToken);
             await _currentTransaction.CommitAsync(cancellationToken);
             await _currentTransaction.DisposeAsync();
             _currentTransaction = null;
@@ -50,6 +56,25 @@ namespace FCG.Catalog.Infrastructure.SqlServer
             await _currentTransaction.RollbackAsync(cancellationToken);
             await _currentTransaction.DisposeAsync();
             _currentTransaction = null;
+        }
+
+        private async Task PublishDomainEventsAsync(CancellationToken cancellationToken)
+        {
+            var domainEvents = _context.ChangeTracker
+                .Entries<BaseEntity>()
+                .Select(entry => entry.Entity)
+                .SelectMany(entity =>
+                {
+                    var events = entity.GetDomainEvents();
+                    entity.ClearDomainEvents();
+                    return events;
+                })
+                .ToList();
+
+            foreach (var domainEvent in domainEvents)
+            {
+                await _publisher.Publish(domainEvent, cancellationToken);
+            }
         }
     }
 }

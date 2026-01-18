@@ -1,21 +1,24 @@
-﻿using System.Text.Json;
-using FCG.Catalog.Infrastructure.Kafka.Abstractions;
+﻿using FCG.Catalog.Infrastructure.Kafka.Abstractions;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace FCG.Catalog.Infrastructure.Kafka.Consumers
 {
+    [ExcludeFromCodeCoverage]
     public abstract class KafkaConsumerBase<TMessage, TCommand> : IKafkaConsumer where TMessage : class where TCommand : IRequest
     {
-        protected readonly IMediator _mediator;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         protected readonly ILogger _logger;
         private readonly IAsyncPolicy _retryPolicy;
         public abstract string Topic { get; }
 
-        protected KafkaConsumerBase(IMediator mediator, ILogger logger, int maxTries = 3)
+        protected KafkaConsumerBase(IServiceScopeFactory serviceScopeFactory, ILogger logger, int maxTries = 3)
         {
-            _mediator = mediator;
+            _serviceScopeFactory = serviceScopeFactory;
             _logger = logger;
 
             _retryPolicy = Policy
@@ -40,14 +43,26 @@ namespace FCG.Catalog.Infrastructure.Kafka.Consumers
 
                 await _retryPolicy.ExecuteAsync(async () =>
                 {
-                    var kafkaMessage = JsonSerializer.Deserialize<TMessage>(message);
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                    var kafkaMessage = JsonSerializer.Deserialize<TMessage>(message, options);
 
                     if (kafkaMessage == null)
                         throw new InvalidOperationException("Mensagem invalida ou nula.");
 
                     var command = MapToCommand(kafkaMessage);
 
-                    await _mediator.Send(command, cancellationToken);
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    await mediator.Send(command, cancellationToken);
+
+                    _logger.LogInformation(
+                        "Mensagem processada com sucesso no tópico {Topic}",
+                        Topic);
+
                 });
             }
 

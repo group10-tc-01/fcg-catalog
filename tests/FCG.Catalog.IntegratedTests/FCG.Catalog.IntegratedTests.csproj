@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <RunSettingsFilePath>C:\Users\f.da.costa.filho\OneDrive - Avanade\personal\FIAP\repos\fase02\fcg-catalog\tests\FCG.Catalog.IntegratedTests\bin\Debug\net8.0\fine-code-coverage\coverage-tool-output\FCG.Catalog.IntegratedTests-fcc-mscodecoverage-generated.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -19,6 +20,13 @@
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
+	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.SqlServer\FCG.Catalog.Infrastructure.SqlServer.csproj" />
+	  <ProjectReference Include="..\..\src\FCG.Catalog.WebApi\FCG.Catalog.WebApi.csproj" />
+	  <ProjectReference Include="..\FCG.Catalog.CommomTestUtilities\FCG.Catalog.CommomTestUtilities.csproj" />
 	</ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,8 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
-using FCG.Catalog.Domain.Catalog.Entity.Games;
-using FCG.Catalog.Domain.Catalog.Entity.Libraries;
-using FCG.Catalog.Domain.Catalog.Entity.Promotions;
+﻿using FCG.Catalog.Domain.Catalog.Entities.Games;
+using FCG.Catalog.Domain.Catalog.Entities.Libraries;
+using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
+using FCG.Catalog.Domain.Catalog.Entities.Promotions;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.SqlServer
 {
@@ -13,6 +12,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer
         public DbSet<Game> Games { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<LibraryGame> LibraryGames { get; set; }
+        public DbSet<PurchaseTransaction> PurchaseTransactions { get; set; }
         public FcgCatalogDbContext(DbContextOptions<FcgCatalogDbContext> options) : base(options)
         {
         }

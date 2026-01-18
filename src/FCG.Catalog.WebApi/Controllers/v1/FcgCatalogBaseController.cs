@@ -1,8 +1,6 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
 {

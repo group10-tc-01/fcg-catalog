@@ -1,10 +1,6 @@
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Repositories.Game;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FCG.Catalog.Application.UseCases.Games.Get
 {
@@ -39,22 +35,15 @@ namespace FCG.Catalog.Application.UseCases.Games.Get
 
             var items = games.Select(x =>
             {
-                var now = DateTime.UtcNow;
-                var activePromotion = x!.Promotions?
-                    .Where(p => p.StartDate <= now && p.EndDate >= now && p.IsActive)
-                    .OrderByDescending(p => p.DiscountPercentage.Value)
-                    .FirstOrDefault();
-
                 var originalPrice = x.Price.Value;
-                var finalPrice = originalPrice;
+
+                var activePromotion = x.GetActivePromotion();
+                var finalPrice = x.CalculateDiscountedPrice(activePromotion);
 
                 ActivePromotionDto? promotionDto = null;
 
                 if (activePromotion != null)
                 {
-                    var discountAmount = originalPrice * (activePromotion.DiscountPercentage.Value / 100);
-                    finalPrice = originalPrice - discountAmount;
-
                     promotionDto = new ActivePromotionDto
                     {
                         PromotionId = activePromotion.Id,
@@ -63,6 +52,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Get
                         EndDate = activePromotion.EndDate
                     };
                 }
+
                 return new GetGameOutput()
                 {
                     Id = x.Id,

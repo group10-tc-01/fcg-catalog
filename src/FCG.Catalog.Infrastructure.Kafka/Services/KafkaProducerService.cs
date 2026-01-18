@@ -1,34 +1,33 @@
 ﻿using FCG.Catalog.Infrastructure.Kafka.Abstractions;
+using FCG.Catalog.Infrastructure.Kafka.Services.Interfaces;
 using FCG.Catalog.Infrastructure.Kafka.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.Kafka.Services
 {
-    public class KafkaProducerService
+    [ExcludeFromCodeCoverage]
+    public class KafkaProducerService : IKafkaProducerService
     {
         private readonly IKafkaProducer _producer;
         private readonly KafkaSettings _settings;
         private readonly ILogger<KafkaProducerService> _logger;
 
-        public KafkaProducerService(IKafkaProducer producer, KafkaSettings settings, ILogger<KafkaProducerService> logger)
+        public KafkaProducerService(IKafkaProducer producer, IOptions<KafkaSettings> options, ILogger<KafkaProducerService> logger)
         {
             _producer = producer;
-            _settings = settings;
+            _settings = options.Value;
             _logger = logger;
         }
-
         public async Task PublishAsync<T>(string topicKey, T message, CancellationToken cancellationToken = default)
         {
             if (!_settings.Topics.ProducerTopics.TryGetValue(topicKey, out var topicName))
             {
-                throw new ArgumentException(
-                    $"Tópico com chave '{topicKey}' não encontrado",
-                    nameof(topicKey));
+                throw new ArgumentException($"Tópico com chave '{topicKey}' não encontrado", nameof(topicKey));
             }
 
-            _logger.LogDebug(
-                "Publicando mensagem no tópico {TopicName} (chave: {TopicKey})",
-                topicName, topicKey);
+            _logger.LogDebug("Publicando mensagem no tópico {TopicName} (chave: {TopicKey})", topicName, topicKey);
 
             await _producer.ProduceAsync(topicName, message, cancellationToken);
         }

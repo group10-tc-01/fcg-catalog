@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace FCG.Catalog.Application.Abstractions.Messaging
+﻿namespace FCG.Catalog.Application.Abstractions.Messaging
 {
     public interface IMessageProducer
     {

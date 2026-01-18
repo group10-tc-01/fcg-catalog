@@ -1,9 +1,7 @@
-﻿using FCG.Catalog.WebApi.Middleware;
-using System.Diagnostics.CodeAnalysis;
-using FCG.Catalog.Infrastructure.SqlServer;
-using Microsoft.AspNetCore.Builder;
+﻿using FCG.Catalog.Infrastructure.SqlServer;
+using FCG.Catalog.WebApi.Middleware;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.WebApi.Extensions
 {

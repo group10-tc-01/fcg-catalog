@@ -1,4 +1,6 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
+﻿using FCG.Catalog.CommomTestUtilities.Builders.Games;
+using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
+using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;
@@ -63,5 +65,56 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
 
             libraryGame.PurchasePrice.Value.Should().Be(29.999999m);
         }
+        [Fact]
+        public void Given_ValidParameters_When_Update_Then_ShouldUpdateGameProperties()
+        {
+            // Arrange
+            var game = new GameBuilder().Build();
+
+            var newTitle = "Resident Evil 4 Remake";
+            var newDescription = "Survival horror game developed by Capcom.";
+            var newPrice = 250.00m;
+            var newCategory = GameCategory.Simulation;
+
+            // Act
+            game.Update(newTitle, newDescription, newPrice, newCategory, DateTime.UtcNow);
+
+            // Assert
+            game.Title.Value.Should().Be(newTitle);
+            game.Description.Should().Be(newDescription);
+            game.Price.Value.Should().Be(newPrice);
+            game.Category.Should().Be(newCategory);
+        }
+
+        [Fact]
+        public void Given_InvalidName_When_Update_Then_ShouldThrowDomainException()
+        {
+            // Arrange
+            var game = new GameBuilder().Build();
+
+            var actNullName = () => game.Update("", "Description", 100, GameCategory.Action, DateTime.UtcNow);
+
+            // Act & Assert
+            actNullName.Should().Throw<DomainException>()
+                .WithMessage(ResourceMessages.GameNameIsRequired);
+        }
+
+        [Fact]
+        public void Given_InvalidPrice_When_Update_Then_ShouldThrowDomainException()
+        {
+            // Arrange
+            var game = new GameBuilder().Build();
+            var invalidPrice = -10.00m;
+
+            // Act
+            var act = () => game.Update("Valid Title", "Description", invalidPrice, GameCategory.Action, DateTime.UtcNow);
+
+            // Assert
+            act.Should().Throw<DomainException>()
+                .WithMessage(ResourceMessages.PriceCannotBeNegative);
+        }
+
+
     }
 }
+

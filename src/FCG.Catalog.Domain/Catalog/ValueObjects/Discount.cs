@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using FCG.Catalog.Domain.Exception;
+﻿using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.ValueObjects
@@ -11,7 +10,7 @@ namespace FCG.Catalog.Domain.Catalog.ValueObjects
         private Discount(decimal value)
         {
             if (value < 0 || value > 100)
-               throw new DomainException(ResourceMessages.DiscountMustBeBetweenZeroAndHundred);
+                throw new DomainException(ResourceMessages.DiscountMustBeBetweenZeroAndHundred);
 
             Value = value;
         }

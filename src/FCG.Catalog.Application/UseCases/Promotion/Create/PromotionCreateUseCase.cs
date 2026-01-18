@@ -1,14 +1,13 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using FCG.Catalog.Domain;
+﻿using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Promotion;
-using FCG.Domain.Repositories.PromotionRepository;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Application.UseCases.Promotion.Create
 {
+    [ExcludeFromCodeCoverage]
     public class CreatePromotionUseCase : ICreatePromotionUseCase
     {
         private readonly IReadOnlyGameRepository _readOnlyGameRepository;
@@ -30,7 +29,7 @@ namespace FCG.Catalog.Application.UseCases.Promotion.Create
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreatePromotionResponse> Handle(CreatePromotionRequest request, CancellationToken cancellationToken)
+        public async Task<CreatePromotionOutput> Handle(CreatePromotionInput request, CancellationToken cancellationToken)
         {
             var gameExists = await _readOnlyGameRepository.ExistsAsync(request.GameId, cancellationToken);
 
@@ -51,11 +50,11 @@ namespace FCG.Catalog.Application.UseCases.Promotion.Create
             }
 
             var discount = Discount.Create(request.DiscountPercentage);
-            var promotion = Domain.Catalog.Entity.Promotions.Promotion.Create(request.GameId, discount, request.StartDate, request.EndDate);
+            var promotion = Domain.Catalog.Entities.Promotions.Promotion.Create(request.GameId, discount, request.StartDate, request.EndDate);
             await _writeOnlyPromotionRepository.AddAsync(promotion, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new CreatePromotionResponse
+            return new CreatePromotionOutput
             {
                 Id = promotion.Id,
                 GameId = promotion.GameId,
