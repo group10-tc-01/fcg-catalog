@@ -16,7 +16,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
         private readonly IReadOnlyLibraryGameRepository _readOnlyLibraryGameRepository;
         private readonly IWriteOnlyLibraryGameRepository _writeOnlyLibraryGameRepository;
         private readonly IWriteOnlyPurchaseTransactionRepository _writeOnlyPurchaseTransactionRepository;
-        private readonly IDistributedCache _cache;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ProcessPaymentResultUseCase> _logger;
 
@@ -33,7 +32,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
             _readOnlyLibraryGameRepository = readOnlyLibraryGameRepository;
             _writeOnlyLibraryGameRepository = writeOnlyLibraryGameRepository;
             _writeOnlyPurchaseTransactionRepository = writeOnlyPurchaseTransactionRepository;
-            _cache = cache;
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
@@ -58,7 +56,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
                 }
             }
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _cache.RemoveAsync($"library:{request.UserId}", cancellationToken);
         }
     }
 }
