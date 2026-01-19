@@ -27,9 +27,11 @@ namespace FCG.Catalog.Infrastructure.Auth.Authentication
 
             var role = user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
+            var email = user.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+
             if (Guid.TryParse(idClaim, out var userId))
             {
-                return Task.FromResult<LoggedUserInfo?>(new LoggedUserInfo { Id = userId, Role = role });
+                return Task.FromResult<LoggedUserInfo?>(new LoggedUserInfo { Id = userId, Role = role, Email = email! });
             }
 
             return Task.FromResult<LoggedUserInfo?>(null);
