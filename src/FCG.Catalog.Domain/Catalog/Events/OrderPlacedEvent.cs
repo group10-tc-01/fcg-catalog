@@ -3,6 +3,7 @@
 namespace FCG.Catalog.Domain.Catalog.Events
 {
     public record OrderPlacedEvent(
+        string UserEmail,
         Guid CorrelationId,
         Guid UserId,
         Guid GameId,

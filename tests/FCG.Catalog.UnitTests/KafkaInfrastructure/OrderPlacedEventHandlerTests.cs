@@ -25,6 +25,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         {
             // Arrange
             var orderEvent = new OrderPlacedEvent(
+                "teste@gmail.com",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -50,6 +51,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         {
             // Arrange
             var orderEvent = new OrderPlacedEvent(
+                "teste@gmail.com",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -75,6 +77,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         {
             // Arrange
             var orderEvent = new OrderPlacedEvent(
+                "teste@gmail.com",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -103,6 +106,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         {
             // Arrange
             var orderEvent = new OrderPlacedEvent(
+                "teste@gmail.com",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -129,6 +133,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         {
             // Arrange
             var orderEvent = new OrderPlacedEvent(
+                "teste@gmail.com",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -160,7 +165,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
             var amount = 149.99m;
             var occurredOn = DateTimeOffset.UtcNow;
 
-            var orderEvent = new OrderPlacedEvent(correlationId, userId, gameId, amount, occurredOn);
+            var orderEvent = new OrderPlacedEvent("teste@gmail.com", correlationId, userId, gameId, amount, occurredOn);
 
             OrderPlacedEvent? capturedEvent = null;
 
@@ -190,6 +195,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         {
             // Arrange
             var orderEvent = new OrderPlacedEvent(
+                "teste@gmail.com",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -215,6 +221,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         {
             // Arrange
             var orderEvent = new OrderPlacedEvent(
+                "teste@gmail.com",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -240,6 +247,7 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         {
             // Arrange
             var orderEvent = new OrderPlacedEvent(
+                "teste@gmail.com",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -262,9 +270,9 @@ namespace FCG.Catalog.UnitTests.KafkaInfrastructure
         public async Task Handle_ShouldPublishToCorrectTopic_WhenMultipleEventsPublished()
         {
             // Arrange
-            var event1 = new OrderPlacedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 10m, DateTimeOffset.UtcNow);
-            var event2 = new OrderPlacedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 20m, DateTimeOffset.UtcNow);
-            var event3 = new OrderPlacedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 30m, DateTimeOffset.UtcNow);
+            var event1 = new OrderPlacedEvent("teste@gmail.com", Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 10m, DateTimeOffset.UtcNow);
+            var event2 = new OrderPlacedEvent("teste@gmail.com", Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 20m, DateTimeOffset.UtcNow);
+            var event3 = new OrderPlacedEvent("teste@gmail.com", Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 30m, DateTimeOffset.UtcNow);
 
             _kafkaProducerServiceMock
                 .Setup(x => x.PublishAsync("order-placed", It.IsAny<OrderPlacedEvent>(), It.IsAny<CancellationToken>()))

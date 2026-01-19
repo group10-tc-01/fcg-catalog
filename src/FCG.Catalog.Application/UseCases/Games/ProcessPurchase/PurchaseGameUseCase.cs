@@ -77,6 +77,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var orderEvent = new OrderPlacedEvent(
+                loggedUser.Email,
                 correlationId,
                 loggedUser.Id,
                 game.Id,
