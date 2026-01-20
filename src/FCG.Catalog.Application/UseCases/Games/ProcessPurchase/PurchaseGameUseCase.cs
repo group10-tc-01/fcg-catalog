@@ -43,6 +43,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
             _readOnlyLibraryGameRepository = readOnlyLibraryGameRepository;
             _writeOnlyPurchaseTransactionRepository = writeOnlyPurchaseTransactionRepository;
             _readOnlyLibraryRepository = readOnlyLibraryRepository;
+            _cache = cache;
             _catalogLoggedUser = catalogLoggedUser;
             _unitOfWork = unitOfWork;
             _mediator = mediator;
@@ -52,6 +53,8 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
         {
             var correlationId = Guid.NewGuid();
             var loggedUser = await _catalogLoggedUser.GetLoggedUserAsync();
+            string cacheKey = $"Endpoint:Library - User:{loggedUser}";
+
             if (loggedUser?.Id == Guid.Empty || loggedUser is null)
                 throw new UnauthorizedException("User not authenticated.");
 
@@ -75,6 +78,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
 
             await _writeOnlyPurchaseTransactionRepository.AddAsync(transaction, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cache.RemoveAsync(cacheKey);
 
             var orderEvent = new OrderPlacedEvent(
                 loggedUser.Email,
@@ -84,7 +88,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
                 finalPrice,
                 OccurredOn: DateTimeOffset.UtcNow
             );
-
+            
             await _mediator.Publish(orderEvent, cancellationToken);
 
             return new PurchaseGameOutput(
