@@ -1,10 +1,13 @@
-﻿using FCG.Catalog.Application.UseCases.Games.Delete;
+﻿﻿using FCG.Catalog.Application.UseCases.Games.Delete;
 using FCG.Catalog.CommomTestUtilities.Builders;
 using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories;
+using FCG.Catalog.CommomTestUtilities.Builders.Promotions.Repositories;
 using FCG.Catalog.Domain.Abstractions;
+using FCG.Catalog.Domain.Catalog.Entities.Promotions;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
+using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Catalog.Messages;
 using FluentAssertions;
 using Moq;
@@ -34,6 +37,7 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
 
             var useCase = new DeleteGameUseCase(
                 ReadOnlyGameRepositoryBuilder.Build(),
+                ReadOnlyPromotionRepositoryBuilder.Build(),
                 UnitOfWorkBuilder.Build()
             );
 
@@ -62,6 +66,11 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             mockRepo.Setup(r => r.Delete(game, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask)
                 .Callback(() => callOrder.Add("Delete"));
+            
+            var mockPromoRepo = new Mock<IReadOnlyPromotionRepository>();
+            mockPromoRepo.Setup(r => r.GetByGameIdAsync(gameId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Promotion>())
+                .Callback(() => callOrder.Add("GetByPromotion"));
 
             var mockUow = new Mock<IUnitOfWork>();
             mockUow.Setup(u => u.CommitTransactionAsync(It.IsAny<CancellationToken>()))
@@ -72,13 +81,14 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
                 .ReturnsAsync(1)
                 .Callback(() => callOrder.Add("Save"));
 
-            var useCase = new DeleteGameUseCase(mockRepo.Object, mockUow.Object);
-
+            var useCase = new DeleteGameUseCase(
+                mockRepo.Object, 
+                mockPromoRepo.Object, 
+                mockUow.Object);
             // Act
             await useCase.Handle(input, CancellationToken.None);
 
             // Assert
-            callOrder.Should().Equal("GetById", "Delete", "Commit", "Save");
-        }
+            callOrder.Should().Equal("GetById", "GetByPromotion", "Delete", "Commit", "Save");        }
     }
 }
