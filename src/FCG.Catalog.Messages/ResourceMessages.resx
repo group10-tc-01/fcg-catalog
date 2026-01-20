@@ -168,4 +168,7 @@
   <data name="LibraryAlreadyExists" xml:space="preserve">
     <value>Library already exists for user {0}.</value>
   </data>
+  <data name="GameWithPromotion" xml:space="preserve">
+    <value>You cannot delete a game with an active promotion</value>
+  </data>
 </root>
