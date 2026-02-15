@@ -42,7 +42,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
             Validate(description, price.Value, title);
             Title = title;
             Description = description;
-            Price = Price.Create(price);
+            Price = Price.Create(price.Value);
             Category = category;
             UpdatedAt = updatedAt;
         }

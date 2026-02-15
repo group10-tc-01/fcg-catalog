@@ -49,7 +49,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
         {
             var correlationId = Guid.NewGuid();
             var loggedUser = await _catalogLoggedUser.GetLoggedUserAsync();
-            string cacheKey = $"Endpoint:Library - User:{loggedUser}";
 
             if (loggedUser?.Id == Guid.Empty || loggedUser is null)
                 throw new UnauthorizedException("User not authenticated.");

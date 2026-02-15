@@ -1,5 +1,6 @@
 ﻿using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.Domain.Catalog.Entities.Promotions;
+using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;
@@ -103,5 +104,63 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
             promotion1.EndDate.Should().Be(promotion2.EndDate);
         }
 
+        [Fact]
+        public void Given_ValidParameters_When_Update_Then_ShouldUpdatePropertiesSuccessfully()
+        {
+            // Arrange
+            var game = new GameBuilder().Build();
+            var promotion = Promotion.Create(game.Id, 10m, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1));
+            var newGameId = Guid.NewGuid();
+            var newDiscount = Discount.Create(50m);
+            var newStartDate = DateTime.UtcNow.AddDays(2);
+            var newEndDate = DateTime.UtcNow.AddDays(5);
+
+            // Act
+            promotion.Update(newGameId, newDiscount, newStartDate, newEndDate);
+
+            // Assert
+            promotion.GameId.Should().Be(newGameId);
+            promotion.DiscountPercentage.Should().Be(newDiscount);
+            promotion.StartDate.Should().Be(newStartDate);
+            promotion.EndDate.Should().Be(newEndDate);
+        }
+
+        [Fact]
+        public void Given_InvalidEndDateBeforeStartDate_When_Update_Then_ShouldThrowDomainException()
+        {
+            // Arrange
+            var game = new GameBuilder().Build();
+            var promotion = Promotion.Create(game.Id, 10m, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1));
+            var newGameId = Guid.NewGuid();
+            var newDiscount = Discount.Create(50m);
+            var newStartDate = DateTime.UtcNow.AddDays(5);
+            var newEndDate = DateTime.UtcNow.AddDays(2); // End before start
+
+            // Act
+            var act = () => promotion.Update(newGameId, newDiscount, newStartDate, newEndDate);
+
+            // Assert
+            act.Should().Throw<DomainException>()
+               .WithMessage(ResourceMessages.PromotionEndDateMustBeAfterStartDate);
+        }
+
+        [Fact]
+        public void Given_EmptyGameId_When_Update_Then_ShouldThrowDomainException()
+        {
+            // Arrange
+            var game = new GameBuilder().Build();
+            var promotion = Promotion.Create(game.Id, 10m, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1));
+            var emptyGameId = Guid.Empty;
+            var newDiscount = Discount.Create(50m);
+            var newStartDate = DateTime.UtcNow.AddDays(2);
+            var newEndDate = DateTime.UtcNow.AddDays(5);
+
+            // Act
+            var act = () => promotion.Update(emptyGameId, newDiscount, newStartDate, newEndDate);
+
+            // Assert
+            act.Should().Throw<DomainException>()
+               .WithMessage(ResourceMessages.GameNotFound);
+        }
     }
 }

@@ -33,7 +33,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
 
             var game = _gameBuilder.BuildWithId(gameId, price: 60.00m);
             var library = _libraryBuilder.BuildWithGame(userId, gameId, 60.00m);
-            var cacheKey = $"Endpoint:Library - User:{userId}";
 
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
 
@@ -69,7 +68,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             // Arrange
             var userId = Guid.NewGuid();
             var query = new GetLibraryByUserIdQuery(userId);
-            var cacheKey = $"Endpoint:Library - User:{userId}";
 
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, null);
 
@@ -96,9 +94,7 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             var userId = Guid.NewGuid();
             var libraryId = Guid.NewGuid();
             var query = new GetLibraryByUserIdQuery(userId);
-
             var library = _libraryBuilder.BuildWithId(libraryId, userId);
-            var cacheKey = $"Endpoint:Library - User:{userId}";
 
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
 
@@ -154,8 +150,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             gameProperty?.SetValue(libraryGames[2], game3);
             dateProperty?.SetValue(libraryGames[2], middleDate);
 
-            var cacheKey = $"Endpoint:Library - User:{userId}";
-
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
 
             var useCase = new GetLibraryUseCase(
@@ -180,9 +174,7 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             var userId = Guid.NewGuid();
             var libraryId = Guid.NewGuid();
             var query = new GetLibraryByUserIdQuery(userId);
-
             var library = _libraryBuilder.BuildWithId(libraryId, userId);
-            var cacheKey = $"Endpoint:Library - User:{userId}";
 
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
 
@@ -213,8 +205,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             gameProperty?.SetValue(libraryGames[0], game);
             dateProperty?.SetValue(libraryGames[0], purchaseDate);
 
-            var cacheKey = $"Endpoint:Library - User:{userId}";
-
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
 
             var useCase = new GetLibraryUseCase(
@@ -240,7 +230,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             // Arrange
             var userId = Guid.NewGuid();
             var query = new GetLibraryByUserIdQuery(userId);
-            var cacheKey = $"Endpoint:Library - User:{userId}";
 
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, null);
 
@@ -262,8 +251,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             // Arrange
             var userId = Guid.NewGuid();
             var query = new GetLibraryByUserIdQuery(userId);
-            var expectedCacheKey = $"Endpoint:Library - User:{userId}";
-
             var library = _libraryBuilder.BuildWithUserId(userId);
 
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
