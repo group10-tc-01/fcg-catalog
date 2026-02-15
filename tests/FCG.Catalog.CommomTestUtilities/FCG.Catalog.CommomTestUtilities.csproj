@@ -15,7 +15,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.Kafka\FCG.Catalog.Infrastructure.Kafka.csproj" />
-	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.Redis\FCG.Catalog.Infrastructure.Redis.csproj" />
 	</ItemGroup>
 
 </Project>

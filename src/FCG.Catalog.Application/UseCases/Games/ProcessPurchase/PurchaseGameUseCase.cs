@@ -7,7 +7,6 @@ using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
 using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Catalog.Domain.Services.Repositories;
-using FCG.Catalog.Infrastructure.Redis.Interface;
 using MediatR;
 using System.Diagnostics.CodeAnalysis;
 
@@ -21,7 +20,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
         private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;
         private readonly IReadOnlyLibraryRepository _readOnlyLibraryRepository;
         private readonly IWriteOnlyPurchaseTransactionRepository _writeOnlyPurchaseTransactionRepository;
-        private readonly ICaching _cache;
         private readonly ICatalogLoggedUser _catalogLoggedUser;
         private readonly IMediator _mediator;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,7 +31,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
             IReadOnlyLibraryRepository readOnlyLibraryRepository,
             IReadOnlyPurchaseTransactionRepository readOnlyPurchaseTransactionRepository,
             IWriteOnlyPurchaseTransactionRepository writeOnlyPurchaseTransactionRepository,
-            ICaching cache,
             ICatalogLoggedUser catalogLoggedUser,
             IUnitOfWork unitOfWork,
             IMediator mediator)
@@ -43,7 +40,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
             _readOnlyLibraryGameRepository = readOnlyLibraryGameRepository;
             _writeOnlyPurchaseTransactionRepository = writeOnlyPurchaseTransactionRepository;
             _readOnlyLibraryRepository = readOnlyLibraryRepository;
-            _cache = cache;
             _catalogLoggedUser = catalogLoggedUser;
             _unitOfWork = unitOfWork;
             _mediator = mediator;
@@ -78,7 +74,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
 
             await _writeOnlyPurchaseTransactionRepository.AddAsync(transaction, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _cache.RemoveAsync(cacheKey);
 
             var orderEvent = new OrderPlacedEvent(
                 loggedUser.Email,
