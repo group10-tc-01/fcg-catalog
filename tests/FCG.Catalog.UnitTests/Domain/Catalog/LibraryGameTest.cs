@@ -14,6 +14,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
             var libraryId = Guid.NewGuid();
             var gameId = Guid.NewGuid();
             var purchasePrice = Price.Create(59.99m);
+            var expectedPurchaseDate = DateTime.UtcNow;
 
             // Act
             var libraryGame = LibraryGame.Create(libraryId, gameId, purchasePrice);
@@ -24,7 +25,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
             libraryGame.LibraryId.Should().Be(libraryId);
             libraryGame.GameId.Should().Be(gameId);
             libraryGame.PurchasePrice.Should().Be(purchasePrice);
-            libraryGame.PurchaseDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+            libraryGame.PurchaseDate.Should().BeCloseTo(expectedPurchaseDate, TimeSpan.FromSeconds(1));
         }
 
         [Fact]

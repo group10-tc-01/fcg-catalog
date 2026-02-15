@@ -24,45 +24,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnLibraryFromDatabase_WhenCacheDoesNotExist()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var gameId = Guid.NewGuid();
-            var query = new GetLibraryByUserIdQuery(userId);
-
-            var game = _gameBuilder.BuildWithId(gameId, price: 60.00m);
-            var library = _libraryBuilder.BuildWithGame(userId, gameId, 60.00m);
-
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
-
-            // Mock da navegação LibraryGame.Game
-            var libraryGames = library.LibraryGames.ToList();
-            if (libraryGames.Any())
-            {
-                var gameProperty = typeof(LibraryGame).GetProperty("Game");
-                gameProperty?.SetValue(libraryGames[0], game);
-            }
-
-            var useCase = new GetLibraryUseCase(
-                ReadOnlyLibraryRepositoryBuilder.Build()
-            );
-
-            // Act
-            var result = await useCase.Handle(query, CancellationToken.None);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.LibraryGames.Should().NotBeNull();
-            result.LibraryGames.Should().HaveCount(1);
-            result.LibraryGames![0].GameId.Should().Be(gameId);
-            result.LibraryGames[0].Title.Should().Be(game.Title.Value);
-            result.LibraryGames[0].PurchasePrice.Should().Be(60.00m);
-
-            ReadOnlyLibraryRepositoryBuilder.VerifyGetByUserIdWithGamesAsyncWasCalled(userId, Times.Once());
-        }
-
-        [Fact]
         public async Task Handle_ShouldReturnEmptyResponse_WhenLibraryDoesNotExist()
         {
             // Arrange

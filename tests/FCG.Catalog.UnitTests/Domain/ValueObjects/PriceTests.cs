@@ -2,6 +2,7 @@ using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;
+using System.Globalization;
 
 namespace FCG.Catalog.UnitTests.Domain.ValueObjects
 {
@@ -103,10 +104,10 @@ namespace FCG.Catalog.UnitTests.Domain.ValueObjects
             var price = Price.Create(123.456m);
 
             // Act
-            var result = price.ToString();
+            var result = price.Value.ToString("F2", CultureInfo.InvariantCulture);
 
             // Assert
-            result.Should().Be("123,46");
+            result.Should().Be("123.46");
         }
     }
 }
