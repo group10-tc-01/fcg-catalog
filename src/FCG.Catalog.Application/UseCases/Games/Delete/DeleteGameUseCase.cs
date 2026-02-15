@@ -12,7 +12,6 @@ namespace FCG.Catalog.Application.UseCases.Games.Delete
         private readonly IReadOnlyGameRepository _gameRepository;
         private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;
 
         public DeleteGameUseCase(
             IReadOnlyGameRepository gameRepository,
