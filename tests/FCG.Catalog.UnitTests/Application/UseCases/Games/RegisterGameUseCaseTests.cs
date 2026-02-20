@@ -92,15 +92,15 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
                 Category = GameCategory.Strategy
             };
 
-            ReadOnlyGameRepositoryBuilder.SetupGetByNameAsync(input.Name, null);
-            WriteOnlyGameRepositoryBuilder.SetupAddAsync(It.IsAny<Game>());
-            UnitOfWorkBuilder.SetupSaveChangesAsync();
-
             var useCase = new RegisterGameUseCase(
                 WriteOnlyGameRepositoryBuilder.Build(),
                 ReadOnlyGameRepositoryBuilder.Build(),
                 UnitOfWorkBuilder.Build()
             );
+
+            ReadOnlyGameRepositoryBuilder.SetupGetByNameAsync(input.Name, null);
+            WriteOnlyGameRepositoryBuilder.SetupAddAsync(It.IsAny<Game>());
+            UnitOfWorkBuilder.SetupSaveChangesAsync();
 
             // Act
             await useCase.Handle(input, CancellationToken.None);
