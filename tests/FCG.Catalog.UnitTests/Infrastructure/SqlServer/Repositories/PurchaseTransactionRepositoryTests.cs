@@ -1,13 +1,7 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Infrastructure.SqlServer;
 using FCG.Catalog.Infrastructure.SqlServer.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Moq;
-using Xunit;
 
 namespace FCG.Catalog.UnitTests.Infrastructure.SqlServer.Repositories
 {
@@ -52,6 +46,8 @@ namespace FCG.Catalog.UnitTests.Infrastructure.SqlServer.Repositories
             var transaction = new PurchaseTransaction(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 10m);
 
             // Act
+            _dbContext.Set<PurchaseTransaction>().Add(transaction);
+            _dbContext.SaveChanges();
             await _repository.AddAsync(transaction, CancellationToken.None);
 
             // Assert
