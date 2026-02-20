@@ -8,7 +8,11 @@ namespace FCG.Catalog.CommomTestUtilities.Builders.Promotions.Repositories
     {
         private static readonly Mock<IReadOnlyPromotionRepository> _mock = new Mock<IReadOnlyPromotionRepository>();
 
-        public static IReadOnlyPromotionRepository Build() => _mock.Object;
+        public static IReadOnlyPromotionRepository Build()
+        {
+            Reset();
+            return _mock.Object;
+        }
 
         public static void Reset() => _mock.Reset();
 
@@ -46,15 +50,6 @@ namespace FCG.Catalog.CommomTestUtilities.Builders.Promotions.Repositories
                 gameId,
                 It.IsAny<DateTime>(),
                 It.IsAny<DateTime>(),
-                It.IsAny<CancellationToken>()), times);
-        }
-
-        public static void VerifyExistsActivePromotionForGameAsyncWasCalled(Guid gameId, DateTime startDate, DateTime endDate, Times times)
-        {
-            _mock.Verify(repo => repo.ExistsActivePromotionForGameAsync(
-                gameId,
-                startDate,
-                endDate,
                 It.IsAny<CancellationToken>()), times);
         }
     }

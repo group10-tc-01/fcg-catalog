@@ -29,12 +29,11 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             // Arrange
             var userId = Guid.NewGuid();
             var query = new GetLibraryByUserIdQuery(userId);
-
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, null);
-
             var useCase = new GetLibraryUseCase(
                 ReadOnlyLibraryRepositoryBuilder.Build()
             );
+
+            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, null);
 
             // Act
             var result = await useCase.Handle(query, CancellationToken.None);
@@ -51,6 +50,10 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
         [Fact]
         public async Task Handle_ShouldReturnEmptyLibraryGames_WhenLibraryHasNoGames()
         {
+            var useCase = new GetLibraryUseCase(
+                ReadOnlyLibraryRepositoryBuilder.Build()
+            );
+
             // Arrange
             var userId = Guid.NewGuid();
             var libraryId = Guid.NewGuid();
@@ -58,10 +61,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             var library = _libraryBuilder.BuildWithId(libraryId, userId);
 
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
-
-            var useCase = new GetLibraryUseCase(
-                ReadOnlyLibraryRepositoryBuilder.Build()
-            );
 
             // Act
             var result = await useCase.Handle(query, CancellationToken.None);
@@ -76,6 +75,10 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
         [Fact]
         public async Task Handle_ShouldOrderGamesByPurchaseDateDescending_WhenLibraryHasMultipleGames()
         {
+            var useCase = new GetLibraryUseCase(
+                ReadOnlyLibraryRepositoryBuilder.Build()
+            );
+
             // Arrange
             var userId = Guid.NewGuid();
             var game1Id = Guid.NewGuid();
@@ -112,10 +115,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             dateProperty?.SetValue(libraryGames[2], middleDate);
 
             ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
-
-            var useCase = new GetLibraryUseCase(
-                ReadOnlyLibraryRepositoryBuilder.Build()
-            );
 
             // Act
             var result = await useCase.Handle(query, CancellationToken.None);
@@ -166,11 +165,11 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Libraries
             gameProperty?.SetValue(libraryGames[0], game);
             dateProperty?.SetValue(libraryGames[0], purchaseDate);
 
-            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
-
             var useCase = new GetLibraryUseCase(
                 ReadOnlyLibraryRepositoryBuilder.Build()
             );
+
+            ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, library);
 
             // Act
             var result = await useCase.Handle(query, CancellationToken.None);

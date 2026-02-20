@@ -8,7 +8,11 @@ namespace FCG.Catalog.CommomTestUtilities.Builders.LibraryGames.Repositories
     {
         private static readonly Mock<IReadOnlyLibraryGameRepository> _mock = new Mock<IReadOnlyLibraryGameRepository>();
 
-        public static IReadOnlyLibraryGameRepository Build() => _mock.Object;
+        public static IReadOnlyLibraryGameRepository Build()
+        {
+            Reset();
+            return _mock.Object;
+        }
 
         public static void Reset() => _mock.Reset();
 
