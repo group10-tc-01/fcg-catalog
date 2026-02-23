@@ -121,7 +121,6 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
                 ReadOnlyLibraryRepositoryBuilder.Build(),
                 ReadOnlyPurchaseTransactionRepositoryBuilder.Build(),
                 WriteOnlyPurchaseTransactionRepositoryBuilder.Build(),
-                CachingBuilder.Build(),
                 CatalogLoggedUserBuilder.Build(),
                 UnitOfWorkBuilder.Build(),
                 _mediatorMock.Object

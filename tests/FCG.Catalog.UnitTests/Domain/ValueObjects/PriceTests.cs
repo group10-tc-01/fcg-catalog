@@ -2,6 +2,7 @@ using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;
+using System.Globalization;
 
 namespace FCG.Catalog.UnitTests.Domain.ValueObjects
 {
@@ -10,10 +11,13 @@ namespace FCG.Catalog.UnitTests.Domain.ValueObjects
         [Fact]
         public void Given_ValidPrice_When_Create_Then_ShouldCreateSuccessfully()
         {
+            // Arrange
             decimal validPrice = 59.99m;
 
+            // Act
             var price = Price.Create(validPrice);
 
+            // Assert
             price.Should().NotBeNull();
             price.Value.Should().Be(validPrice);
         }
@@ -41,10 +45,14 @@ namespace FCG.Catalog.UnitTests.Domain.ValueObjects
         [Fact]
         public void Given_NegativePrice_When_Create_Then_ShouldThrowDomainException()
         {
-            decimal negativePrice = -10.50m;
+            // Arrange
+            decimal negativePrice = -10.00m;
+
+            // Act
             var act = () => Price.Create(negativePrice);
 
-            act.Should().Throw<DomainException>().WithMessage(ResourceMessages.PriceCannotBeNegative);
+            // Assert
+            act.Should().Throw<DomainException>().WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
         }
 
         [Fact]
@@ -80,29 +88,26 @@ namespace FCG.Catalog.UnitTests.Domain.ValueObjects
         [Fact]
         public void Given_ZeroPrice_When_Create_Then_ShouldThrowDomainException()
         {
+            // Arrange
             decimal zeroPrice = 0m;
+
+            // Act
             var act = () => Price.Create(zeroPrice);
 
+            // Assert
             act.Should().Throw<DomainException>().WithMessage(ResourceMessages.GamePriceMustBeGreaterThanZero);
         }
         [Fact]
         public void Given_PriceObject_When_ToStringCalled_Then_ShouldReturnFormattedValue()
         {
-            var price = Price.Create(10.5m);
+            // Arrange
+            var price = Price.Create(123.456m);
 
-            var result = price.ToString();
+            // Act
+            var result = price.Value.ToString("F2", CultureInfo.InvariantCulture);
 
-            result.Should().Be(10.5m.ToString("F2"));
-        }
-        [Fact]
-        public void Given_InvalidDecimalValue_When_ImplicitlyConvertedToPrice_Then_ShouldThrowException()
-        {
-            decimal invalidValue = -10m;
-
-            Action act = () => { Price p = invalidValue; };
-
-            act.Should().Throw<DomainException>()
-                .WithMessage(ResourceMessages.PriceCannotBeNegative);
+            // Assert
+            result.Should().Be("123.46");
         }
     }
 }

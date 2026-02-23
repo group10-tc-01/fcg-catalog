@@ -4,9 +4,7 @@ using FCG.Catalog.CommomTestUtilities.Builders.Promotions;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Catalog.Entities.Promotions;
-using FCG.Catalog.Infrastructure.Redis.Interface;
 using FCG.Catalog.Infrastructure.SqlServer;
-using FCG.Catalog.IntegratedTests.Fakes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
@@ -33,8 +31,6 @@ namespace FCG.Catalog.IntegratedTests.Configurations
                 RemoveEntityFrameworkServices(services);
                 RemoveKafkaServices(services);
                 RemoveRedisServices(services);
-
-                services.AddSingleton<ICaching, InMemoryCaching>();
 
                 _connection?.Dispose();
                 _connection = new SqliteConnection("Data Source=:memory:");

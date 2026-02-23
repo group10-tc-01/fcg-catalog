@@ -1,5 +1,4 @@
 ﻿using FCG.Catalog.Domain.Repositories.Library;
-using FCG.Catalog.Infrastructure.Redis.Interface;
 using MediatR;
 
 namespace FCG.Catalog.Application.UseCases.Libraries.Get
@@ -8,7 +7,7 @@ namespace FCG.Catalog.Application.UseCases.Libraries.Get
     {
         private readonly IReadOnlyLibraryRepository _readOnlyLibraryRepository;
 
-        public GetLibraryUseCase(IReadOnlyLibraryRepository readRepo, ICaching cache)
+        public GetLibraryUseCase(IReadOnlyLibraryRepository readRepo)
         {
             _readOnlyLibraryRepository = readRepo;
         }

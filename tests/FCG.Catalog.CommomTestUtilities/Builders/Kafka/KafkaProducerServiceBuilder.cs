@@ -1,13 +1,14 @@
 ﻿using FCG.Catalog.Infrastructure.Kafka.Services;
+using FCG.Catalog.Infrastructure.Kafka.Services.Interfaces;
 using Moq;
 
 namespace FCG.Catalog.CommomTestUtilities.Builders.Kafka
 {
     public static class KafkaProducerServiceBuilder
     {
-        private static readonly Mock<KafkaProducerService> _mock = new Mock<KafkaProducerService>();
+        private static readonly Mock<IKafkaProducerService> _mock = new Mock<IKafkaProducerService>();
 
-        public static KafkaProducerService Build() => _mock.Object;
+        public static IKafkaProducerService Build() => _mock.Object;
 
         public static void Reset() => _mock.Reset();
 
@@ -38,11 +39,11 @@ namespace FCG.Catalog.CommomTestUtilities.Builders.Kafka
         }
 
         public static void VerifyPublishAsyncWasCalledWithMessage<T>(string topicKey, T message, Times times)
-        {
-            _mock.Verify(service => service.PublishAsync(
-                topicKey,
-                It.Is<T>(m => m.Equals(message)),
-                It.IsAny<CancellationToken>()), times);
-        }
-    }
-}
+           {
+               _mock.Verify(service => service.PublishAsync(
+                   topicKey,
+                   It.Is<T>(m => m.Equals(message)),
+                   It.IsAny<CancellationToken>()), times);
+           }
+       }
+   }

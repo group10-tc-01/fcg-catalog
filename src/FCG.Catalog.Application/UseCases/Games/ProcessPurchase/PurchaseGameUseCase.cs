@@ -7,7 +7,6 @@ using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
 using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Catalog.Domain.Services.Repositories;
-using FCG.Catalog.Infrastructure.Redis.Interface;
 using MediatR;
 using System.Diagnostics.CodeAnalysis;
 
@@ -21,7 +20,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
         private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;
         private readonly IReadOnlyLibraryRepository _readOnlyLibraryRepository;
         private readonly IWriteOnlyPurchaseTransactionRepository _writeOnlyPurchaseTransactionRepository;
-        private readonly ICaching _cache;
         private readonly ICatalogLoggedUser _catalogLoggedUser;
         private readonly IMediator _mediator;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,7 +31,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
             IReadOnlyLibraryRepository readOnlyLibraryRepository,
             IReadOnlyPurchaseTransactionRepository readOnlyPurchaseTransactionRepository,
             IWriteOnlyPurchaseTransactionRepository writeOnlyPurchaseTransactionRepository,
-            ICaching cache,
             ICatalogLoggedUser catalogLoggedUser,
             IUnitOfWork unitOfWork,
             IMediator mediator)
@@ -52,6 +49,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
         {
             var correlationId = Guid.NewGuid();
             var loggedUser = await _catalogLoggedUser.GetLoggedUserAsync();
+
             if (loggedUser?.Id == Guid.Empty || loggedUser is null)
                 throw new UnauthorizedException("User not authenticated.");
 
@@ -84,7 +82,7 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPurchase
                 finalPrice,
                 OccurredOn: DateTimeOffset.UtcNow
             );
-
+            
             await _mediator.Publish(orderEvent, cancellationToken);
 
             return new PurchaseGameOutput(

@@ -1,5 +1,4 @@
 using FCG.Catalog.Domain.Repositories.Game;
-using FCG.Catalog.Infrastructure.Redis.Interface;
 using MediatR;
 
 namespace FCG.Catalog.Application.UseCases.Games.GetPurchaseStatus;
@@ -8,7 +7,7 @@ public class GetPurchaseStatusHandler : IRequestHandler<GetPurchaseStatusInput, 
 {
     private readonly IReadOnlyPurchaseTransactionRepository _readOnlyPurchaseTransactionRepository;
 
-    public GetPurchaseStatusHandler(IReadOnlyPurchaseTransactionRepository readOnlyPurchaseTransactionRepository, ICaching cache)
+    public GetPurchaseStatusHandler(IReadOnlyPurchaseTransactionRepository readOnlyPurchaseTransactionRepository)
     {
         _readOnlyPurchaseTransactionRepository = readOnlyPurchaseTransactionRepository;
     }

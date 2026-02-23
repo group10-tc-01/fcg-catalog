@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace FCG.Catalog.Application.UseCases.Games.Update
 {
     [ExcludeFromCodeCoverage]
-
     public class UpdateGameInputValidator : AbstractValidator<UpdateGameInput>
     {
         public UpdateGameInputValidator()

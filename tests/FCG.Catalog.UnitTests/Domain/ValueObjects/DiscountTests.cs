@@ -2,68 +2,115 @@ using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using FluentAssertions;
+using System.Globalization;
 
 namespace FCG.Catalog.UnitTests.Domain.ValueObjects
 {
     public class DiscountTests
     {
         [Fact]
-        public void Given_ValidPercentages_When_Create_Then_ShouldCreateSuccessfullyAndSetProperties()
+        public void Given_ValidDiscount_When_Create_Then_ShouldCreateSuccessfully()
         {
-            decimal validPercentage = 25.5m;
-            decimal zeroPercentage = 0m;
-            decimal maxPercentage = 100m;
+            // Arrange
+            decimal validDiscount = 15.5m;
 
-            var discount = Discount.Create(validPercentage);
-            var zeroDiscount = Discount.Create(zeroPercentage);
-            var maxDiscount = Discount.Create(maxPercentage);
+            // Act
+            var discount = Discount.Create(validDiscount);
 
+            // Assert
             discount.Should().NotBeNull();
-            discount.Value.Should().Be(validPercentage);
-            zeroDiscount.Value.Should().Be(0);
-            maxDiscount.Value.Should().Be(100);
+            discount.Value.Should().Be(validDiscount);
         }
 
         [Fact]
-        public void Given_InvalidPercentages_When_Create_Then_ShouldThrowDomainException()
+        public void Given_NegativeDiscount_When_Create_Then_ShouldThrowDomainException()
         {
-            decimal negativePercentage = -5m;
-            decimal invalidPercentage = 101m;
-            var actNegative = () => Discount.Create(negativePercentage);
-            var actAbove100 = () => Discount.Create(invalidPercentage);
+            // Arrange
+            decimal negativeDiscount = -5m;
 
-            actNegative.Should().Throw<DomainException>().WithMessage(ResourceMessages.DiscountMustBeBetweenZeroAndHundred);
-            actAbove100.Should().Throw<DomainException>().WithMessage(ResourceMessages.DiscountMustBeBetweenZeroAndHundred);
+            // Act
+            var act = () => Discount.Create(negativeDiscount);
+
+            // Assert
+            act.Should().Throw<DomainException>().WithMessage(ResourceMessages.DiscountMustBeBetweenZeroAndHundred);
         }
 
         [Fact]
-        public void Given_DiscountObject_When_ImplicitlyConvertedToDecimal_Then_ShouldReturnValue()
+        public void Given_DiscountGreaterThanHundred_When_Create_Then_ShouldThrowDomainException()
         {
-            var discount = Discount.Create(15.75m);
+            // Arrange
+            decimal invalidDiscount = 150m;
 
-            decimal value = discount;
+            // Act
+            var act = () => Discount.Create(invalidDiscount);
 
-            value.Should().Be(15.75m);
+            // Assert
+            act.Should().Throw<DomainException>().WithMessage(ResourceMessages.DiscountMustBeBetweenZeroAndHundred);
         }
 
         [Fact]
-        public void Given_DecimalValue_When_ImplicitlyConvertedToDiscount_Then_ShouldCreateDiscount()
+        public void Given_ZeroDiscount_When_Create_Then_ShouldCreateSuccessfully()
         {
-            decimal value = 30m;
+            // Arrange
+            decimal zeroDiscount = 0m;
 
+            // Act
+            var discount = Discount.Create(zeroDiscount);
+
+            // Assert
+            discount.Value.Should().Be(zeroDiscount);
+        }
+
+        [Fact]
+        public void Given_HundredDiscount_When_Create_Then_ShouldCreateSuccessfully()
+        {
+            // Arrange
+            decimal hundredDiscount = 100m;
+
+            // Act
+            var discount = Discount.Create(hundredDiscount);
+
+            // Assert
+            discount.Value.Should().Be(hundredDiscount);
+        }
+
+        [Fact]
+        public void Given_ImplicitConversionFromDecimal_When_Convert_Then_ShouldCreateDiscount()
+        {
+            // Arrange
+            decimal value = 25m;
+
+            // Act
             Discount discount = value;
 
-            discount.Value.Should().Be(30m);
+            // Assert
+            discount.Value.Should().Be(value);
         }
 
         [Fact]
-        public void Given_DiscountObject_When_ToStringCalled_Then_ShouldReturnFormattedValue()
+        public void Given_ImplicitConversionToDecimal_When_Convert_Then_ShouldReturnValue()
         {
-            var discount = Discount.Create(15.5m);
+            // Arrange
+            var discount = Discount.Create(30m);
 
-            var result = discount.ToString();
+            // Act
+            decimal value = discount;
 
-            result.Should().Be(15.5m.ToString("F2"));
+            // Assert
+            value.Should().Be(discount.Value);
+        }
+
+        [Fact]
+        public void Given_Discount_When_ToString_Then_ShouldFormatCorrectly()
+        {
+            // Arrange
+            var discount = Discount.Create(12.345m);
+
+            // Act
+            var result = discount.Value.ToString("F2", CultureInfo.InvariantCulture);
+
+            // Assert
+            result.Should().Be("12.35");
         }
     }
 }

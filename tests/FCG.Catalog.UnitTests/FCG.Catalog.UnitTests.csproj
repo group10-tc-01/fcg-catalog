@@ -6,9 +6,14 @@
 		<Nullable>enable</Nullable>
 
 		<IsPackable>false</IsPackable>
-		<IsTestProject>true</IsTestProject>
-		<RunSettingsFilePath>C:\Users\f.da.costa.filho\OneDrive - Avanade\personal\FIAP\repos\fase02\fcg-catalog\tests\FCG.Catalog.UnitTests\bin\Debug\net8.0\fine-code-coverage\coverage-tool-output\FCG.Catalog.UnitTests-fcc-mscodecoverage-generated.runsettings</RunSettingsFilePath>
+		<IsTestProject>true</IsTestProject>		
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="TestResults\**" />
+	  <EmbeddedResource Remove="TestResults\**" />
+	  <None Remove="TestResults\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="6.0.0" />
@@ -18,6 +23,7 @@
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
