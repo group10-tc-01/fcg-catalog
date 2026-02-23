@@ -1,7 +1,5 @@
 using FCG.Catalog.Application.DependencyInjection;
 using FCG.Catalog.Infrastructure.Kafka.DependencyInjection;
-using FCG.Catalog.Infrastructure.Redis.DependencyInjection;
-using FCG.Catalog.Infrastructure.Redis.Redis;
 using FCG.Catalog.WebApi.DependencyInjection;
 using FCG.Catalog.WebApi.Extensions;
 using FCG.Catalog.WebApi.Middleware;
@@ -27,8 +25,6 @@ namespace FCG.Catalog.WebApi
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddKafkaInfrastructure(builder.Configuration);
-            builder.Services.AddRedisInfrastructure(builder.Configuration);
-            builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
 
             var app = builder.Build();
 

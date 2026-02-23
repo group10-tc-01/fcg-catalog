@@ -9,12 +9,7 @@ namespace FCG.Catalog.Domain.Catalog.ValueObjects
 
         private Price(decimal value)
         {
-            if (value < 0)
-            {
-                throw new DomainException(ResourceMessages.PriceCannotBeNegative);
-            }
-
-            if (value == 0)
+            if (value <= 0)  // Combina as validações para simplificar e usar a mesma mensagem
             {
                 throw new DomainException(ResourceMessages.GamePriceMustBeGreaterThanZero);
             }

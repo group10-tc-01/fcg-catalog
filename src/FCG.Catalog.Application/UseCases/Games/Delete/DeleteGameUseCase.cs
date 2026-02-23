@@ -10,8 +10,8 @@ namespace FCG.Catalog.Application.UseCases.Games.Delete
     public class DeleteGameUseCase : IDeleteGameUseCase
     {
         private readonly IReadOnlyGameRepository _gameRepository;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public DeleteGameUseCase(
             IReadOnlyGameRepository gameRepository,
@@ -36,8 +36,8 @@ namespace FCG.Catalog.Application.UseCases.Games.Delete
             {
                 throw new DomainException(ResourceMessages.GameWithPromotion);
             }
+            
             await _gameRepository.Delete(game, cancellationToken);
-
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 

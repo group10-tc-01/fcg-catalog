@@ -12,7 +12,9 @@ namespace FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories
             => _mock.Object;
 
         public static void Reset()
-            => _mock.Reset();
+        {
+            _mock.Reset();
+        }
 
         public static void SetupGetByCorrelationIdAsync(
             Guid correlationId,

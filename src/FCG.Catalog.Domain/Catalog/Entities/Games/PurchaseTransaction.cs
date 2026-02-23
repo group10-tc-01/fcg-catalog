@@ -20,7 +20,6 @@ public sealed class PurchaseTransaction : BaseEntity
         GameId = gameId;
         Amount = amount;
         Status = "Pending";
-
     }
 
     public void UpdateStatus(string status, string? message = null)
