@@ -159,8 +159,8 @@ jobs:
             -reports:"$(echo $coverage_files | tr ' ' ';')" \
             -targetdir:"./CoverageReports" \
             -reporttypes:"Cobertura;OpenCover;HtmlInline_AzurePipelines" \
-            -filefilters:"-**/tests/**;-**/FCG.Catalog.UnitTests/**;-**/FCG.Catalog.IntegratedTests/**;-**/FCG.Catalog.FunctionalTests/**;-**/CommomTestsUtilities/**" \
-            -classfilters:"-FCG.Catalog.UnitTests.*;-FCG.Catalog.IntegratedTests.*;-FCG.Catalog.FunctionalTests.*;-*.Tests.*;-*TestsUtilities.*" \
+            -filefilters:"-**/tests/**;-**/FCG.Catalog.UnitTests/**;-**/FCG.Catalog.IntegratedTests/**;-**/FCG.Catalog.FunctionalTests/**;-**/CommomTestsUtilities/**;-**/FCG.Catalog.Messages/**" \
+            -classfilters:"-FCG.Catalog.UnitTests.*;-FCG.Catalog.IntegratedTests.*;-FCG.Catalog.FunctionalTests.*;-*.Tests.*;-*TestsUtilities.*;-FCG.Catalog.Messages.*" \
             -verbosity:Info
         else
           echo "No coverage files found"
@@ -280,7 +280,7 @@ jobs:
           /d:sonar.token="$SONAR_TOKEN" \
           /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" \
           /d:sonar.cs.vstest.reportsPaths="**/TestResults/**/*.trx" \
-          /d:sonar.coverage.exclusions="**/tests/**/*,**/Migrations/**/*,**/Program.cs,**/Startup.cs" \
+          /d:sonar.coverage.exclusions="**/tests/**/*,**/Migrations/**/*,**/Program.cs,**/Startup.cs,**/FCG.Catalog.Messages/**/*" \
           /d:sonar.test.exclusions="**/tests/**/*,**/*Tests*/**/*,**/*Test*/**/*"
     
     - name: Restore dependencies

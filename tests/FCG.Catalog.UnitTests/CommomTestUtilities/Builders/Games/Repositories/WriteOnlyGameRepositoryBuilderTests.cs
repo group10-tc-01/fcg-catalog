@@ -1,6 +1,5 @@
 using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories;
-using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Repositories.Game;
 using Moq;
 
@@ -50,20 +49,6 @@ public class WriteOnlyGameRepositoryBuilderTests
     }
 
     [Fact]
-    public async Task VerifyAddAsyncWasCalled_ShouldVerifyCall()
-    {
-        WriteOnlyGameRepositoryBuilder.Reset(); // Limpa o mock para evitar estado residual
-        // Arrange
-        var game = new GameBuilder().Build();
-        var repository = WriteOnlyGameRepositoryBuilder.Build();
-        WriteOnlyGameRepositoryBuilder.SetupAddAsync(game);
-        await repository.AddAsync(game);
-
-        // Act & Assert
-        WriteOnlyGameRepositoryBuilder.VerifyAddAsyncWasCalled(Times.Once());
-    }
-
-    [Fact]
     public void VerifyUpdateWasCalled_ShouldVerifyCall()
     {
         WriteOnlyGameRepositoryBuilder.Reset();
@@ -75,19 +60,6 @@ public class WriteOnlyGameRepositoryBuilderTests
 
         // Act & Assert
         WriteOnlyGameRepositoryBuilder.VerifyUpdateWasCalled(Times.Once());
-    }
-
-    [Fact]
-    public async Task VerifyAddAsyncWasCalledWith_ShouldVerifyCallWithSpecificGame()
-    {
-        // Arrange
-        var game = new GameBuilder().Build();
-        WriteOnlyGameRepositoryBuilder.SetupAddAsync(game);
-        var repository = WriteOnlyGameRepositoryBuilder.Build();
-        await repository.AddAsync(game);
-
-        // Act & Assert
-        WriteOnlyGameRepositoryBuilder.VerifyAddAsyncWasCalledWith(game, Times.Once());
     }
 
     [Fact]

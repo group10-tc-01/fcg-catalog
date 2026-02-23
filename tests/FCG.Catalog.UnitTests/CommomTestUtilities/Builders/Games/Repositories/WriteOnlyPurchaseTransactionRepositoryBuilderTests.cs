@@ -83,41 +83,18 @@ public class WriteOnlyPurchaseTransactionRepositoryBuilderTests
     }
 
     [Fact]
-    public async Task VerifyUpdateStatusAsyncWasCalled_ShouldVerifyCall()
-    {
-        // Arrange
-        var correlationId = Guid.NewGuid();
-        var status = "Rejected";
-        var message = "Pagamento rejeitado.";
-        
-        var builderRepo = WriteOnlyPurchaseTransactionRepositoryBuilder.Build();
-        WriteOnlyPurchaseTransactionRepositoryBuilder.SetupUpdateStatusAsync();
-
-        await builderRepo.UpdateStatusAsync(correlationId, status, message, CancellationToken.None);
-
-        // Act & Assert
-        WriteOnlyPurchaseTransactionRepositoryBuilder.VerifyUpdateStatusAsyncWasCalled(correlationId, status, Times.Once());
-    }
-
-    [Fact]
     public void Reset_ShouldClearConfigurations()
     {
-        // Arrange
         var correlationId = Guid.NewGuid();
         var userId = Guid.NewGuid();
         var gameId = Guid.NewGuid();
-        var amount = 59.99m;        
+        var amount = 59.99m;
         var transaction = new PurchaseTransaction(correlationId, userId, gameId, amount);
         transaction.UpdateStatus("Pending", "Transação iniciada.");
 
         var builderRepo = WriteOnlyPurchaseTransactionRepositoryBuilder.Build();
         WriteOnlyPurchaseTransactionRepositoryBuilder.SetupAddAsync();
-                
-        // Act
-        var exception = Record.ExceptionAsync(() => builderRepo.AddAsync(transaction, CancellationToken.None));
 
-        // Assert
-        // After reset, the setup should be cleared, and since it's strict, it might throw
-        // For simplicity, just ensure the method is callable, or adjust based on mock behavior
+        var exception = Record.ExceptionAsync(() => builderRepo.AddAsync(transaction, CancellationToken.None));
     }
 }

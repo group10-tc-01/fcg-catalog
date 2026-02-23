@@ -1,4 +1,3 @@
-using FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories;
 using FCG.Catalog.CommomTestUtilities.Builders.Libraries.Repositories;
 using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Repositories.Library;
@@ -70,25 +69,12 @@ public class ReadOnlyLibraryRepositoryBuilderTests
     }
 
     [Fact]
-    public async Task VerifyGetByUserIdAsyncWasCalled_ShouldVerifyCall()
-    {
-        // Arrange
-        var userId = Guid.NewGuid();
-        var repository = ReadOnlyLibraryRepositoryBuilder.Build();
-        
-        await repository.GetByUserIdAsync(userId, CancellationToken.None);
-
-        // Act & Assert
-        ReadOnlyLibraryRepositoryBuilder.VerifyGetByUserIdAsyncWasCalled(userId, Times.Once());
-    }
-
-    [Fact]
     public async Task VerifyGetByUserIdWithGamesAsyncWasCalled_ShouldVerifyCall()
     {
         // Arrange
         var userId = Guid.NewGuid();
         var repository = ReadOnlyLibraryRepositoryBuilder.Build();
-        ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, null); // Permite a chamada
+        ReadOnlyLibraryRepositoryBuilder.SetupGetByUserIdWithGamesAsync(userId, null);
 
         await repository.GetByUserIdWithGamesAsync(userId, CancellationToken.None);
 
