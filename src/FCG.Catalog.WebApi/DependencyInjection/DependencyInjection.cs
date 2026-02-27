@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Elmah.Io.Extensions.Logging;
 
 namespace FCG.Catalog.WebApi.DependencyInjection
 {
@@ -30,10 +31,13 @@ namespace FCG.Catalog.WebApi.DependencyInjection
             services.AddAuthInfrastructure(configuration);
             services.AddHttpContextAccessor();
             services.AddScoped<ITokenProvider, HttpContextTokenProvider>();
+            services.AddElmahIO(configuration);
 
             return services;
         }
-        private static void AddAuthenticationConfiguration(this IServiceCollection services, IConfiguration configuration)
+
+        private static void AddAuthenticationConfiguration(this IServiceCollection services,
+            IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings["SecretKey"];
@@ -67,6 +71,7 @@ namespace FCG.Catalog.WebApi.DependencyInjection
                     };
                 });
         }
+
         private static void AddSwaggerConfiguration(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -116,10 +121,27 @@ namespace FCG.Catalog.WebApi.DependencyInjection
 
         private static void AddFilters(this IServiceCollection services)
         {
-            services.AddMvc(options =>
+            services.AddMvc(options => { options.Filters.Add<TrimStringsActionFilter>(); });
+        }
+
+        private static void AddElmahIO(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddElmahIo(options =>
             {
-                options.Filters.Add<TrimStringsActionFilter>();
+                options.ApiKey = configuration["ElmahIo:ApiKey"]; 
+                options.LogId = new Guid(configuration["ElmahIo:LogId"] ?? Guid.Empty.ToString());
+            });
+
+            services.AddLogging(builder =>
+            {
+                builder.AddElmahIo(options =>
+                {
+                    options.ApiKey = configuration["ElmahIo:ApiKey"]; 
+                    options.LogId = new Guid(configuration["ElmahIo:LogId"] ?? Guid.Empty.ToString());
+                });
+                builder.AddFilter<ElmahIoLoggerProvider>(null, LogLevel.Warning);
             });
         }
+        
     }
 }

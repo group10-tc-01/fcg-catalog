@@ -42,6 +42,7 @@ namespace FCG.Catalog.WebApi
 
             app.UseSwagger();
             app.UseSwaggerUI();
+            
 
             app.UseHttpsRedirection();
 
