@@ -5,6 +5,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using Elmah.Io.AspNetCore;
 
 namespace FCG.Catalog.WebApi.Middleware
 {
@@ -36,6 +37,7 @@ namespace FCG.Catalog.WebApi.Middleware
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            exception.Ship(context);
             var traceId = context!.TraceIdentifier;
             var correlationId = context.Items.ContainsKey(CorrelationIdKey) ? context.Items[CorrelationIdKey]?.ToString() : string.Empty;
 
@@ -57,6 +59,7 @@ namespace FCG.Catalog.WebApi.Middleware
             {
                 var msg = exception.Message;
                 await HandleUnauthorizedExceptionAsync(context, msg, correlationId);
+                exception.Ship(context);
                 return;
             }
 
@@ -76,12 +79,12 @@ namespace FCG.Catalog.WebApi.Middleware
             };
 
             var jsonResponse = JsonSerializer.Serialize(response, options);
-
             await context.Response.WriteAsync(jsonResponse);
         }
 
         private async Task HandleUnauthorizedExceptionAsync(HttpContext context, string message, string? correlationId)
         {
+            new UnauthorizedAccessException(message).Ship(context);
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
             var response = ApiResponse<object>.ErrorResponse(new List<string> { message }, System.Net.HttpStatusCode.Unauthorized);
@@ -91,7 +94,7 @@ namespace FCG.Catalog.WebApi.Middleware
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };
-
+            
             await context.Response.WriteAsync(JsonSerializer.Serialize(response, options));
         }
         private async Task HandleApiExceptionAsync(HttpContext context, BaseException exception, string? correlationId)
@@ -107,12 +110,12 @@ namespace FCG.Catalog.WebApi.Middleware
             };
 
             var jsonResponse = JsonSerializer.Serialize(response, options);
-
             await context.Response.WriteAsync(jsonResponse);
         }
 
         private async Task HandleGenericExceptionAsync(HttpContext context, Exception exception, string traceId, string? correlationId)
         {
+            exception.Ship(context);
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
             var problemDetails = new ProblemDetails

@@ -7,6 +7,7 @@ using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Messages;
 using MediatR;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 
 namespace FCG.Catalog.Application.UseCases.Games.Register
 {

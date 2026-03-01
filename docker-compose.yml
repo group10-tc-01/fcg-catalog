@@ -107,7 +107,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:8080;http://+:8081
     ports:
-      - "5000:800"
+      - "5000:8080"
     restart: on-failure
 
 volumes:

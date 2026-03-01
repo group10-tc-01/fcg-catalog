@@ -34,11 +34,7 @@ namespace FCG.Catalog.WebApi
             logger.LogInformation("Application started successfully");
             logger.LogInformation("Environment: {Environment}", app.Environment.EnvironmentName);
 
-            if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
-            {
-                app.ApplyMigrations();
-                logger.LogInformation("Migrations applied");
-            }
+   
 
             app.UseSwagger();
             app.UseSwaggerUI();

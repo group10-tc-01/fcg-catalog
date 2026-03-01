@@ -139,9 +139,8 @@ namespace FCG.Catalog.WebApi.DependencyInjection
                     options.ApiKey = configuration["ElmahIo:ApiKey"]; 
                     options.LogId = new Guid(configuration["ElmahIo:LogId"] ?? Guid.Empty.ToString());
                 });
-                builder.AddFilter<ElmahIoLoggerProvider>(null, LogLevel.Warning);
+                    builder.AddFilter<ElmahIoLoggerProvider>(null, LogLevel.Warning);
             });
         }
-        
     }
 }
