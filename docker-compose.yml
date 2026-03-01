@@ -68,27 +68,6 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
     restart: unless-stopped
 
-  redis:
-    image: redis:7-alpine
-    container_name: fcg-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    command: redis-server --requirepass CatalogApi --appendonly yes
-    restart: unless-stopped
-
-  redis-insight:
-    image: redis/redisinsight:latest
-    container_name: fcg-redis-insight
-    ports:
-      - "5540:5540"
-    volumes:
-      - redis-insight-data:/data
-    restart: unless-stopped
-    depends_on:
-      - redis
-
   webapi:
     build:
       context: .
@@ -98,14 +77,11 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
-      redis:
-        condition: service_started
     environment:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=fcg_catalog;User Id=sa;Password=YourPassword123;TrustServerCertificate=True;
       - Kafka__BootstrapServers=kafka:29092
-      - ConnectionStrings__Redis=redis:6379
       - ASPNETCORE_ENVIRONMENT=Docker
-      - ASPNETCORE_URLS=http://+:8080;http://+:8081
+      - ASPNETCORE_URLS=http://+:8080;
     ports:
       - "5000:8080"
     restart: on-failure
@@ -115,5 +91,3 @@ volumes:
   kafka-data:
   zookeeper-data:
   zookeeper-logs:
-  redis-data:
-  redis-insight-data:

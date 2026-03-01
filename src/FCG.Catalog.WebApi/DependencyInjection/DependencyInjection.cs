@@ -1,4 +1,6 @@
-﻿using FCG.Catalog.Application.DependencyInjection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using FCG.Catalog.Application.DependencyInjection;
 using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.Infrastructure.Auth.DependencyInjection;
 using FCG.Catalog.Infrastructure.SqlServer.DependencyInjection;
@@ -8,16 +10,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Elmah.Io.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.ElmahIo;
 
 namespace FCG.Catalog.WebApi.DependencyInjection
 {
     [ExcludeFromCodeCoverage]
     public static class DependencyInjection
     {
-        public static IServiceCollection AddWebApi(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddWebApi(this IServiceCollection services, 
+            IConfiguration configuration, IHostBuilder host) 
         {
             services.AddInfrastructure(configuration);
             services.AddApplication();
@@ -32,6 +35,7 @@ namespace FCG.Catalog.WebApi.DependencyInjection
             services.AddHttpContextAccessor();
             services.AddScoped<ITokenProvider, HttpContextTokenProvider>();
             services.AddElmahIO(configuration);
+            host.AddSerilog(configuration);
 
             return services;
         }
@@ -126,20 +130,38 @@ namespace FCG.Catalog.WebApi.DependencyInjection
 
         private static void AddElmahIO(this IServiceCollection services, IConfiguration configuration)
         {
+            
             services.AddElmahIo(options =>
             {
                 options.ApiKey = configuration["ElmahIo:ApiKey"]; 
                 options.LogId = new Guid(configuration["ElmahIo:LogId"] ?? Guid.Empty.ToString());
-            });
+                options.Application = "FCG.Catalog.WebApi";
 
-            services.AddLogging(builder =>
+            });
+            
+        }
+        private static void AddSerilog(this IHostBuilder host, IConfiguration configuration)
+        {
+            host.UseSerilog((context, config) =>
             {
-                builder.AddElmahIo(options =>
+                var loggerConfig = config
+                    .MinimumLevel.Information()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+                    .MinimumLevel.Override("System", LogEventLevel.Warning)
+                    .Enrich.FromLogContext()
+                    .Enrich.WithMachineName()
+                    .WriteTo.Console();
+                   var apiKey = configuration["ElmahIo:ApiKey"];
+                   var logIdRaw = configuration["ElmahIo:LogId"];
+            
+                if (!string.IsNullOrWhiteSpace(apiKey) && Guid.TryParse(logIdRaw, out var logId))
                 {
-                    options.ApiKey = configuration["ElmahIo:ApiKey"]; 
-                    options.LogId = new Guid(configuration["ElmahIo:LogId"] ?? Guid.Empty.ToString());
-                });
-                    builder.AddFilter<ElmahIoLoggerProvider>(null, LogLevel.Warning);
+                    loggerConfig.WriteTo.ElmahIo(new ElmahIoSinkOptions(apiKey, logId)
+                    {
+                        MinimumLogEventLevel = LogEventLevel.Warning
+                    });
+                }
             });
         }
     }

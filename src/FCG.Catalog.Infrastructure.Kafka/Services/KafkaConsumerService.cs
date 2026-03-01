@@ -82,7 +82,7 @@ namespace FCG.Catalog.Infrastructure.Kafka.Services
             using var consumer = new ConsumerBuilder<Ignore, string>(config)
                 .SetErrorHandler((_, e) =>
                 {
-                    _logger.LogError(
+                    _logger.LogInformation(
                         "Erro no consumer do tópico {Topic}: {Reason}",
                         topicConfig.TopicName, e.Reason);
                 })
