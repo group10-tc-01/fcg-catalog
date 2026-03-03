@@ -33,6 +33,14 @@ namespace FCG.Catalog.Infrastructure.Kafka.Producers
                 CompressionType = kafkaSettings.Producer.CompressionType
             };
 
+            if (kafkaSettings.UseSaslSsl)
+            {
+                config.SecurityProtocol = SecurityProtocol.SaslSsl;
+                config.SaslMechanism = SaslMechanism.Plain;
+                config.SaslUsername = kafkaSettings.SaslUsername;
+                config.SaslPassword = kafkaSettings.SaslPassword;
+            }
+
             _producer = new ProducerBuilder<string, string>(config)
                 .SetErrorHandler((_, e) =>
                 {
