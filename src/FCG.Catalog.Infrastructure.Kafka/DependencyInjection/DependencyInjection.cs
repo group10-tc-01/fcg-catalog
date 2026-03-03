@@ -15,14 +15,34 @@ namespace FCG.Catalog.Infrastructure.Kafka.DependencyInjection
     {
         public static IServiceCollection AddKafkaInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<KafkaSettings>(
-                configuration.GetSection("KafkaSettings"));
+            var kafkaSection = configuration.GetSection("KafkaSettings");
+            var kafkaSettings = kafkaSection.Get<KafkaSettings>() ?? new KafkaSettings();
+
+            ValidateKafkaSettings(kafkaSettings);
+
+            services.Configure<KafkaSettings>(kafkaSection);
 
             services.AddKafkaProducer(configuration);
             services.AddKafkaConsumers(configuration);
             services.AddKafkaEventHandlers();
 
             return services;
+        }
+
+        private static void ValidateKafkaSettings(KafkaSettings settings)
+        {
+            if (settings.UseSaslSsl)
+            {
+                if (string.IsNullOrWhiteSpace(settings.SaslUsername))
+                {
+                    throw new InvalidOperationException("KafkaSettings:SaslUsername must be configured when UseSaslSsl is true.");
+                }
+
+                if (string.IsNullOrWhiteSpace(settings.SaslPassword))
+                {
+                    throw new InvalidOperationException("KafkaSettings:SaslPassword must be configured when UseSaslSsl is true.");
+                }
+            }
         }
 
         public static IServiceCollection AddKafkaProducer(this IServiceCollection services, IConfiguration configuration)

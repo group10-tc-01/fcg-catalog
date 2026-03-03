@@ -79,6 +79,14 @@ namespace FCG.Catalog.Infrastructure.Kafka.Services
                     _settings.Consumer.AutoOffsetReset, true)
             };
 
+            if (_settings.UseSaslSsl)
+            {
+                config.SecurityProtocol = SecurityProtocol.SaslSsl;
+                config.SaslMechanism = SaslMechanism.Plain;
+                config.SaslUsername = _settings.SaslUsername;
+                config.SaslPassword = _settings.SaslPassword;
+            }
+
             using var consumer = new ConsumerBuilder<Ignore, string>(config)
                 .SetErrorHandler((_, e) =>
                 {

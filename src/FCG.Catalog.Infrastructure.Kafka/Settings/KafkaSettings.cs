@@ -8,6 +8,9 @@ namespace FCG.Catalog.Infrastructure.Kafka.Settings
     {
         public string BootstrapServers { get; set; } = string.Empty;
         public string ClientId { get; set; } = "fcg-catalog";
+        public bool UseSaslSsl { get; set; }
+        public string SaslUsername { get; set; } = string.Empty;
+        public string SaslPassword { get; set; } = string.Empty;
         public ConsumerSettings Consumer { get; set; } = new();
         public ProducerSettings Producer { get; set; } = new();
         public TopicsSettings Topics { get; set; } = new();
