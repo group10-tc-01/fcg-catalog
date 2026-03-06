@@ -60,7 +60,7 @@ A aplicação segue os princípios da **Clean Architecture**, garantindo separa�
                  │
 ┌────────────────▼────────────────────────┐
 │    FCG.Catalog.Infrastructure.*         │  ← Camada de Infraestrutura
-│  SqlServer, Kafka, Redis, Auth (JWT)   │
+│  SqlServer, Kafka, Auth (JWT)   │
 └─────────────────────────────────────────┘
 ```
 
@@ -88,7 +88,6 @@ A aplicação segue os princípios da **Clean Architecture**, garantindo separa�
 - **Kafka** (`FCG.Catalog.Infrastructure.Kafka`): Produção e consumo de eventos
   - Consumers: `UserCreatedEventConsumer`, `PaymentProcessedEventConsumer`
   - Producers: `OrderPlacedEventProducer`
-- **Redis** (`FCG.Catalog.Infrastructure.Redis`): Cache de consultas e sessões
 
 #### 4️⃣ **Presentation** (`FCG.Catalog.WebApi`)
 - Controllers versionados (`/v1/...`)
@@ -112,9 +111,6 @@ A aplicação segue os princípios da **Clean Architecture**, garantindo separa�
 - **Entity Framework Core 9.0** - ORM
 - **SQL Server 2022** - Banco de dados relacional
 - **Migrations** - Controle de versionamento do schema
-
-### Cache
-- **Redis** (`StackExchange.Redis`) - Cache distribuído
 
 ### Segurança
 - **JWT Bearer Authentication** (`Microsoft.AspNetCore.Authentication.JwtBearer 8.0.22`)
@@ -640,8 +636,7 @@ A aplicação utiliza **Apache Kafka** para comunicação assíncrona baseada em
 - ✅ Docker e Docker Compose
 - ✅ SQL Server 2022
 - ✅ Apache Kafka (via Docker)
-- ✅ Redis (via Docker) - opcional para cache
-
+- 
 ### Configuração de Ambiente
 
 **appsettings.json**
@@ -664,11 +659,6 @@ A aplicação utiliza **Apache Kafka** para comunicação assíncrona baseada em
       "PaymentProcessed": "payment-processed"
     }
   },
-  "RedisSettings": {
-    "ConnectionString": "localhost:6379",
-    "InstanceName": "FCG.Catalog:",
-    "DefaultCacheExpirationMinutes": 30
-  },
   "CatalogSettings": {
     "DefaultPageSize": 10,
     "MaxPageSize": 100,
@@ -680,5 +670,5 @@ A aplicação utiliza **Apache Kafka** para comunicação assíncrona baseada em
 ### Execução com Docker Compose
 
 ```bash
-# Subir infraestrutura (SQL Server, Kafka, Redis)
+# Subir infraestrutura (SQL Server, Kafka)
 docker-compose up -d
