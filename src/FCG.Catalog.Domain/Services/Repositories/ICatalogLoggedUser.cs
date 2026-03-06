@@ -4,5 +4,4 @@
     {
         Task<LoggedUserInfo?> GetLoggedUserAsync();
     }
-
 }
