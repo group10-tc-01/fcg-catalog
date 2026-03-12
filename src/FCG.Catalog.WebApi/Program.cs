@@ -21,6 +21,7 @@ namespace FCG.Catalog.WebApi
                 }); builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddApplication();
+            
             builder.Services.AddWebApi(builder.Configuration);
             builder.Services.AddSwaggerGen();
 
@@ -29,7 +30,7 @@ namespace FCG.Catalog.WebApi
             var app = builder.Build();
 
             app.UseMiddleware<GlobalExceptionMiddleware>();
-
+            
             var logger = app.Services.GetRequiredService<ILogger<Program>>();
             logger.LogInformation("Application started successfully");
             logger.LogInformation("Environment: {Environment}", app.Environment.EnvironmentName);
@@ -42,6 +43,7 @@ namespace FCG.Catalog.WebApi
 
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseHealthChecks("/health");
 
             app.UseHttpsRedirection();
 

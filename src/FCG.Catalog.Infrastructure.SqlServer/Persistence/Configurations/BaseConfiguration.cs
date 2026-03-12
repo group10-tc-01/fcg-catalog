@@ -1,13 +1,14 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FCG.Catalog.Infrastructure.SqlServer.Persistence.Configurations
 {
     [ExcludeFromCodeCoverage]
     public abstract class BaseConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
     {
-        public virtual void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<T> builder)
+        public virtual void Configure(EntityTypeBuilder<T> builder)
         {
             builder.HasKey(e => e.Id);
 

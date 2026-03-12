@@ -1,8 +1,11 @@
-﻿using FCG.Catalog.Domain.Abstractions;
+using FCG.Catalog.Domain.Abstractions;
+using FCG.Catalog.Domain.Interfaces;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
 using FCG.Catalog.Domain.Repositories.Promotion;
+using FCG.Catalog.Infrastructure.SqlServer.Audit;
+using FCG.Catalog.Infrastructure.SqlServer.Persistence.Interceptors;
 using FCG.Catalog.Infrastructure.SqlServer.Repositories;
 using FCG.Domain.Repositories.LibraryRepository;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +21,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSqlServer(configuration);
+            services.AddAuditServices();
 
             services.AddScoped<IWriteOnlyGameRepository, GameRepository>();
             services.AddScoped<IReadOnlyGameRepository, GameRepository>();
@@ -36,12 +40,19 @@ namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
 
         private static void AddSqlServer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<FcgCatalogDbContext>(options =>
+            services.AddDbContext<FcgCatalogDbContext>((serviceProvider, options) =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.AddInterceptors(serviceProvider.GetRequiredService<AuditingInterceptor>());
             });
         }
 
-
+        private static void AddAuditServices(this IServiceCollection services)
+        {
+            services.AddSingleton<AuditService>();
+            services.AddSingleton<IAuditService>(sp => sp.GetRequiredService<AuditService>());
+            services.AddHostedService<AuditBackgroundService>();
+            services.AddScoped<AuditingInterceptor>();
+        }
     }
 }
