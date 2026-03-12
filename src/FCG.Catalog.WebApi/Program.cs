@@ -18,6 +18,7 @@ namespace FCG.Catalog.WebApi
             builder.Services.AddApplication();
 
             builder.Services.AddAuthInfrastructure(builder.Configuration);
+            var app = builder.Build();
 
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -28,7 +29,6 @@ namespace FCG.Catalog.WebApi
 
             builder.Services.AddSqlServerInfrastructure(builder.Configuration);
 
-            var app = builder.Build();
 
             app.UseWebApiPipeline();
 
