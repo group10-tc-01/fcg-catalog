@@ -1,4 +1,6 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.Games;
+﻿using System.Text.Json;
+using FCG.Catalog.Domain.Catalog.Entities.Audit;
+using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Catalog.Entities.Promotions;
@@ -13,6 +15,8 @@ namespace FCG.Catalog.Infrastructure.SqlServer
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<LibraryGame> LibraryGames { get; set; }
         public DbSet<PurchaseTransaction> PurchaseTransactions { get; set; }
+        public DbSet<AuditTrail> AuditTrails { get; set; }
+        
         public FcgCatalogDbContext(DbContextOptions<FcgCatalogDbContext> options) : base(options)
         {
         }
