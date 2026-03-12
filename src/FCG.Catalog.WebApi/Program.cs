@@ -19,7 +19,6 @@ namespace FCG.Catalog.WebApi
 
             builder.Services.AddAuthInfrastructure(builder.Configuration);
 
-  feature/Create-Table-auditlog-in-DB
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseHealthChecks("/health");
