@@ -1,7 +1,9 @@
-﻿using FCG.Catalog.Domain.Services.Repositories;
+﻿using FCG.Catalog.Domain.Interfaces;
+using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.Infrastructure.Auth.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 namespace FCG.Catalog.Infrastructure.Auth.DependencyInjection
 {
     public static class DependencyInjection
@@ -10,6 +12,7 @@ namespace FCG.Catalog.Infrastructure.Auth.DependencyInjection
         {
             services.AddHttpContextAccessor();
             services.AddScoped<ICatalogLoggedUser, CatalogLoggedUser>();
+            services.AddScoped<ICurrentSessionProvider, CurrentSessionProvider>();
 
             return services;
         }
