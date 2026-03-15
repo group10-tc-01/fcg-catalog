@@ -17,11 +17,11 @@ namespace FCG.Catalog.WebApi
 
             builder.Services.AddApplication();
 
+            builder.Services.AddSqlServerInfrastructure(builder.Configuration);
+
             builder.Services.AddAuthInfrastructure(builder.Configuration);
 
             builder.Services.AddKafkaInfrastructure(builder.Configuration);
-
-            builder.Services.AddSqlServerInfrastructure(builder.Configuration);
 
             var app = builder.Build();
 

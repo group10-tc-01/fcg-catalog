@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Application.Observability;
+using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.LibraryGames;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
@@ -55,6 +56,12 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
                     await _writeOnlyLibraryGameRepository.AddAsync(libraryGame, cancellationToken);
                 }
             }
+
+            CatalogMetrics.RecordProcessed(
+                request.IsApproved.ToString().ToLowerInvariant(),
+                request.Amount,
+                request.IsApproved ? "payment_completed" : "payment_rejected");
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

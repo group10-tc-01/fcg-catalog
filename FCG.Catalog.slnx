@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Itens de Solução/">
+    <File Path="docker-compose.yml" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/FCG.Catalog.Application/FCG.Catalog.Application.csproj" />
     <Project Path="src/FCG.Catalog.Domain/FCG.Catalog.Domain.csproj" />

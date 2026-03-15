@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FCG.Catalog.Application.Abstractions.Behaviors;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -15,6 +16,10 @@ namespace FCG.Catalog.Application.DependencyInjection
             services.AddMediatR(configuration =>
             {
                 configuration.RegisterServicesFromAssembly(assembly);
+
+                configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
+                configuration.AddOpenBehavior(typeof(MetricsBehavior<,>));
+                configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
 
             });
 

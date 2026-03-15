@@ -1,3 +1,4 @@
+using FCG.Catalog.Application.Observability;
 using FCG.Catalog.Domain.Repositories.Game;
 using MediatR;
 
@@ -19,6 +20,11 @@ public class GetPurchaseStatusHandler : IRequestHandler<GetPurchaseStatusInput, 
 
         if (transaction is null)
             return new PurchaseStatusOutput(request.CorrelationId, "NotFound", "Transação não encontrada.");
+
+        CatalogMetrics.RecordProcessed(
+            transaction.Status.ToString().ToLowerInvariant(),
+            transaction.Amount,
+            transaction.Message ?? "none");
 
         return new PurchaseStatusOutput(
             transaction.CorrelationId,
