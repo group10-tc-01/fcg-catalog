@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FCG.Catalog.Infrastructure.SqlServer.Migrations
 {
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     public partial class addaudittrail : Migration
     {
         /// <inheritdoc />
-        [ExcludeFromCodeCoverage]
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameTable(
