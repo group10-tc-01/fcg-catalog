@@ -3,7 +3,10 @@ using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
 using FCG.Catalog.Domain.Repositories.Promotion;
+using FCG.Catalog.Infrastructure.SqlServer.Persistence.Interceptors;
+using FCG.Catalog.Infrastructure.SqlServer.Providers;
 using FCG.Catalog.Infrastructure.SqlServer.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +19,10 @@ namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
     {
         public static IServiceCollection AddSqlServerInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentSessionProvider, CurrentSessionProvider>();
+            services.AddScoped<AuditingInterceptor>();
+
             services.AddSqlServer(configuration);
 
             services.AddScoped<IWriteOnlyGameRepository, GameRepository>();

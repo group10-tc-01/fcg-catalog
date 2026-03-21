@@ -2,7 +2,7 @@ using FCG.Catalog.Domain.Abstractions;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.Games;
 
-public sealed class PurchaseTransaction : BaseEntity
+public sealed class PurchaseTransaction : BaseEntity, IAuditableEntity
 {
     public Guid CorrelationId => Id;
     public Guid UserId { get; private set; }

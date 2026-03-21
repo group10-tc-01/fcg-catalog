@@ -8,8 +8,7 @@ using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.Games
 {
-
-    public sealed class Game : BaseEntity
+    public sealed class Game : BaseEntity, IAuditableEntity
     {
         public Title Title { get; private set; }
         public string Description { get; private set; } = string.Empty;
@@ -40,9 +39,9 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Games
         public void Update(string title, string description, Price price, GameCategory category, DateTime updatedAt)
         {
             Validate(description, price.Value, title);
-            Title = title;
+            Title.ChangeValue(title);
             Description = description;
-            Price = Price.Create(price.Value);
+            Price.ChangeValue(price.Value);
             Category = category;
             UpdatedAt = updatedAt;
         }

@@ -99,7 +99,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
 
             promotion1.Id.Should().NotBe(promotion2.Id);
             promotion1.GameId.Should().Be(promotion2.GameId);
-            promotion1.DiscountPercentage.Should().Be(promotion2.DiscountPercentage);
+            promotion1.DiscountPercentage.Value.Should().Be(promotion2.DiscountPercentage.Value);
             promotion1.StartDate.Should().Be(promotion2.StartDate);
             promotion1.EndDate.Should().Be(promotion2.EndDate);
         }
@@ -120,7 +120,7 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
 
             // Assert
             promotion.GameId.Should().Be(newGameId);
-            promotion.DiscountPercentage.Should().Be(newDiscount);
+            promotion.DiscountPercentage.Value.Should().Be(newDiscount.Value);
             promotion.StartDate.Should().Be(newStartDate);
             promotion.EndDate.Should().Be(newEndDate);
         }

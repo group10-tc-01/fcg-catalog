@@ -6,7 +6,7 @@ using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.Promotions
 {
-    public sealed class Promotion : BaseEntity
+    public sealed class Promotion : BaseEntity, IAuditableEntity
     {
         public Guid GameId { get; private set; }
         public Discount DiscountPercentage { get; private set; } = null!;
@@ -39,7 +39,7 @@ namespace FCG.Catalog.Domain.Catalog.Entities.Promotions
             Validate(gameId, startDate, endDate);
 
             GameId = gameId;
-            DiscountPercentage = discount;
+            DiscountPercentage.ChangeValue(discount.Value);
             StartDate = startDate;
             EndDate = endDate;
         }

@@ -6,7 +6,7 @@ using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.Libraries
 {
-    public sealed class Library : BaseEntity
+    public sealed class Library : BaseEntity, IAuditableEntity
     {
         public Guid UserId { get; private set; }
 

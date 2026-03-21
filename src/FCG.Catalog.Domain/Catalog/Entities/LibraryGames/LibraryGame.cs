@@ -5,7 +5,7 @@ using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 
 namespace FCG.Catalog.Domain.Catalog.Entities.LibraryGames
 {
-    public sealed class LibraryGame : BaseEntity
+    public sealed class LibraryGame : BaseEntity, IAuditableEntity
     {
         public Guid LibraryId { get; private set; }
         public Guid GameId { get; private set; }

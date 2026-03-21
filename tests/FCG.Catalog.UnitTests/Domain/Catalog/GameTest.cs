@@ -59,9 +59,9 @@ namespace FCG.Catalog.UnitTests.Domain.Catalog
             game.Update(newTitle, newDescription, newPrice, newCategory, updatedAt);
 
             // Assert
-            game.Title.Should().Be(newTitle);
+            game.Title.Value.Should().Be(newTitle.Value);
             game.Description.Should().Be(newDescription);
-            game.Price.Should().Be(newPrice);
+            game.Price.Value.Should().Be(newPrice.Value);
             game.Category.Should().Be(newCategory);
             game.UpdatedAt.Should().Be(updatedAt);
         }
