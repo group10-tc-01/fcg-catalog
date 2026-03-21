@@ -30,7 +30,6 @@ namespace FCG.Catalog.IntegratedTests.Configurations
             {
                 RemoveEntityFrameworkServices(services);
                 RemoveKafkaServices(services);
-                RemoveRedisServices(services);
 
                 _connection?.Dispose();
                 _connection = new SqliteConnection("Data Source=:memory:");
@@ -69,21 +68,6 @@ namespace FCG.Catalog.IntegratedTests.Configurations
                 .ToList();
 
             foreach (var descriptor in kafkaDescriptorsToRemove)
-            {
-                services.Remove(descriptor);
-            }
-        }
-
-        private static void RemoveRedisServices(IServiceCollection services)
-        {
-            var redisDescriptorsToRemove = services.Where(d =>
-                d.ServiceType.FullName?.Contains("Redis") == true ||
-                d.ServiceType.FullName?.Contains("Caching") == true ||
-                d.ImplementationType?.FullName?.Contains("Redis") == true ||
-                d.ImplementationType?.FullName?.Contains("Caching") == true)
-                .ToList();
-
-            foreach (var descriptor in redisDescriptorsToRemove)
             {
                 services.Remove(descriptor);
             }
@@ -150,7 +134,7 @@ namespace FCG.Catalog.IntegratedTests.Configurations
             var promotions = new List<Promotion>();
             var promotionBuilder = new PromotionBuilder();
 
-            foreach (var game in games.Take(2)) 
+            foreach (var game in games.Take(2))
             {
                 var promotion = promotionBuilder.BuildActivePromotion(game.Id, 20m);
                 promotions.Add(promotion);

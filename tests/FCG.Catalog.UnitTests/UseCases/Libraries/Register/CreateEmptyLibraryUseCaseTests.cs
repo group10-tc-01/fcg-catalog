@@ -3,7 +3,6 @@ using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Library;
-using FCG.Domain.Repositories.LibraryRepository;
 using Moq;
 
 namespace FCG.Catalog.UnitTests.UseCases.Libraries.Register;
