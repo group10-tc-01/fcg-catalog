@@ -1,8 +1,11 @@
 ﻿using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.WebApi.Context;
 using FCG.Catalog.WebApi.Filter;
+using FCG.Catalog.WebApi.Observability;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Sinks.OpenTelemetry;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
@@ -29,6 +32,8 @@ namespace FCG.Catalog.WebApi.DependencyInjection
             services.AddHealthChecks();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddScoped<ITokenProvider, HttpContextTokenProvider>();
+            services.AddObservability(configuration);
+            services.AddSerilogLogging(configuration);
 
             return services;
         }
@@ -85,6 +90,74 @@ namespace FCG.Catalog.WebApi.DependencyInjection
             services.AddMvc(options =>
             {
                 options.Filters.Add<TrimStringsActionFilter>();
+            });
+        }
+
+        private static void AddObservability(this IServiceCollection services, IConfiguration configuration)
+        {
+            var options = new ObservabilityOptions();
+            configuration.GetSection(ObservabilityOptions.SectionName).Bind(options);
+
+            var environment = configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production";
+
+            var resourceBuilder = ObservabilityTelemetry.CreateResourceBuilder(options, environment);
+
+            services.AddOpenTelemetry()
+                .WithTracing(builder => builder.ConfigureTracing(options, resourceBuilder))
+                .WithMetrics(builder => builder.ConfigureMetrics(options, resourceBuilder));
+        }
+
+        private static void AddSerilogLogging(this IServiceCollection services, IConfiguration configuration)
+        {
+            var options = new ObservabilityOptions();
+            configuration.GetSection(ObservabilityOptions.SectionName).Bind(options);
+
+            var environment = configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production";
+
+            var loggerConfig = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithProperty("Application", "FCG.Catalog")
+                .Enrich.WithProperty("Environment", environment)
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{CorrelationId}] {Message:lj}{NewLine}{Exception}");
+
+            if (options.EnableOtlpExporter && !string.IsNullOrEmpty(options.OtlpEndpoint))
+            {
+                loggerConfig.WriteTo.OpenTelemetry(otlpOptions =>
+                {
+                    otlpOptions.Endpoint = $"{options.OtlpEndpoint}/otlp/v1/logs";
+                    otlpOptions.Protocol = OtlpProtocol.HttpProtobuf;
+                    otlpOptions.Headers = new Dictionary<string, string>
+                    {
+                        ["Authorization"] = options.OtlpAuthHeader
+                    };
+                    otlpOptions.ResourceAttributes = new Dictionary<string, object>
+                    {
+                        ["service.name"] = options.ServiceName,
+                        ["deployment.environment"] = environment
+                    };
+                });
+            }
+
+            Log.Logger = loggerConfig.CreateLogger();
+
+            Log.Information("Starting {Application} application", "FCG.Catalog");
+            Log.Information("Environment: {Environment}", environment);
+
+            if (options.EnableOtlpExporter)
+            {
+                Log.Information("OTLP exporter enabled — sending telemetry to {Endpoint}", options.OtlpEndpoint);
+            }
+            else
+            {
+                Log.Information("OTLP exporter disabled — telemetry is console-only");
+            }
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.AddSerilog();
             });
         }
     }
