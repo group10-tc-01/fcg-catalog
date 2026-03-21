@@ -30,7 +30,6 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
         {
             var query = _fcgDbContext.Games
                 .Include(g => g!.Promotions)
-                .AsNoTracking()
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(name))
@@ -50,7 +49,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 
         public async Task<Game?> GetByNameAsync(string name)
         {
-            var game = await _fcgDbContext.Games.AsNoTracking().FirstOrDefaultAsync(g => g.Title.Value == name);
+            var game = await _fcgDbContext.Games.FirstOrDefaultAsync(g => g.Title.Value == name);
 
             return game;
         }
@@ -58,23 +57,19 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
         public async Task<Game?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _fcgDbContext.Games
-            .AsNoTracking()
+            
             .Include(g => g.Promotions)
             .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
         }
 
         public async Task<Game?> GetByIdActiveAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _fcgDbContext.Games
-                .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.Id == id && g.IsActive, cancellationToken);
+            return await _fcgDbContext.Games.FirstOrDefaultAsync(g => g.Id == id && g.IsActive, cancellationToken);
         }
 
         public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _fcgDbContext.Games
-                .AsNoTracking()
-                .AnyAsync(g => g.Id == id, cancellationToken);
+            return await _fcgDbContext.Games.AnyAsync(g => g.Id == id, cancellationToken);
         }
 
         public void Update(Game game)

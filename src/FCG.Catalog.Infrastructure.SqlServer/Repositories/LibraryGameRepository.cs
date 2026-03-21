@@ -20,15 +20,12 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
 
         public async Task<bool> HasGameAsync(Guid userId, Guid gameId, CancellationToken cancellationToken)
         {
-            return await _fcgDbContext.LibraryGames
-                .AsNoTracking()
-                .AnyAsync(x => x.Library.UserId == userId && x.GameId == gameId, cancellationToken);
+            return await _fcgDbContext.LibraryGames.AnyAsync(x => x.Library.UserId == userId && x.GameId == gameId, cancellationToken);
         }
 
         public async Task<IEnumerable<LibraryGame>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
         {
             return await _fcgDbContext.LibraryGames
-                .AsNoTracking()
                 .Include(x => x.Game)
                 .Where(x => x.LibraryId == userId)
                 .ToListAsync(cancellationToken);

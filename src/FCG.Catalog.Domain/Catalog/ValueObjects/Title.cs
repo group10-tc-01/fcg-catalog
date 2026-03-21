@@ -3,13 +3,27 @@ using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.ValueObjects
 {
-    public sealed record Title
+    public sealed class Title
     {
-        public string Value { get; }
+        public string Value { get; private set; }
 
         private Title(string value)
         {
             Value = value;
+        }
+
+        internal void ChangeValue(string newValue)
+        {
+            if (string.IsNullOrWhiteSpace(newValue))
+                throw new DomainException(ResourceMessages.GameNameIsRequired);
+
+            if (newValue.Length < 3)
+                throw new DomainException(ResourceMessages.GameTitleMinLength);
+
+            if (newValue.Length > 255)
+                throw new DomainException(ResourceMessages.GameTitleMaxLength);
+
+            Value = newValue;
         }
 
         public static Title Create(string value)

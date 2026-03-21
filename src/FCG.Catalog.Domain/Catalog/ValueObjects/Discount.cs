@@ -3,9 +3,9 @@ using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.ValueObjects
 {
-    public sealed record Discount
+    public sealed class Discount
     {
-        public decimal Value { get; }
+        public decimal Value { get; private set; }
 
         private Discount(decimal value)
         {
@@ -15,9 +15,16 @@ namespace FCG.Catalog.Domain.Catalog.ValueObjects
             Value = value;
         }
 
+        internal void ChangeValue(decimal newValue)
+        {
+            if (newValue < 0 || newValue > 100)
+                throw new DomainException(ResourceMessages.DiscountMustBeBetweenZeroAndHundred);
+
+            Value = newValue;
+        }
+
         public static Discount Create(decimal value)
         {
-
             return new Discount(value);
         }
 

@@ -3,18 +3,26 @@ using FCG.Catalog.Messages;
 
 namespace FCG.Catalog.Domain.Catalog.ValueObjects
 {
-    public sealed record Price
+    public sealed class Price
     {
-        public decimal Value { get; }
+        public decimal Value { get; private set; }
 
         private Price(decimal value)
         {
-            if (value <= 0)  // Combina as validações para simplificar e usar a mesma mensagem
+            if (value <= 0)
             {
                 throw new DomainException(ResourceMessages.GamePriceMustBeGreaterThanZero);
             }
 
             Value = value;
+        }
+
+        internal void ChangeValue(decimal newValue)
+        {
+            if (newValue <= 0)
+                throw new DomainException(ResourceMessages.GamePriceMustBeGreaterThanZero);
+
+            Value = newValue;
         }
 
         public static Price Create(decimal value)

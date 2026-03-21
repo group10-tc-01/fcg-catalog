@@ -22,14 +22,12 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
         public async Task<Promotion?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _fcgDbContext.Promotions
-                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
 
         public async Task<IEnumerable<Promotion>> GetByGameIdAsync(Guid gameId, CancellationToken cancellationToken = default)
         {
             return await _fcgDbContext.Promotions
-                .AsNoTracking()
                 .Where(p => p.GameId == gameId)
                 .ToListAsync(cancellationToken);
         }
@@ -41,7 +39,6 @@ namespace FCG.Catalog.Infrastructure.SqlServer.Repositories
             CancellationToken cancellationToken = default)
         {
             return await _fcgDbContext.Promotions
-                .AsNoTracking()
                 .AnyAsync(p =>
                         p.GameId == gameId &&
                         p.StartDate <= endDate && p.EndDate >= startDate,
