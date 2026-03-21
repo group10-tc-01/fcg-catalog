@@ -1,5 +1,5 @@
 ﻿using FCG.Catalog.Domain.Catalog.Entities.Libraries;
-using FCG.Domain.Repositories.LibraryRepository;
+using FCG.Catalog.Domain.Repositories.Library;
 using Moq;
 
 namespace FCG.Catalog.CommomTestUtilities.Builders.Libraries.Repositories

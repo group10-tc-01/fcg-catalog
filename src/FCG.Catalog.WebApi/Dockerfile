@@ -15,7 +15,6 @@ COPY ["src/FCG.Catalog.Messages/FCG.Catalog.Messages.csproj", "src/FCG.Catalog.M
 COPY ["src/FCG.Catalog.Infrastructure.Auth/FCG.Catalog.Infrastructure.Auth.csproj", "src/FCG.Catalog.Infrastructure.Auth/"]
 COPY ["src/FCG.Catalog.Infrastructure.Kafka/FCG.Catalog.Infrastructure.Kafka.csproj", "src/FCG.Catalog.Infrastructure.Kafka/"]
 
-
 RUN dotnet restore "src/FCG.Catalog.WebApi/FCG.Catalog.WebApi.csproj"
 
 COPY . .

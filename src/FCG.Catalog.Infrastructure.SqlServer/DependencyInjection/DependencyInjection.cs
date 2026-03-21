@@ -7,7 +7,6 @@ using FCG.Catalog.Domain.Repositories.Promotion;
 using FCG.Catalog.Infrastructure.SqlServer.Audit;
 using FCG.Catalog.Infrastructure.SqlServer.Persistence.Interceptors;
 using FCG.Catalog.Infrastructure.SqlServer.Repositories;
-using FCG.Domain.Repositories.LibraryRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +17,7 @@ namespace FCG.Catalog.Infrastructure.SqlServer.DependencyInjection
     [ExcludeFromCodeCoverage]
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddSqlServerInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSqlServer(configuration);
             services.AddAuditServices();
