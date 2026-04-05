@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<PreserveCompilationContext>true</PreserveCompilationContext>
 	<InternalsVisibleTo>FCG.Catalog.IntegratedTests</InternalsVisibleTo>
+    <UserSecretsId>b481b57b-eea5-43de-950a-31625090ebec</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
