@@ -171,4 +171,7 @@
   <data name="GameWithPromotion" xml:space="preserve">
     <value>You cannot delete a game with an active promotion</value>
   </data>
+  <data name="MongoDbConnectionNotConfigured" xml:space="preserve">
+    <value>MongoDB connection string is not configured.</value>
+  </data>
 </root>
