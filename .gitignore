@@ -482,3 +482,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Terraform                                                                 
+*.tfstate                                                                   
+*.tfvars                                                                    
+terraform/GITHUB_SECRETS.md 
