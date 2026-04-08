@@ -11,17 +11,15 @@ namespace FCG.Catalog.Infrastructure.MongoDb
     {
         public DbSet<Game> Games { get; set; } = null!;
         public DbSet<GameDetailDocument> GamesDetail { get; set; } = null!;
+        public DbSet<GameCacheEntity> GamesCache { get; set; } = null!;
 
-        public MongoDbContext(DbContextOptions<MongoDbContext> options) : base(options)
-        {
-
-        }
+        public MongoDbContext(DbContextOptions<MongoDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<GameDetailDocument>().ToCollection("games_detail");
+            modelBuilder.Entity<GameCacheEntity>().ToCollection("games_cache");
         }
     }
 }
