@@ -482,3 +482,10 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Secrets and environment-specific config
+appsettings.Production.json
+appsettings.Docker.json
+appsettings.Development.json
+secrets.json
+setup-secrets.sh
