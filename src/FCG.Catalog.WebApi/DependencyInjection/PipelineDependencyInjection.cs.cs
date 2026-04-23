@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.WebApi.Extensions;
+using FCG.Catalog.Infrastructure.Elasticsearch.Extensions;
+using FCG.Catalog.WebApi.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Diagnostics.CodeAnalysis;
@@ -19,6 +20,9 @@ namespace FCG.Catalog.WebApi.DependencyInjection
             {
                 app.ApplyMigrations();
                 logger.LogInformation("Migrations applied");
+
+                app.EnsureGamesIndexCreatedAsync().GetAwaiter().GetResult();
+                logger.LogInformation("Elasticsearch games index ensured");
             }
 
             app.UseSwagger();
