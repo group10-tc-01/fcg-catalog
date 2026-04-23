@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-<ItemGroup>
+	<PropertyGroup>
+		<IsTestProject>true</IsTestProject>
+		<SonarQubeExclude>true</SonarQubeExclude>
+	</PropertyGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Bogus" />
 		<PackageReference Include="Moq" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
