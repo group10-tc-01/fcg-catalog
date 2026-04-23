@@ -4,6 +4,7 @@
     <Project Path="src/FCG.Catalog.Domain/FCG.Catalog.Domain.csproj" />
     <Project Path="src/FCG.Catalog.Infrastructure.Auth/FCG.Catalog.Infrastructure.Auth.csproj" Id="5f39a26f-f1ae-4772-90f0-0215e915dbda" />
     <Project Path="src/FCG.Catalog.Infrastructure.Kafka/FCG.Catalog.Infrastructure.Kafka.csproj" />
+    <Project Path="src/FCG.Catalog.Infrastructure.MongoDb/FCG.Catalog.Infrastructure.MongoDb.csproj" Id="1adbaca7-9950-4d63-a052-bb4ecc963b31" />
     <Project Path="src/FCG.Catalog.Infrastructure.SqlServer/FCG.Catalog.Infrastructure.SqlServer.csproj" />
     <Project Path="src/FCG.Catalog.Messages/FCG.Catalog.Messages.csproj" />
     <Project Path="src/FCG.Catalog.WebApi/FCG.Catalog.WebApi.csproj" />

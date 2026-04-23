@@ -88,4 +88,3 @@ volumes:
   sqlserver-data:
   kafka-data:
   zookeeper-data:
-  zookeeper-logs:

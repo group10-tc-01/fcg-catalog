@@ -487,3 +487,9 @@ $RECYCLE.BIN/
 *.tfstate                                                                   
 *.tfvars                                                                    
 terraform/GITHUB_SECRETS.md 
+# Secrets and environment-specific config
+appsettings.Production.json
+appsettings.Docker.json
+appsettings.Development.json
+secrets.json
+setup-secrets.sh
