@@ -100,6 +100,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=fcg_catalog;User Id=sa;Password=YourPassword123;TrustServerCertificate=True;
       - KafkaSettings__BootstrapServers=kafka:29092
+      - ElasticsearchSettings__Uri=http://elasticsearch:9200
+      - ElasticsearchSettings__IndexName=games
+      - ElasticsearchSettings__Username=${ELASTICSEARCH_USERNAME:-}
+      - ElasticsearchSettings__Password=${ELASTICSEARCH_PASSWORD:-}
     ports:
       - "5000:8080"
     restart: on-failure

@@ -8,4 +8,8 @@
     <PackageReference Include="Elastic.Clients.Elasticsearch" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

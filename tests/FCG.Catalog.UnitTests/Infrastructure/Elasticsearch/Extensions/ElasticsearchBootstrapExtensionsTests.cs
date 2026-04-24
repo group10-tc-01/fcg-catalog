@@ -33,9 +33,9 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Elasticsearch.Extensions
             server.PutRequestBody.Should().Contain("\"category\":{\"type\":\"keyword\"}");
             server.PutRequestBody.Should().Contain("\"price\":{\"scaling_factor\":100");
             server.PutRequestBody.Should().Contain("\"type\":\"scaled_float\"");
+            server.PutRequestBody.Should().Contain("\"discountedPrice\":{\"scaling_factor\":100");
             server.PutRequestBody.Should().Contain("\"isActive\":{\"type\":\"boolean\"}");
-            server.PutRequestBody.Should().Contain("\"createdAt\":{\"type\":\"date\"}");
-            server.PutRequestBody.Should().Contain("\"updatedAt\":{\"type\":\"date\"}");
+            server.PutRequestBody.Should().Contain("\"indexedAt\":{\"type\":\"date\"}");
         }
 
         [Fact]

@@ -1,7 +1,6 @@
 using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.IndexManagement;
 using Elastic.Clients.Elasticsearch.Mapping;
-using FCG.Catalog.Infrastructure.Elasticsearch.Documents;
 using FCG.Catalog.Infrastructure.Elasticsearch.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,9 +57,9 @@ namespace FCG.Catalog.Infrastructure.Elasticsearch.Extensions
                         { "description", new TextProperty() },
                         { "category", new KeywordProperty() },
                         { "price", new ScaledFloatNumberProperty { ScalingFactor = 100 } },
+                        { "discountedPrice", new ScaledFloatNumberProperty { ScalingFactor = 100 } },
                         { "isActive", new BooleanProperty() },
-                        { "createdAt", new DateProperty() },
-                        { "updatedAt", new DateProperty() }
+                        { "indexedAt", new DateProperty() }
                     }
                 }
             };

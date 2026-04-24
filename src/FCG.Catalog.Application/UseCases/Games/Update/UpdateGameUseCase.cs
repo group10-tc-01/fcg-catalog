@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Domain.Abstractions;
+using FCG.Catalog.Application.Services;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
@@ -13,13 +14,16 @@ namespace FCG.Catalog.Application.UseCases.Games.Update
         private readonly IReadOnlyGameRepository _readOnlyGameRepository;
         private readonly IWriteOnlyGameRepository _writeOnlyGameRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IGameSearchRepository _gameSearchRepository;
 
         public UpdateGameUseCase(IReadOnlyGameRepository readOnlyGameRepository, IWriteOnlyGameRepository writeOnlyGameRepository,
-                                IUnitOfWork unitOfWork)
+                                IUnitOfWork unitOfWork,
+                                IGameSearchRepository gameSearchRepository)
         {
             _readOnlyGameRepository = readOnlyGameRepository;
             _writeOnlyGameRepository = writeOnlyGameRepository;
             _unitOfWork = unitOfWork;
+            _gameSearchRepository = gameSearchRepository;
         }
 
         public async Task<UpdateGameOutput> Handle(UpdateGameInput request, CancellationToken cancellationToken)
@@ -46,6 +50,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Update
 
             _writeOnlyGameRepository.Update(game);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _gameSearchRepository.IndexAsync(GameSearchMapper.ToGameSearch(game), cancellationToken);
 
             return new UpdateGameOutput(game.Id, game.Title, game.Price.Value, game.Description, game.Category.ToString(), game.UpdatedAt);
         }

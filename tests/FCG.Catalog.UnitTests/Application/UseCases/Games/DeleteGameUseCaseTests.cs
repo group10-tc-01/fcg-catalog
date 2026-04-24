@@ -38,7 +38,8 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var useCase = new DeleteGameUseCase(
                 ReadOnlyGameRepositoryBuilder.Build(),
                 ReadOnlyPromotionRepositoryBuilder.Build(),
-                UnitOfWorkBuilder.Build()
+                UnitOfWorkBuilder.Build(),
+                Mock.Of<IGameSearchRepository>()
             );
 
             // Act
@@ -84,11 +85,57 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var useCase = new DeleteGameUseCase(
                 mockRepo.Object, 
                 mockPromoRepo.Object, 
-                mockUow.Object);
+                mockUow.Object,
+                Mock.Of<IGameSearchRepository>());
             // Act
             await useCase.Handle(input, CancellationToken.None);
 
             // Assert
             callOrder.Should().Equal("GetById", "GetByPromotion", "Delete", "Commit", "Save");        }
+
+        [Fact]
+        public async Task Handle_ShouldDeleteGameFromSearchIndexAfterSaving_WhenGameIsDeleted()
+        {
+            // Arrange
+            var game = _gameBuilder.Build();
+            var input = new DeleteGameInput(game.Id);
+
+            var gameRepositoryMock = new Mock<IReadOnlyGameRepository>();
+            gameRepositoryMock
+                .Setup(x => x.GetByIdAsync(game.Id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(game);
+            gameRepositoryMock
+                .Setup(x => x.Delete(game, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            var promotionRepositoryMock = new Mock<IReadOnlyPromotionRepository>();
+            promotionRepositoryMock
+                .Setup(x => x.GetByGameIdAsync(game.Id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Promotion>());
+
+            var unitOfWorkMock = new Mock<IUnitOfWork>();
+            unitOfWorkMock
+                .Setup(x => x.CommitTransactionAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+            unitOfWorkMock
+                .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(1);
+
+            var searchRepositoryMock = new Mock<IGameSearchRepository>();
+
+            var useCase = new DeleteGameUseCase(
+                gameRepositoryMock.Object,
+                promotionRepositoryMock.Object,
+                unitOfWorkMock.Object,
+                searchRepositoryMock.Object);
+
+            // Act
+            await useCase.Handle(input, CancellationToken.None);
+
+            // Assert
+            searchRepositoryMock.Verify(
+                x => x.DeleteAsync(game.Id, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
     }
 }

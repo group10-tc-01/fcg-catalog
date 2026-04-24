@@ -23,6 +23,9 @@ namespace FCG.Catalog.WebApi.DependencyInjection
 
                 app.EnsureGamesIndexCreatedAsync().GetAwaiter().GetResult();
                 logger.LogInformation("Elasticsearch games index ensured");
+
+                app.ReindexGamesSearchAsync().GetAwaiter().GetResult();
+                logger.LogInformation("Elasticsearch games index reindexed");
             }
 
             app.UseSwagger();

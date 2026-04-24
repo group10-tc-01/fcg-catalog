@@ -6,6 +6,7 @@ using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Messages;
 using FCG.Catalog.UnitTests.Domain.ValueObjects;
@@ -40,7 +41,11 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(0);
 
-            var useCase = new UpdateGameUseCase(readRepoMock.Object, writeRepoMock.Object, unitOfWorkMock.Object);
+            var useCase = new UpdateGameUseCase(
+                readRepoMock.Object,
+                writeRepoMock.Object,
+                unitOfWorkMock.Object,
+                Mock.Of<IGameSearchRepository>());
 
             // Act
             var result = await useCase.Handle(request, CancellationToken.None);
@@ -76,7 +81,11 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var writeRepoMock = new Mock<IWriteOnlyGameRepository>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            var useCase = new UpdateGameUseCase(readRepoMock.Object, writeRepoMock.Object, unitOfWorkMock.Object);
+            var useCase = new UpdateGameUseCase(
+                readRepoMock.Object,
+                writeRepoMock.Object,
+                unitOfWorkMock.Object,
+                Mock.Of<IGameSearchRepository>());
 
             // Act
             var act = () => useCase.Handle(request, CancellationToken.None);
@@ -107,7 +116,11 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var writeRepoMock = new Mock<IWriteOnlyGameRepository>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            var useCase = new UpdateGameUseCase(readRepoMock.Object, writeRepoMock.Object, unitOfWorkMock.Object);
+            var useCase = new UpdateGameUseCase(
+                readRepoMock.Object,
+                writeRepoMock.Object,
+                unitOfWorkMock.Object,
+                Mock.Of<IGameSearchRepository>());
 
             // Act
             var act = () => useCase.Handle(request, CancellationToken.None);
@@ -137,7 +150,11 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var writeRepoMock = new Mock<IWriteOnlyGameRepository>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            var useCase = new UpdateGameUseCase(readRepoMock.Object, writeRepoMock.Object, unitOfWorkMock.Object);
+            var useCase = new UpdateGameUseCase(
+                readRepoMock.Object,
+                writeRepoMock.Object,
+                unitOfWorkMock.Object,
+                Mock.Of<IGameSearchRepository>());
 
             // Act
             var act = () => useCase.Handle(request, CancellationToken.None);
@@ -167,7 +184,11 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var writeRepoMock = new Mock<IWriteOnlyGameRepository>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            var useCase = new UpdateGameUseCase(readRepoMock.Object, writeRepoMock.Object, unitOfWorkMock.Object);
+            var useCase = new UpdateGameUseCase(
+                readRepoMock.Object,
+                writeRepoMock.Object,
+                unitOfWorkMock.Object,
+                Mock.Of<IGameSearchRepository>());
 
             // Act
             var act = () => useCase.Handle(request, CancellationToken.None);
@@ -197,13 +218,68 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var writeRepoMock = new Mock<IWriteOnlyGameRepository>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            var useCase = new UpdateGameUseCase(readRepoMock.Object, writeRepoMock.Object, unitOfWorkMock.Object);
+            var useCase = new UpdateGameUseCase(
+                readRepoMock.Object,
+                writeRepoMock.Object,
+                unitOfWorkMock.Object,
+                Mock.Of<IGameSearchRepository>());
 
             // Act
             var act = () => useCase.Handle(request, CancellationToken.None);
 
             // Assert
             await act.Should().ThrowAsync<DomainException>().WithMessage(ResourceMessages.GameNameIsRequired); // Assuming description validation is similar
+        }
+
+        [Fact]
+        public async Task Handle_ShouldUpdateSearchIndexAfterSaving_WhenGameIsUpdated()
+        {
+            // Arrange
+            var existingGame = Game.Create("Old Title", "Old Description", Price.Create(20m), GameCategory.Action);
+            var request = new UpdateGameInput
+            {
+                Id = existingGame.Id,
+                Title = "Updated Indexed Title",
+                Description = "Updated Indexed Description",
+                Price = 45.5m,
+                Category = GameCategory.Puzzle
+            };
+
+            var readRepoMock = new Mock<IReadOnlyGameRepository>();
+            readRepoMock
+                .Setup(repo => repo.GetByIdAsync(existingGame.Id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(existingGame);
+
+            var writeRepoMock = new Mock<IWriteOnlyGameRepository>();
+            var unitOfWorkMock = new Mock<IUnitOfWork>();
+            unitOfWorkMock
+                .Setup(uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(1);
+
+            var searchRepositoryMock = new Mock<IGameSearchRepository>();
+
+            var useCase = new UpdateGameUseCase(
+                readRepoMock.Object,
+                writeRepoMock.Object,
+                unitOfWorkMock.Object,
+                searchRepositoryMock.Object);
+
+            // Act
+            await useCase.Handle(request, CancellationToken.None);
+
+            // Assert
+            searchRepositoryMock.Verify(
+                x => x.IndexAsync(
+                    It.Is<GameSearch>(game =>
+                        game.Id == existingGame.Id &&
+                        game.Title == request.Title &&
+                        game.Description == request.Description &&
+                        game.Price == request.Price &&
+                        game.DiscountedPrice == request.Price &&
+                        game.Category == request.Category.ToString() &&
+                        game.IsActive),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

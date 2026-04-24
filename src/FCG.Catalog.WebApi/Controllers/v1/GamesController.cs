@@ -4,6 +4,7 @@ using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Application.UseCases.Games.GetPurchaseStatus;
 using FCG.Catalog.Application.UseCases.Games.ProcessPurchase;
 using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Application.UseCases.Games.Search;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Services.Repositories;
@@ -38,6 +39,16 @@ namespace FCG.Catalog.WebApi.Controllers.v1
             var output = await _mediator.Send(input, CancellationToken.None).ConfigureAwait(false);
             return Ok(ApiResponse<PagedListResponse<GetGameOutput>>.SuccesResponse(output));
 
+        }
+
+        [HttpGet("search")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponse<PagedListResponse<SearchGameOutput>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Search([FromQuery] SearchGamesInput input, CancellationToken cancellationToken)
+        {
+            var output = await _mediator.Send(input, cancellationToken).ConfigureAwait(false);
+            return Ok(ApiResponse<PagedListResponse<SearchGameOutput>>.SuccesResponse(output));
         }
 
         [HttpPost("{id}/purchase")]

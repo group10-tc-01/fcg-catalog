@@ -1,5 +1,7 @@
 using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
+using FCG.Catalog.Domain.Repositories.Game;
+using FCG.Catalog.Infrastructure.Elasticsearch.Repositories;
 using FCG.Catalog.Infrastructure.Elasticsearch.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,7 @@ namespace FCG.Catalog.Infrastructure.Elasticsearch.DependencyInjection
 
                 return new ElasticsearchClient(clientSettings);
             });
+            services.AddSingleton<IGameSearchRepository, GameSearchRepository>();
 
             return services;
         }

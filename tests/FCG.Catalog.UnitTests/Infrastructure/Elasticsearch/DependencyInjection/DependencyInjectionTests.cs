@@ -1,4 +1,5 @@
 using Elastic.Clients.Elasticsearch;
+using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Infrastructure.Elasticsearch.DependencyInjection;
 using FCG.Catalog.Infrastructure.Elasticsearch.Settings;
 using FluentAssertions;
@@ -41,6 +42,7 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Elasticsearch.DependencyInjection
                 });
 
             provider.GetRequiredService<ElasticsearchClient>().Should().NotBeNull();
+            provider.GetRequiredService<IGameSearchRepository>().Should().NotBeNull();
         }
     }
 }

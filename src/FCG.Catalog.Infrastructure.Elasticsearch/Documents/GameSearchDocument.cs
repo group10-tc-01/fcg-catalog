@@ -1,6 +1,6 @@
 namespace FCG.Catalog.Infrastructure.Elasticsearch.Documents
 {
-    internal sealed class GameIndexDocument
+    internal sealed class GameSearchDocument
     {
         public string Id { get; init; } = string.Empty;
 
@@ -8,14 +8,14 @@ namespace FCG.Catalog.Infrastructure.Elasticsearch.Documents
 
         public string Description { get; init; } = string.Empty;
 
+        public decimal Price { get; init; }
+
         public string Category { get; init; } = string.Empty;
 
-        public decimal Price { get; init; }
+        public decimal DiscountedPrice { get; init; }
 
         public bool IsActive { get; init; }
 
-        public DateTime CreatedAt { get; init; }
-
-        public DateTime? UpdatedAt { get; init; }
+        public DateTime IndexedAt { get; init; }
     }
 }
