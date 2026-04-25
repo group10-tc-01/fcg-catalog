@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FCG.Catalog.Application.Abstractions.Caching;
 using FCG.Catalog.Infrastructure.Redis.Services;
 using FCG.Catalog.Infrastructure.Redis.Settings;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace FCG.Catalog.Infrastructure.Redis.DependencyInjection
 {
+    [ExcludeFromCodeCoverage]
     public static class DependencyInjection
     {
         public static IServiceCollection AddRedisInfrastructure(
