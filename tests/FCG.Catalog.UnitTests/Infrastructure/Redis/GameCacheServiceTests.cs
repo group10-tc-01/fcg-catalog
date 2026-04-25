@@ -56,6 +56,8 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Redis
             {
                 Name = "zelda",
                 Category = GameCategory.Adventure,
+                MinPrice = 40m,
+                MaxPrice = 60m,
                 Pagination = new PaginationParams { PageNumber = 2, PageSize = 5 }
             };
             var pagination = input.Pagination;
@@ -119,6 +121,109 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Redis
             result.Should().BeNull();
         }
 
+        [Fact]
+        public async Task GetGameListAsync_ShouldReturnNull_WhenCacheIsEmpty()
+        {
+            // Arrange
+            using var provider = CreateProvider();
+            var service = CreateService(provider.GetRequiredService<IDistributedCache>());
+            var input = new GetGameInput
+            {
+                Pagination = new PaginationParams { PageNumber = 1, PageSize = 10 }
+            };
+
+            // Act
+            var result = await service.GetGameListAsync(input, input.Pagination, CancellationToken.None);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetGameByIdAsync_ShouldReturnNull_WhenCacheIsEmpty()
+        {
+            // Arrange
+            using var provider = CreateProvider();
+            var service = CreateService(provider.GetRequiredService<IDistributedCache>());
+
+            // Act
+            var result = await service.GetGameByIdAsync(Guid.NewGuid(), CancellationToken.None);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task InvalidateGameByIdAsync_ShouldRemoveCachedDetail()
+        {
+            // Arrange
+            using var provider = CreateProvider();
+            var service = CreateService(provider.GetRequiredService<IDistributedCache>());
+            var gameId = Guid.NewGuid();
+            var expected = new GetGameIdOutput
+            {
+                Title = "Cached Detail",
+                Description = "Cached Description",
+                Category = GameCategory.Action.ToString(),
+                OriginalPrice = 39.99m,
+                HasActivePromotion = false
+            };
+
+            await service.SetGameByIdAsync(gameId, expected, CancellationToken.None);
+
+            // Act
+            await service.InvalidateGameByIdAsync(gameId, CancellationToken.None);
+            var result = await service.GetGameByIdAsync(gameId, CancellationToken.None);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task CacheOperations_ShouldFallback_WhenDistributedCacheThrows()
+        {
+            // Arrange
+            var service = CreateService(new ThrowingDistributedCache());
+            var gameId = Guid.NewGuid();
+            var input = new GetGameInput
+            {
+                Name = "cache",
+                Category = GameCategory.Action,
+                MinPrice = 10m,
+                MaxPrice = 20m,
+                Pagination = new PaginationParams { PageNumber = 1, PageSize = 10 }
+            };
+            var listResponse = new PagedListResponse<GetGameOutput>(
+                new List<GetGameOutput> { new() { Id = gameId, Title = "Cache" } },
+                totalCount: 1,
+                currentPage: 1,
+                pageSize: 10);
+            var detailResponse = new GetGameIdOutput
+            {
+                Title = "Cache",
+                Description = "Fallback",
+                Category = GameCategory.Action.ToString(),
+                OriginalPrice = 10m,
+                HasActivePromotion = false
+            };
+
+            // Act
+            var listResult = await service.GetGameListAsync(input, input.Pagination, CancellationToken.None);
+            var detailResult = await service.GetGameByIdAsync(gameId, CancellationToken.None);
+            var writeAct = async () =>
+            {
+                await service.SetGameListAsync(input, input.Pagination, listResponse, CancellationToken.None);
+                await service.SetGameByIdAsync(gameId, detailResponse, CancellationToken.None);
+                await service.InvalidateGameListAsync(CancellationToken.None);
+                await service.InvalidateGameByIdAsync(gameId, CancellationToken.None);
+            };
+
+            // Assert
+            listResult.Should().BeNull();
+            detailResult.Should().BeNull();
+            await writeAct.Should().NotThrowAsync();
+        }
+
         private static ServiceProvider CreateProvider()
         {
             var services = new ServiceCollection();
@@ -137,6 +242,53 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Redis
             var logger = new Mock<ILogger<GameCacheService>>();
 
             return new GameCacheService(distributedCache, settings, logger.Object);
+        }
+
+        private sealed class ThrowingDistributedCache : IDistributedCache
+        {
+            public byte[]? Get(string key)
+            {
+                throw new InvalidOperationException("Cache unavailable.");
+            }
+
+            public Task<byte[]?> GetAsync(string key, CancellationToken token = default)
+            {
+                throw new InvalidOperationException("Cache unavailable.");
+            }
+
+            public void Refresh(string key)
+            {
+                throw new InvalidOperationException("Cache unavailable.");
+            }
+
+            public Task RefreshAsync(string key, CancellationToken token = default)
+            {
+                throw new InvalidOperationException("Cache unavailable.");
+            }
+
+            public void Remove(string key)
+            {
+                throw new InvalidOperationException("Cache unavailable.");
+            }
+
+            public Task RemoveAsync(string key, CancellationToken token = default)
+            {
+                throw new InvalidOperationException("Cache unavailable.");
+            }
+
+            public void Set(string key, byte[] value, DistributedCacheEntryOptions options)
+            {
+                throw new InvalidOperationException("Cache unavailable.");
+            }
+
+            public Task SetAsync(
+                string key,
+                byte[] value,
+                DistributedCacheEntryOptions options,
+                CancellationToken token = default)
+            {
+                throw new InvalidOperationException("Cache unavailable.");
+            }
         }
     }
 }
