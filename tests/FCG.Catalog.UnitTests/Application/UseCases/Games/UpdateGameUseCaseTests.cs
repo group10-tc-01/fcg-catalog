@@ -1,3 +1,4 @@
+using FCG.Catalog.Application.Abstractions.Caching;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.CommomTestUtilities.Builders;
 using FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories;
@@ -40,7 +41,15 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(0);
 
-            var useCase = new UpdateGameUseCase(readRepoMock.Object, writeRepoMock.Object, unitOfWorkMock.Object);
+            var cacheMock = new Mock<IGameCacheService>();
+            cacheMock
+                .Setup(cache => cache.InvalidateGameByIdAsync(gameId, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+            cacheMock
+                .Setup(cache => cache.InvalidateGameListAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            var useCase = new UpdateGameUseCase(readRepoMock.Object, writeRepoMock.Object, unitOfWorkMock.Object, cacheMock.Object);
 
             // Act
             var result = await useCase.Handle(request, CancellationToken.None);
@@ -54,6 +63,8 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
             result.Category.Should().Be(GameCategory.RPG.ToString());
             writeRepoMock.Verify(repo => repo.Update(existingGame), Times.Once);
             unitOfWorkMock.Verify(uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            cacheMock.Verify(cache => cache.InvalidateGameByIdAsync(gameId, It.IsAny<CancellationToken>()), Times.Once);
+            cacheMock.Verify(cache => cache.InvalidateGameListAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]

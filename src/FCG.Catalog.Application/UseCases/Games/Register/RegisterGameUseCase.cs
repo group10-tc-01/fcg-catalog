@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Application.Abstractions.Caching;
+using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
 using FCG.Catalog.Domain.Enum;
@@ -16,13 +17,20 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
         private readonly IWriteOnlyGameRepository _writeRepo;
         private readonly IReadOnlyGameRepository _readRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IGameCacheService _gameCacheService;
 
-        public RegisterGameUseCase(IWriteOnlyGameRepository writeRepo, IReadOnlyGameRepository readRepo, IUnitOfWork unitOfWork)
+        public RegisterGameUseCase(
+            IWriteOnlyGameRepository writeRepo,
+            IReadOnlyGameRepository readRepo,
+            IUnitOfWork unitOfWork,
+            IGameCacheService? gameCacheService = null)
         {
             _writeRepo = writeRepo;
             _readRepo = readRepo;
             _unitOfWork = unitOfWork;
+            _gameCacheService = gameCacheService ?? NullGameCacheService.Instance;
         }
+
         public async Task<RegisterGameOutput> Handle(RegisterGameInput request, CancellationToken cancellationToken)
         {
             await ValidateIfGameAlreadyExistsAsync(request.Name);
@@ -37,6 +45,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
 
             await _writeRepo.AddAsync(game);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _gameCacheService.InvalidateGameListAsync(cancellationToken);
 
             return new RegisterGameOutput { Id = game.Id, Name = game.Title };
         }
