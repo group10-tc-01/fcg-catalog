@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Domain.Abstractions;
+﻿using FCG.Catalog.Application.Abstractions.Caching;
+using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
@@ -13,13 +14,16 @@ namespace FCG.Catalog.Application.UseCases.Games.Update
         private readonly IReadOnlyGameRepository _readOnlyGameRepository;
         private readonly IWriteOnlyGameRepository _writeOnlyGameRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IGameCacheService _gameCacheService;
 
         public UpdateGameUseCase(IReadOnlyGameRepository readOnlyGameRepository, IWriteOnlyGameRepository writeOnlyGameRepository,
-                                IUnitOfWork unitOfWork)
+                                IUnitOfWork unitOfWork,
+                                IGameCacheService? gameCacheService = null)
         {
             _readOnlyGameRepository = readOnlyGameRepository;
             _writeOnlyGameRepository = writeOnlyGameRepository;
             _unitOfWork = unitOfWork;
+            _gameCacheService = gameCacheService ?? NullGameCacheService.Instance;
         }
 
         public async Task<UpdateGameOutput> Handle(UpdateGameInput request, CancellationToken cancellationToken)
@@ -46,6 +50,8 @@ namespace FCG.Catalog.Application.UseCases.Games.Update
 
             _writeOnlyGameRepository.Update(game);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _gameCacheService.InvalidateGameByIdAsync(request.Id, cancellationToken);
+            await _gameCacheService.InvalidateGameListAsync(cancellationToken);
 
             return new UpdateGameOutput(game.Id, game.Title, game.Price.Value, game.Description, game.Category.ToString(), game.UpdatedAt);
         }

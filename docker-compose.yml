@@ -68,6 +68,20 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    container_name: fcg-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   webapi:
     build:
       context: .
@@ -77,9 +91,14 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=fcg_catalog;User Id=sa;Password=YourPassword123;TrustServerCertificate=True;
       - Kafka__BootstrapServers=kafka:29092
+      - RedisSettings__ConnectionString=redis:6379
+      - RedisSettings__InstanceName=fcg-catalog:
+      - RedisSettings__DefaultTtlSeconds=60
     ports:
       - "5000:80"
     restart: on-failure
@@ -87,4 +106,5 @@ services:
 volumes:
   sqlserver-data:
   kafka-data:
+  redis-data:
   zookeeper-data:
