@@ -20,5 +20,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Search
         public bool IsActive { get; init; }
 
         public DateTime IndexedAt { get; init; }
+
+        public double Score { get; init; }
     }
 }

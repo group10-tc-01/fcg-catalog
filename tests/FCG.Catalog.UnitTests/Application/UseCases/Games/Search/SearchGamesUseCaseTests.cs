@@ -33,7 +33,8 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games.Search
                         Category = "Adventure",
                         DiscountedPrice = 49.99m,
                         IsActive = true,
-                        IndexedAt = indexedAt
+                        IndexedAt = indexedAt,
+                        Score = 1.85
                     }
                 },
                 totalCount: 5,
@@ -62,6 +63,7 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games.Search
             result.Items[0].Title.Should().Be("The Legend of Zelda");
             result.Items[0].DiscountedPrice.Should().Be(49.99m);
             result.Items[0].IndexedAt.Should().Be(indexedAt);
+            result.Items[0].Score.Should().Be(1.85);
 
             repository.VerifyAll();
         }

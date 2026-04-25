@@ -20,5 +20,7 @@ namespace FCG.Catalog.Domain.Models
         public bool IsActive { get; set; }
 
         public DateTime IndexedAt { get; set; }
+
+        public double Score { get; set; }
     }
 }

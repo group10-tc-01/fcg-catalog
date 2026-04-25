@@ -1,21 +1,17 @@
 using Elastic.Clients.Elasticsearch;
-using Elastic.Transport;
+using Elastic.Clients.Elasticsearch.Core.Search;
+using Elastic.Clients.Elasticsearch.QueryDsl;
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Infrastructure.Elasticsearch.Documents;
 using FCG.Catalog.Infrastructure.Elasticsearch.Settings;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
-using TransportHttpMethod = Elastic.Transport.HttpMethod;
 
 namespace FCG.Catalog.Infrastructure.Elasticsearch.Repositories
 {
-    [ExcludeFromCodeCoverage]
     public sealed class GameSearchRepository : IGameSearchRepository
     {
-        private static readonly JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web);
-
         private readonly ElasticsearchClient _client;
         private readonly string _indexName;
 
@@ -27,16 +23,17 @@ namespace FCG.Catalog.Infrastructure.Elasticsearch.Repositories
 
         public async Task IndexAsync(GameSearch game, CancellationToken cancellationToken = default)
         {
-            var indexedAt = DateTime.UtcNow;
-            var document = MapToDocument(game, indexedAt);
+            var document = MapToDocument(game, DateTime.UtcNow);
 
-            var response = await _client.Transport.RequestAsync<StringResponse>(
-                TransportHttpMethod.PUT,
-                $"/{_indexName}/_doc/{game.Id}",
-                PostData.Serializable(document),
+            var response = await _client.IndexAsync(document, i => i
+                .Index(_indexName)
+                .Id(game.Id.ToString()),
                 cancellationToken);
 
-            EnsureSuccess(response, $"Failed to index game search document '{game.Id}'.");
+            if (!response.IsValidResponse)
+            {
+                throw new InvalidOperationException($"Failed to index game search document '{game.Id}'.");
+            }
         }
 
         public async Task<PagedListResponse<GameSearch>> SearchAsync(
@@ -46,77 +43,44 @@ namespace FCG.Catalog.Infrastructure.Elasticsearch.Repositories
         {
             var from = (pagination.PageNumber - 1) * pagination.PageSize;
 
-            var request = new
-            {
-                from,
-                size = pagination.PageSize,
-                track_total_hits = true,
-                query = new
-                {
-                    @bool = new
-                    {
-                        filter = new object[]
-                        {
-                            new
-                            {
-                                term = new
+            var response = await _client.SearchAsync<GameSearchDocument>(s => s
+                .Indices(_indexName)
+                .From(from)
+                .Size(pagination.PageSize)
+                .TrackTotalHits(new TrackHits(true))
+                .Query(q => q
+                    .Bool(b => b
+                        .Filter(f => f
+                            .Term(t => t
+                                .Field(Infer.Field<GameSearchDocument>(f => f.IsActive))
+                                .Value(true)))
+                        .Must(m => m
+                            .MultiMatch(mm => mm
+                                .Query(term)
+                                .Fields(Fields.FromFields(new Field[]
                                 {
-                                    isActive = new
-                                    {
-                                        value = true
-                                    }
-                                }
-                            }
-                        },
-                        must = new object[]
-                        {
-                            new
-                            {
-                                multi_match = new
-                                {
-                                    query = term,
-                                    fields = new[]
-                                    {
-                                        "title^2.0",
-                                        "description"
-                                    },
-                                    fuzziness = "AUTO",
-                                    type = "best_fields"
-                                }
-                            }
-                        }
-                    }
-                },
-                sort = new object[]
-                {
-                    new
-                    {
-                        _score = new
-                        {
-                            order = "desc"
-                        }
-                    }
-                }
-            };
-
-            var response = await _client.Transport.RequestAsync<StringResponse>(
-                TransportHttpMethod.POST,
-                $"/{_indexName}/_search",
-                PostData.Serializable(request),
+                                    new Field(nameof(GameSearchDocument.Title).ToLowerInvariant(), boost: 2.0f),
+                                    new Field(nameof(GameSearchDocument.Description).ToLowerInvariant())
+                                }))
+                                .Fuzziness(new Fuzziness("AUTO"))
+                                .Type(TextQueryType.BestFields)))))
+                .Sort(so => so.Score(sc => sc.Order(SortOrder.Desc))),
                 cancellationToken);
 
-            EnsureSuccess(response, "Failed to search games in Elasticsearch.");
+            if (!response.IsValidResponse)
+            {
+                throw new InvalidOperationException("Failed to search games in Elasticsearch.");
+            }
 
-            using var json = JsonDocument.Parse(response.Body);
-            var hits = json.RootElement.GetProperty("hits");
-            var totalCount = hits.GetProperty("total").GetProperty("value").GetInt32();
+            var totalCount = (int)response.Total;
 
-            var items = hits.GetProperty("hits")
-                .EnumerateArray()
-                .Select(hit => JsonSerializer.Deserialize<GameSearchDocument>(
-                    hit.GetProperty("_source").GetRawText(),
-                    JsonSerializerOptions)!)
-                .Select(MapToModel)
+            var items = response.Hits
+                .Select(hit =>
+                {
+                    var model = MapToModel(hit.Source!);
+                    model.Score = hit.Score ?? 0d;
+                    return model;
+                })
                 .ToList();
 
             return new PagedListResponse<GameSearch>(items, totalCount, pagination.PageNumber, pagination.PageSize);
@@ -124,19 +88,17 @@ namespace FCG.Catalog.Infrastructure.Elasticsearch.Repositories
 
         public async Task DeleteAsync(Guid gameId, CancellationToken cancellationToken = default)
         {
-            var response = await _client.Transport.RequestAsync<StringResponse>(
-                TransportHttpMethod.DELETE,
-                $"/{_indexName}/_doc/{gameId}",
-                cancellationToken);
+            var response = await _client.DeleteAsync(_indexName, gameId.ToString(), cancellationToken);
 
-            var statusCode = response.ApiCallDetails?.HttpStatusCode;
-
-            if (statusCode == (int)System.Net.HttpStatusCode.NotFound)
+            if (response.Result == Result.NotFound)
             {
                 return;
             }
 
-            EnsureSuccess(response, $"Failed to delete game search document '{gameId}'.");
+            if (!response.IsValidResponse)
+            {
+                throw new InvalidOperationException($"Failed to delete game search document '{gameId}'.");
+            }
         }
 
         private static GameSearchDocument MapToDocument(GameSearch game, DateTime indexedAt)
@@ -167,18 +129,6 @@ namespace FCG.Catalog.Infrastructure.Elasticsearch.Repositories
                 IsActive = document.IsActive,
                 IndexedAt = document.IndexedAt
             };
-        }
-
-        private static void EnsureSuccess(TransportResponse response, string message)
-        {
-            var statusCode = response.ApiCallDetails?.HttpStatusCode;
-
-            if (statusCode is >= 200 and < 300)
-            {
-                return;
-            }
-
-            throw new InvalidOperationException(message);
         }
     }
 }

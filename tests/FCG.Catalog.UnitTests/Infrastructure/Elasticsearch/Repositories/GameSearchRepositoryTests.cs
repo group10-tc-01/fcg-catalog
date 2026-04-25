@@ -162,7 +162,7 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Elasticsearch.Repositories
                 multiMatch.GetProperty("query").GetString().Should().Be("halo");
                 multiMatch.GetProperty("fuzziness").GetString().Should().Be("AUTO");
                 multiMatch.GetProperty("type").GetString().Should().Be("best_fields");
-                multiMatch.GetProperty("fields")[0].GetString().Should().Be("title^2.0");
+                multiMatch.GetProperty("fields")[0].GetString().Should().Be("title^2");
                 multiMatch.GetProperty("fields")[1].GetString().Should().Be("description");
 
                 var sort = root.GetProperty("sort")[0].GetProperty("_score");
@@ -176,6 +176,8 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Elasticsearch.Repositories
             result.Items.Should().HaveCount(2);
             result.Items[0].Title.Should().Be("Halo Infinite");
             result.Items[0].DiscountedPrice.Should().Be(199.90m);
+            result.Items[0].Score.Should().Be(2.0);
+            result.Items[1].Score.Should().Be(1.7);
         }
 
         [Fact]

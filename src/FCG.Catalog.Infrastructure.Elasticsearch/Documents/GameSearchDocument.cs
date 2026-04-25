@@ -1,6 +1,6 @@
 namespace FCG.Catalog.Infrastructure.Elasticsearch.Documents
 {
-    internal sealed class GameSearchDocument
+    public sealed class GameSearchDocument
     {
         public string Id { get; init; } = string.Empty;
 

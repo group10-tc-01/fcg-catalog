@@ -33,7 +33,8 @@ namespace FCG.Catalog.Application.UseCases.Games.Search
                     Category = game.Category,
                     DiscountedPrice = game.DiscountedPrice,
                     IsActive = game.IsActive,
-                    IndexedAt = game.IndexedAt
+                    IndexedAt = game.IndexedAt,
+                    Score = game.Score
                 })
                 .ToList();
 
