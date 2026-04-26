@@ -7,7 +7,6 @@ using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -20,7 +19,6 @@ public class ProcessPaymentResultUseCaseTests
     private readonly Mock<IWriteOnlyLibraryGameRepository> _mockWriteOnlyLibraryGameRepository;
     private readonly Mock<IWriteOnlyPurchaseTransactionRepository> _mockWriteOnlyPurchaseTransactionRepository;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
-    private readonly Mock<IDistributedCache> _mockCache;
     private readonly Mock<ILogger<ProcessPaymentResultUseCase>> _mockLogger;
     private readonly ProcessPaymentResultUseCase _useCase;
 
@@ -31,7 +29,6 @@ public class ProcessPaymentResultUseCaseTests
         _mockWriteOnlyLibraryGameRepository = new Mock<IWriteOnlyLibraryGameRepository>();
         _mockWriteOnlyPurchaseTransactionRepository = new Mock<IWriteOnlyPurchaseTransactionRepository>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockCache = new Mock<IDistributedCache>();
         _mockLogger = new Mock<ILogger<ProcessPaymentResultUseCase>>();
         _useCase = new ProcessPaymentResultUseCase(
             _mockReadOnlyLibraryRepository.Object,
@@ -39,7 +36,6 @@ public class ProcessPaymentResultUseCaseTests
             _mockWriteOnlyLibraryGameRepository.Object,
             _mockWriteOnlyPurchaseTransactionRepository.Object,
             _mockUnitOfWork.Object,
-            _mockCache.Object,
             _mockLogger.Object
         );
     }

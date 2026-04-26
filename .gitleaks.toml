@@ -1,0 +1,12 @@
+title = "FCG Catalog Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore local generated artifacts outside the GitHub checkout"
+paths = [
+  '''(^|/)\.vs/''',
+  '''(^|/)bin/''',
+  '''(^|/)obj/'''
+]

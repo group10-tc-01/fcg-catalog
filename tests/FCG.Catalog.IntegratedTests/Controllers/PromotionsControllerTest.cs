@@ -12,7 +12,7 @@ namespace FCG.Catalog.IntegratedTests.Controllers
 {
     public class PromotionsControllerTest : FcgCatalogFixture
     {
-        private const string BaseUrl = "/api/Promotion";
+        private const string BaseUrl = "/api/v1/promotion";
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
