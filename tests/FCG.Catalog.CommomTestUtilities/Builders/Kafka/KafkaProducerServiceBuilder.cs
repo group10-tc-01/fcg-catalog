@@ -42,7 +42,7 @@ namespace FCG.Catalog.CommomTestUtilities.Builders.Kafka
            {
                _mock.Verify(service => service.PublishAsync(
                    topicKey,
-                   It.Is<T>(m => m.Equals(message)),
+                   It.Is<T>(m => m != null && m.Equals(message)),
                    It.IsAny<CancellationToken>()), times);
            }
        }

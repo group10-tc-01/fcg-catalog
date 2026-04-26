@@ -5,7 +5,6 @@ using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Domain.Repositories.Library;
 using FCG.Catalog.Domain.Repositories.LibraryGame;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
 namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
@@ -25,7 +24,6 @@ namespace FCG.Catalog.Application.UseCases.Games.ProcessPayment
             IWriteOnlyLibraryGameRepository writeOnlyLibraryGameRepository,
             IWriteOnlyPurchaseTransactionRepository writeOnlyPurchaseTransactionRepository,
             IUnitOfWork unitOfWork,
-            IDistributedCache cache,
             ILogger<ProcessPaymentResultUseCase> logger)
         {
             _readOnlyLibraryRepository = readOnlyLibraryRepository;
