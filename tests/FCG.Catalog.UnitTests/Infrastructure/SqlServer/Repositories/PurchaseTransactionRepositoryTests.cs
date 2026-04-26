@@ -72,8 +72,8 @@ namespace FCG.Catalog.UnitTests.Infrastructure.SqlServer.Repositories
 
             // Assert
             var updatedTransaction = _dbContext.Set<PurchaseTransaction>().Find(correlationId);
-            Assert.Equal(status, updatedTransaction.Status);
-            Assert.Equal(message, updatedTransaction.Message);
+            Assert.Equal(status, updatedTransaction?.Status);
+            Assert.Equal(message, updatedTransaction?.Message);
         }
 
         [Fact]

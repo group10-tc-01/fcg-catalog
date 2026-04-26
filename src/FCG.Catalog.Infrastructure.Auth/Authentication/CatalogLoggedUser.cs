@@ -19,8 +19,10 @@ namespace FCG.Catalog.Infrastructure.Auth.Authentication
         {
             var user = _httpContextAccessor.HttpContext?.User;
 
-            if (user == null || !user.Identity.IsAuthenticated)
+            if (user?.Identity?.IsAuthenticated != true)
+            {
                 return Task.FromResult<LoggedUserInfo?>(null);
+            }
 
             var idClaim = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
                           ?? user.FindFirst("sub")?.Value;
