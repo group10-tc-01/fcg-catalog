@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Application.Abstractions.Caching;
 using FCG.Catalog.CommomTestUtilities.Builders;
 using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.CommomTestUtilities.Builders.Games.Repositories;
@@ -112,6 +113,43 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
 
             // Assert
             WriteOnlyGameRepositoryBuilder.VerifyAddAsyncWasCalled(Times.Once());
+        }
+
+        [Fact]
+        public async Task Handle_ShouldInvalidateGameListCache_WhenGameIsRegistered()
+        {
+            // Arrange
+            var input = new RegisterGameInput
+            {
+                Name = "Cache Invalidated Game",
+                Description = "Valid Description",
+                Price = 19.99m,
+                Category = GameCategory.Strategy
+            };
+            var cacheMock = new Mock<IGameCacheService>();
+
+            ReadOnlyGameRepositoryBuilder.SetupGetByNameAsync(input.Name, null);
+            WriteOnlyGameRepositoryBuilder.SetupAddAsync(It.IsAny<Game>());
+            UnitOfWorkBuilder.SetupSaveChangesAsync();
+            cacheMock
+                .Setup(cache => cache.InvalidateGameListAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            var useCase = new RegisterGameUseCase(
+                WriteOnlyGameRepositoryBuilder.Build(),
+                ReadOnlyGameRepositoryBuilder.Build(),
+                UnitOfWorkBuilder.Build(),
+                Mock.Of<IGameSearchRepository>(),
+                cacheMock.Object
+            );
+
+            // Act
+            await useCase.Handle(input, CancellationToken.None);
+
+            // Assert
+            cacheMock.Verify(
+                cache => cache.InvalidateGameListAsync(It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Fact]
@@ -284,12 +322,14 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
                 .ReturnsAsync(1);
 
             var searchRepositoryMock = new Mock<IGameSearchRepository>();
+            var cacheMock = new Mock<IGameCacheService>();
 
             var useCase = new RegisterGameUseCase(
                 writeRepoMock.Object,
                 readRepoMock.Object,
                 unitOfWorkMock.Object,
-                searchRepositoryMock.Object);
+                searchRepositoryMock.Object,
+                cacheMock.Object);
 
             // Act
             await useCase.Handle(input, CancellationToken.None);
@@ -305,6 +345,9 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
                         game.Category == input.Category.ToString() &&
                         game.IsActive),
                     It.IsAny<CancellationToken>()),
+                Times.Once);
+            cacheMock.Verify(
+                x => x.InvalidateGameListAsync(It.IsAny<CancellationToken>()),
                 Times.Once);
         }
     }

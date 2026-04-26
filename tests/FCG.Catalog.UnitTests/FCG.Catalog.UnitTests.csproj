@@ -40,6 +40,7 @@
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.Elasticsearch\FCG.Catalog.Infrastructure.Elasticsearch.csproj" />
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.Kafka\FCG.Catalog.Infrastructure.Kafka.csproj" />
+	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.Redis\FCG.Catalog.Infrastructure.Redis.csproj" />
 	  <ProjectReference Include="..\FCG.Catalog.CommomTestUtilities\FCG.Catalog.CommomTestUtilities.csproj" />
 	</ItemGroup>
 

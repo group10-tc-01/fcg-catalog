@@ -155,17 +155,17 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Elasticsearch.Repositories
                 root.GetProperty("track_total_hits").GetBoolean().Should().BeTrue();
 
                 var boolQuery = root.GetProperty("query").GetProperty("bool");
-                var filterTerm = boolQuery.GetProperty("filter")[0].GetProperty("term").GetProperty("isActive");
+                var filterTerm = GetFirstClause(boolQuery.GetProperty("filter")).GetProperty("term").GetProperty("isActive");
                 filterTerm.GetProperty("value").GetBoolean().Should().BeTrue();
 
-                var multiMatch = boolQuery.GetProperty("must")[0].GetProperty("multi_match");
+                var multiMatch = GetFirstClause(boolQuery.GetProperty("must")).GetProperty("multi_match");
                 multiMatch.GetProperty("query").GetString().Should().Be("halo");
                 multiMatch.GetProperty("fuzziness").GetString().Should().Be("AUTO");
                 multiMatch.GetProperty("type").GetString().Should().Be("best_fields");
                 multiMatch.GetProperty("fields")[0].GetString().Should().Be("title^2");
                 multiMatch.GetProperty("fields")[1].GetString().Should().Be("description");
 
-                var sort = root.GetProperty("sort")[0].GetProperty("_score");
+                var sort = GetFirstClause(root.GetProperty("sort")).GetProperty("_score");
                 sort.GetProperty("order").GetString().Should().Be("desc");
             }
 
@@ -233,6 +233,11 @@ namespace FCG.Catalog.UnitTests.Infrastructure.Elasticsearch.Repositories
                 Uri = "http://localhost:9200",
                 IndexName = "games"
             });
+        }
+
+        private static JsonElement GetFirstClause(JsonElement element)
+        {
+            return element.ValueKind == JsonValueKind.Array ? element[0] : element;
         }
 
         private sealed class FakeElasticsearchServer : IAsyncDisposable

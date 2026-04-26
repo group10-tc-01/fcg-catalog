@@ -14,6 +14,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+      start_period: 10s
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -67,6 +68,29 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    container_name: fcg-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis-ui:
+    image: redislabs/redisinsight:latest
+    container_name: fcg-redis-ui
+    depends_on:
+      - redis
+    ports:
+      - "5540:5540"
+    restart: unless-stopped
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:9.3.3
     container_name: fcg-elasticsearch
@@ -106,12 +130,17 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      redis:
+        condition: service_healthy
       elasticsearch:
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=fcg_catalog;User Id=sa;Password=YourPassword123;TrustServerCertificate=True;
       - KafkaSettings__BootstrapServers=kafka:29092
+      - RedisSettings__ConnectionString=redis:6379
+      - "RedisSettings__InstanceName=fcg-catalog:"
+      - RedisSettings__DefaultTtlSeconds=60
       - ElasticsearchSettings__Uri=http://elasticsearch:9200
       - ElasticsearchSettings__IndexName=games
       - ElasticsearchSettings__Username=${ELASTICSEARCH_USERNAME:-}
@@ -123,6 +152,7 @@ services:
 volumes:
   sqlserver-data:
   kafka-data:
+  redis-data:
   zookeeper-data:
   zookeeper-logs:
   elasticsearch-data:
