@@ -3,6 +3,7 @@ using FCG.Catalog.Infrastructure.Auth.DependencyInjection;
 using FCG.Catalog.Infrastructure.Elasticsearch.DependencyInjection;
 using FCG.Catalog.Infrastructure.Kafka.DependencyInjection;
 using FCG.Catalog.Infrastructure.MongoDb.DependencyInjection;
+using FCG.Catalog.Infrastructure.Redis.DependencyInjection;
 using FCG.Catalog.Infrastructure.SqlServer.DependencyInjection;
 using FCG.Catalog.WebApi.DependencyInjection;
 
