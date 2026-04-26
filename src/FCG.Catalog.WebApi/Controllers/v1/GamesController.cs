@@ -26,7 +26,7 @@ namespace FCG.Catalog.WebApi.Controllers.v1
         public async Task<IActionResult> Register([FromBody] RegisterGameInput input, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(input, cancellationToken);
-            var response = ApiResponse<RegisterGameOutput>.SuccesResponse(result);
+            var response = ApiResponse<RegisterGameOutput>.SuccesResponse(result);            
             return Created($"api/v1/games/{result.Id}", response);
         }
 

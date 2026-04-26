@@ -115,7 +115,7 @@ public class ReadOnlyGameRepositoryBuilderTests
     }
 
     [Fact]
-    public void Reset_ShouldClearConfigurations()
+    public async Task Reset_ShouldClearConfigurations()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -125,7 +125,7 @@ public class ReadOnlyGameRepositoryBuilderTests
 
         // Act
         ReadOnlyGameRepositoryBuilder.Reset();
-        var result = repository.GetByIdAsync(id, CancellationToken.None).Result;
+        var result = await repository.GetByIdAsync(id, CancellationToken.None);
 
         // Assert
         Assert.Null(result);
