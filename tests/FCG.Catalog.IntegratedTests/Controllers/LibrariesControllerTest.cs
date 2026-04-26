@@ -10,7 +10,7 @@ namespace FCG.Catalog.IntegratedTests.Controllers
 {
     public class LibrariesControllerTest : FcgCatalogFixture
     {
-        private const string BaseUrl = "/api/Library";
+        private const string BaseUrl = "/api/v1/library";
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {

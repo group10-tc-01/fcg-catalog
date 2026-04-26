@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FCG.Catalog.WebApi.Controllers.v1
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class LibraryController(IMediator mediator, ICatalogLoggedUser catalogLoggedUser) : FcgCatalogBaseController(mediator)
     {
         [HttpGet]
