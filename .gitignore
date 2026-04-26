@@ -483,6 +483,10 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
+# Terraform                                                                 
+*.tfstate                                                                   
+*.tfvars                                                                    
+terraform/GITHUB_SECRETS.md 
 # Secrets and environment-specific config
 appsettings.Production.json
 appsettings.Docker.json

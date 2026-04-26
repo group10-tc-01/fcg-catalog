@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Infrastructure.SqlServer;
+using FCG.Catalog.Application.Services;
 using FCG.Catalog.WebApi.Middleware;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
@@ -15,6 +16,14 @@ namespace FCG.Catalog.WebApi.Extensions
             using var dbContext = scope.ServiceProvider.GetRequiredService<FcgCatalogDbContext>();
 
             dbContext.Database.Migrate();
+        }
+
+        public static async Task ReindexGamesSearchAsync(this IApplicationBuilder app)
+        {
+            using var scope = app.ApplicationServices.CreateScope();
+
+            var reindexService = scope.ServiceProvider.GetRequiredService<IGameSearchReindexService>();
+            await reindexService.ReindexAsync();
         }
 
         public static void UseCustomerExceptionHandler(this IApplicationBuilder app)

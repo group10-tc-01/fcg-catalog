@@ -4,12 +4,15 @@ using FCG.Catalog.CommomTestUtilities.Builders.Promotions;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Catalog.Entities.Promotions;
+using FCG.Catalog.Domain.Models;
+using FCG.Catalog.Domain.Repositories.Game;
 using FCG.Catalog.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using Program = FCG.Catalog.WebApi.Program;
@@ -23,6 +26,7 @@ namespace FCG.Catalog.IntegratedTests.Configurations
         public List<Library> CreatedLibraries { get; private set; } = [];
         public List<Game> CreatedGames { get; private set; } = [];
         public List<Promotion> CreatedPromotions { get; private set; } = [];
+        public TestGameSearchRepository GameSearchRepository { get; } = new();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -30,6 +34,7 @@ namespace FCG.Catalog.IntegratedTests.Configurations
             {
                 RemoveEntityFrameworkServices(services);
                 RemoveKafkaServices(services);
+                ReplaceElasticsearchSearchRepository(services);
 
                 _connection?.Dispose();
                 _connection = new SqliteConnection("Data Source=:memory:");
@@ -71,6 +76,13 @@ namespace FCG.Catalog.IntegratedTests.Configurations
             {
                 services.Remove(descriptor);
             }
+        }
+
+        private void ReplaceElasticsearchSearchRepository(IServiceCollection services)
+        {
+            services.RemoveAll<IGameSearchRepository>();
+            GameSearchRepository.Reset();
+            services.AddSingleton<IGameSearchRepository>(GameSearchRepository);
         }
 
         private void EnsureDatabaseSeeded(IServiceCollection services)
@@ -153,6 +165,48 @@ namespace FCG.Catalog.IntegratedTests.Configurations
                 _connection?.Dispose();
             }
             base.Dispose(disposing);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    public class TestGameSearchRepository : IGameSearchRepository
+    {
+        private readonly List<GameSearch> _indexedGames = [];
+
+        public PagedListResponse<GameSearch> SearchResult { get; set; } =
+            new([], 0, 1, 10);
+
+        public IReadOnlyList<GameSearch> IndexedGames => _indexedGames;
+
+        public List<Guid> DeletedGameIds { get; } = [];
+
+        public Task IndexAsync(GameSearch game, CancellationToken cancellationToken = default)
+        {
+            _indexedGames.RemoveAll(x => x.Id == game.Id);
+            _indexedGames.Add(game);
+            return Task.CompletedTask;
+        }
+
+        public Task<PagedListResponse<GameSearch>> SearchAsync(
+            string term,
+            PaginationParams pagination,
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(SearchResult);
+        }
+
+        public Task DeleteAsync(Guid gameId, CancellationToken cancellationToken = default)
+        {
+            DeletedGameIds.Add(gameId);
+            _indexedGames.RemoveAll(x => x.Id == gameId);
+            return Task.CompletedTask;
+        }
+
+        public void Reset()
+        {
+            _indexedGames.Clear();
+            DeletedGameIds.Clear();
+            SearchResult = new PagedListResponse<GameSearch>([], 0, 1, 10);
         }
     }
 }

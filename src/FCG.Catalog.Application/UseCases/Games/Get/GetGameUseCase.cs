@@ -1,3 +1,4 @@
+using FCG.Catalog.Application.Abstractions.Caching;
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Repositories.Game;
 using System.Diagnostics.CodeAnalysis;
@@ -8,16 +9,24 @@ namespace FCG.Catalog.Application.UseCases.Games.Get
     public class GetGameUseCase : IGetAllGamesUseCase
     {
         private readonly IReadOnlyGameRepository _readRepo;
+        private readonly IGameCacheService _gameCacheService;
 
-        public GetGameUseCase(IReadOnlyGameRepository readRepo)
+        public GetGameUseCase(IReadOnlyGameRepository readRepo, IGameCacheService? gameCacheService = null)
         {
             _readRepo = readRepo;
+            _gameCacheService = gameCacheService ?? NullGameCacheService.Instance;
         }
 
-        public Task<PagedListResponse<GetGameOutput>> Handle(GetGameInput request,
+        public async Task<PagedListResponse<GetGameOutput>> Handle(GetGameInput request,
             CancellationToken cancellationToken)
         {
             var pagination = request.Pagination ?? new PaginationParams();
+
+            var cachedResult = await _gameCacheService.GetGameListAsync(request, pagination, cancellationToken);
+            if (cachedResult is not null)
+            {
+                return cachedResult;
+            }
 
             var query = _readRepo.GetAllWithFilters(
                 name: request.Name,
@@ -33,12 +42,13 @@ namespace FCG.Catalog.Application.UseCases.Games.Get
 
             var games = pagedQuery.ToList();
 
-            var items = games.Select(x =>
+            var items = games.Where(x => x is not null).Select(x =>
             {
-                var originalPrice = x.Price.Value;
+                var game = x!;
+                var originalPrice = game.Price.Value;
 
-                var activePromotion = x.GetActivePromotion();
-                var finalPrice = x.CalculateDiscountedPrice(activePromotion);
+                var activePromotion = game.GetActivePromotion();
+                var finalPrice = game.CalculateDiscountedPrice(activePromotion);
 
                 ActivePromotionDto? promotionDto = null;
 
@@ -55,10 +65,10 @@ namespace FCG.Catalog.Application.UseCases.Games.Get
 
                 return new GetGameOutput()
                 {
-                    Id = x.Id,
-                    Category = x.Category.ToString(),
-                    Description = x.Description,
-                    Title = x.Title.Value,
+                    Id = game.Id,
+                    Category = game.Category.ToString(),
+                    Description = game.Description,
+                    Title = game.Title.Value,
                     Price = originalPrice,
                     FinalPrice = finalPrice,
                     ActivePromotion = promotionDto
@@ -66,7 +76,9 @@ namespace FCG.Catalog.Application.UseCases.Games.Get
             }).ToList();
 
             var result = new PagedListResponse<GetGameOutput>(items, totalCount, pagination.PageNumber, pagination.PageSize);
-            return Task.FromResult(result);
+            await _gameCacheService.SetGameListAsync(request, pagination, result, cancellationToken);
+
+            return result;
         }
     }
 }
