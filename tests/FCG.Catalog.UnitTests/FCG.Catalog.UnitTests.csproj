@@ -24,6 +24,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Using Include="Xunit" />
 	</ItemGroup>
 
@@ -34,6 +38,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Application\FCG.Catalog.Application.csproj" />
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
+	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.Elasticsearch\FCG.Catalog.Infrastructure.Elasticsearch.csproj" />
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.Kafka\FCG.Catalog.Infrastructure.Kafka.csproj" />
 	  <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure.Redis\FCG.Catalog.Infrastructure.Redis.csproj" />
 	  <ProjectReference Include="..\FCG.Catalog.CommomTestUtilities\FCG.Catalog.CommomTestUtilities.csproj" />

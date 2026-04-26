@@ -13,17 +13,20 @@ namespace FCG.Catalog.Application.UseCases.Games.Delete
         private readonly IReadOnlyGameRepository _gameRepository;
         private readonly IReadOnlyPromotionRepository _readOnlyPromotionRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IGameSearchRepository _gameSearchRepository;
         private readonly IGameCacheService _gameCacheService;
 
         public DeleteGameUseCase(
             IReadOnlyGameRepository gameRepository,
             IReadOnlyPromotionRepository readOnlyPromotionRepository,
             IUnitOfWork unitOfWork,
+            IGameSearchRepository gameSearchRepository,
             IGameCacheService? gameCacheService = null)
         {
             _gameRepository = gameRepository;
             _readOnlyPromotionRepository = readOnlyPromotionRepository;
             _unitOfWork = unitOfWork;
+            _gameSearchRepository = gameSearchRepository;
             _gameCacheService = gameCacheService ?? NullGameCacheService.Instance;
         }
 
@@ -46,6 +49,7 @@ namespace FCG.Catalog.Application.UseCases.Games.Delete
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             await _gameCacheService.InvalidateGameByIdAsync(request.Id, cancellationToken);
             await _gameCacheService.InvalidateGameListAsync(cancellationToken);
+            await _gameSearchRepository.DeleteAsync(request.Id, cancellationToken);
 
             return Unit.Value;
         }

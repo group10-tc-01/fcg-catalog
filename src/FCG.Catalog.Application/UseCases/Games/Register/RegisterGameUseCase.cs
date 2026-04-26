@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Application.Abstractions.Caching;
+using FCG.Catalog.Application.Abstractions.Caching;
+using FCG.Catalog.Application.Services;
 using FCG.Catalog.Domain.Abstractions;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
 using FCG.Catalog.Domain.Catalog.ValueObjects;
@@ -17,17 +18,20 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
         private readonly IWriteOnlyGameRepository _writeRepo;
         private readonly IReadOnlyGameRepository _readRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IGameSearchRepository _gameSearchRepository;
         private readonly IGameCacheService _gameCacheService;
 
         public RegisterGameUseCase(
             IWriteOnlyGameRepository writeRepo,
             IReadOnlyGameRepository readRepo,
             IUnitOfWork unitOfWork,
+            IGameSearchRepository gameSearchRepository,
             IGameCacheService? gameCacheService = null)
         {
             _writeRepo = writeRepo;
             _readRepo = readRepo;
             _unitOfWork = unitOfWork;
+            _gameSearchRepository = gameSearchRepository;
             _gameCacheService = gameCacheService ?? NullGameCacheService.Instance;
         }
 
@@ -41,14 +45,17 @@ namespace FCG.Catalog.Application.UseCases.Games.Register
             {
                 throw new DomainException($"Invalid category: '{request.Category}'. Available categories are: Action, Adventure, RPG...");
             }
+
             var game = Game.Create(request.Name, request.Description, price, request.Category);
 
             await _writeRepo.AddAsync(game);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             await _gameCacheService.InvalidateGameListAsync(cancellationToken);
+            await _gameSearchRepository.IndexAsync(GameSearchMapper.ToGameSearch(game), cancellationToken);
 
             return new RegisterGameOutput { Id = game.Id, Name = game.Title };
         }
+
         private async Task ValidateIfGameAlreadyExistsAsync(string name)
         {
             var game = await _readRepo.GetByNameAsync(name);

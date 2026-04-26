@@ -1,5 +1,6 @@
 ﻿using FCG.Catalog.Application.UseCases.Games.Get;
 using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Application.UseCases.Games.Search;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Domain.Enum;
 using FCG.Catalog.Domain.Models;
@@ -36,6 +37,56 @@ namespace FCG.Catalog.IntegratedTests.Controllers
             var result = await DoAuthenticatedGet(url, token);
 
             result.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        #endregion
+
+        #region SEARCH
+
+        [Fact]
+        public async Task Given_ValidRequest_When_SearchGamesIsCalled_ShouldReturnOkWithPagedResults()
+        {
+            // Arrange
+            var indexedAt = DateTime.UtcNow;
+            Factory.GameSearchRepository.SearchResult = new PagedListResponse<GameSearch>(
+                new List<GameSearch>
+                {
+                    new()
+                    {
+                        Id = Guid.NewGuid(),
+                        Title = "Fuzzy Racing",
+                        Description = "Searchable racing game",
+                        Price = 99.9m,
+                        Category = GameCategory.Racing.ToString(),
+                        DiscountedPrice = 89.9m,
+                        IsActive = true,
+                        IndexedAt = indexedAt
+                    }
+                },
+                totalCount: 1,
+                currentPage: 1,
+                pageSize: 10);
+
+            // Act
+            var result = await _httpClient.GetAsync($"{BaseUrl}/search?term=fuzzy&pageNumber=1&pageSize=10");
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonSerializer.Deserialize<ApiResponse<PagedListResponse<SearchGameOutput>>>(content, JsonOptions);
+
+            // Assert
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.Should().NotBeNull();
+            response!.Success.Should().BeTrue();
+            response.Data.Items.Should().ContainSingle();
+            response.Data.Items[0].Title.Should().Be("Fuzzy Racing");
+            response.Data.TotalCount.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task Given_InvalidPagination_When_SearchGamesIsCalled_ShouldReturnBadRequest()
+        {
+            var result = await _httpClient.GetAsync($"{BaseUrl}/search?term=fuzzy&pageNumber=0&pageSize=10");
+
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         #endregion
