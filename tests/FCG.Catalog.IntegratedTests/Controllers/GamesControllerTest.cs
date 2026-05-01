@@ -1,4 +1,7 @@
-﻿using FCG.Catalog.Application.UseCases.Games.Get;
+﻿using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Elastic.Clients.Elasticsearch;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Application.UseCases.Games.Search;
 using FCG.Catalog.Application.UseCases.Games.Update;
@@ -7,9 +10,6 @@ using FCG.Catalog.Domain.Models;
 using FCG.Catalog.IntegratedTests.Configurations;
 using FCG.Catalog.WebApi.Models;
 using FluentAssertions;
-using System.Net;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace FCG.Catalog.IntegratedTests.Controllers
 {
@@ -104,14 +104,20 @@ namespace FCG.Catalog.IntegratedTests.Controllers
                 Category = GameCategory.Adventure
             };
 
-            var token = GenerateToken(Guid.NewGuid(), "Admin");
+            var userId = Guid.NewGuid();
+            var role = "Admin";
 
-            var result = await DoAuthenticatedPost(BaseUrl, input, token);
-            var content = await result.Content.ReadAsStringAsync();
+            Factory.MockLoggedUser.UserId = userId;
+            Factory.MockLoggedUser.Role = role;
+
+            var token = GenerateToken(userId, role);
+            var createResponse = await DoAuthenticatedPost(BaseUrl, input, token);
+            createResponse.StatusCode.Should().Be(HttpStatusCode.Created, "Falha ao criar jogo para teste");
+            var content = await createResponse.Content.ReadAsStringAsync();
 
             var response = JsonSerializer.Deserialize<ApiResponse<RegisterGameOutput>>(content, JsonOptions);
 
-            result.StatusCode.Should().Be(HttpStatusCode.Created);
+            createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             response.Should().NotBeNull();
             response!.Data.Id.Should().NotBeEmpty();
             response.Data.Name.Should().Be(input.Name);
@@ -156,6 +162,8 @@ namespace FCG.Catalog.IntegratedTests.Controllers
             var adminToken = GenerateToken(Guid.NewGuid(), "Admin");
 
             var createResponse = await DoAuthenticatedPost(BaseUrl, createInput, adminToken);
+            
+            createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             var createContent = await createResponse.Content.ReadAsStringAsync();
 
             var createdGame = JsonSerializer
@@ -195,6 +203,8 @@ namespace FCG.Catalog.IntegratedTests.Controllers
             var adminToken = GenerateToken(Guid.NewGuid(), "Admin");
 
             var createResponse = await DoAuthenticatedPost(BaseUrl, input, adminToken);
+            
+            createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             var content = await createResponse.Content.ReadAsStringAsync();
 
             var createdGame = JsonSerializer
@@ -238,6 +248,8 @@ namespace FCG.Catalog.IntegratedTests.Controllers
             var adminToken = GenerateToken(Guid.NewGuid(), "Admin");
 
             var createResponse = await DoAuthenticatedPost(BaseUrl, input, adminToken);
+            
+            createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             var content = await createResponse.Content.ReadAsStringAsync();
 
             var createdGame = JsonSerializer
