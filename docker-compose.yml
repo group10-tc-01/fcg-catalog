@@ -156,8 +156,8 @@ services:
     image: mongo:7
     hostname: mongodb
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=user
-      - MONGO_INITDB_ROOT_PASSWORD=pass
+      - MONGO_INITDB_ROOT_USERNAME=${user:-user}
+      - MONGO_INITDB_ROOT_PASSWORD=${pass:-pass}
     ports:
       - 27017:27017
     volumes:
