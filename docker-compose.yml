@@ -134,6 +134,8 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
+      mongodb:
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=fcg_catalog;User Id=sa;Password=YourPassword123;TrustServerCertificate=True;
@@ -148,6 +150,29 @@ services:
     ports:
       - "5000:8080"
     restart: on-failure
+    
+  mongodb:
+    container_name: fcg_mongodb      
+    image: mongo:7
+    hostname: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    ports:
+      - 27017:27017
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - mongo-data:/data/db
+      - mongo-configdb:/data/configdb
+    depends_on: 
+      - sqlserver
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand(\"ping\")' --quiet || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    restart: on-failure
 
 volumes:
   sqlserver-data:
@@ -155,4 +180,6 @@ volumes:
   redis-data:
   zookeeper-data:
   zookeeper-logs:
-  elasticsearch-data:
+  elasticsearch-data:  
+  mongo-data:
+  mongo-configdb:
