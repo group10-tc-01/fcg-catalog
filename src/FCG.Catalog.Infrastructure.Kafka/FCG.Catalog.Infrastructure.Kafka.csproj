@@ -7,8 +7,8 @@
     <PackageReference Include="Polly" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FCG.Catalog.Application\FCG.Catalog.Application.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FCG.Catalog.Application\FCG.Catalog.Application.csproj" />
+	</ItemGroup>
 
 </Project>

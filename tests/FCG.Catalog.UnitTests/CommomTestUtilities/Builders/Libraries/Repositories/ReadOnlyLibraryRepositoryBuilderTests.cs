@@ -93,7 +93,7 @@ public class ReadOnlyLibraryRepositoryBuilderTests
     }
 
     [Fact]
-    public void Reset_ShouldClearConfigurations()
+    public async Task Reset_ShouldClearConfigurations()
     {
         // Arrange
         var userId = Guid.NewGuid();
@@ -104,7 +104,7 @@ public class ReadOnlyLibraryRepositoryBuilderTests
 
         // Act
         ReadOnlyLibraryRepositoryBuilder.Reset();
-        var result = repository.GetByUserIdAsync(userId, CancellationToken.None).Result;
+        var result = await repository.GetByUserIdAsync(userId, CancellationToken.None);
 
         // Assert
         Assert.Null(result); // After reset, should return default (null)

@@ -36,25 +36,25 @@
     <ProjectReference Include="..\FCG.Catalog.Infrastructure.SqlServer\FCG.Catalog.Infrastructure.SqlServer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FCG.Catalog.Infrastructure.Kafka\FCG.Catalog.Infrastructure.Kafka.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FCG.Catalog.Infrastructure.Kafka\FCG.Catalog.Infrastructure.Kafka.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Update="appsettings.Development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <DependentUpon>appsettings.json</DependentUpon>
-    </Content>
+	<ItemGroup>
+		<Content Update="appsettings.Development.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<DependentUpon>appsettings.json</DependentUpon>
+		</Content>
 
-    <Content Update="appsettings.Test.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <DependentUpon>appsettings.json</DependentUpon>
-    </Content>
+		<Content Update="appsettings.Test.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<DependentUpon>appsettings.json</DependentUpon>
+		</Content>
 
-    <Content Update="appsettings.Docker.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <DependentUpon>appsettings.json</DependentUpon>
-    </Content>
-  </ItemGroup>
+		<Content Update="appsettings.Docker.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<DependentUpon>appsettings.json</DependentUpon>
+		</Content>
+	</ItemGroup>
 
 </Project>

@@ -1,4 +1,13 @@
 <Solution>
+  <Folder Name="/Itens de Solução/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path=".gitleaks.toml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="docker-compose.yml" />
+    <File Path="README.md" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/FCG.Catalog.Application/FCG.Catalog.Application.csproj" />
     <Project Path="src/FCG.Catalog.Domain/FCG.Catalog.Domain.csproj" />
