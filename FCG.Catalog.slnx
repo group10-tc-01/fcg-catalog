@@ -1,5 +1,5 @@
 <Solution>
-  <Folder Name="/Itens de Solução/">
+  <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path=".gitleaks.toml" />
@@ -8,16 +8,22 @@
     <File Path="docker-compose.yml" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/src/">
-    <Project Path="src/FCG.Catalog.Application/FCG.Catalog.Application.csproj" />
+  <Folder Name="/src/0 - Domain/">
     <Project Path="src/FCG.Catalog.Domain/FCG.Catalog.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/1 - Application/">
+    <Project Path="src/FCG.Catalog.Application/FCG.Catalog.Application.csproj" />
+    <Project Path="src/FCG.Catalog.Messages/FCG.Catalog.Messages.csproj" />
+  </Folder>
+  <Folder Name="/src/2 - Infrastructure/">
     <Project Path="src/FCG.Catalog.Infrastructure.Auth/FCG.Catalog.Infrastructure.Auth.csproj" Id="5f39a26f-f1ae-4772-90f0-0215e915dbda" />
     <Project Path="src/FCG.Catalog.Infrastructure.Elasticsearch/FCG.Catalog.Infrastructure.Elasticsearch.csproj" />
     <Project Path="src/FCG.Catalog.Infrastructure.Kafka/FCG.Catalog.Infrastructure.Kafka.csproj" />
     <Project Path="src/FCG.Catalog.Infrastructure.MongoDb/FCG.Catalog.Infrastructure.MongoDb.csproj" Id="1adbaca7-9950-4d63-a052-bb4ecc963b31" />
     <Project Path="src/FCG.Catalog.Infrastructure.Redis/FCG.Catalog.Infrastructure.Redis.csproj" />
     <Project Path="src/FCG.Catalog.Infrastructure.SqlServer/FCG.Catalog.Infrastructure.SqlServer.csproj" />
-    <Project Path="src/FCG.Catalog.Messages/FCG.Catalog.Messages.csproj" />
+  </Folder>
+  <Folder Name="/src/3 - WebApi/">
     <Project Path="src/FCG.Catalog.WebApi/FCG.Catalog.WebApi.csproj" />
   </Folder>
   <Folder Name="/tests/">
