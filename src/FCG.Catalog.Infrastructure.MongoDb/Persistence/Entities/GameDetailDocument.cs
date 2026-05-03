@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Infrastructure.MongoDb.Persistence.Attributes;
 
 namespace FCG.Catalog.Infrastructure.MongoDb.Persistence.Entities
 {
