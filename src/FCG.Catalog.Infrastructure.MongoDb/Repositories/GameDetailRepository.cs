@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FCG.Catalog.Infrastructure.MongoDb.Repository
+namespace FCG.Catalog.Infrastructure.MongoDb.Repositories
 {
     [ExcludeFromCodeCoverage]
     public class GameDetailRepository : IReadOnlyGameDetailRepository, IWriteOnlyGameDetailRepository

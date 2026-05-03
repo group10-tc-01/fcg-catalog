@@ -13,6 +13,7 @@
 - [Regras de Negócio](#-regras-de-negócio)
 - [Endpoints da API](#-endpoints-da-api)
 - [Eventos](#-eventos)
+- [Infraestrutura MongoDB](#-infraestrutura-mongodb)
 - [Configuração e Execução](#-configuração-e-execução)
 
 ---
@@ -625,6 +626,165 @@ A aplicação utiliza **Apache Kafka** para comunicação assíncrona baseada em
 
 **Consumidores esperados:**
 - ✅ **PaymentsAPI**: Processar pagamento do usuário
+
+---
+
+## 🍃 Infraestrutura MongoDB
+
+A aplicação utiliza **MongoDB** para persistência de dados complementares e não-estruturados, desacoplando o modelo relacional (SQL Server) de informações ricas do catálogo de jogos.
+
+### Visão Geral
+
+O projeto `FCG.Catalog.Infrastructure.MongoDb` foi criado para:
+- Armazenar dados expandidos do jogo (reviews, screenshots, requisitos, tags)
+- Disponibilizar cache otimizado para consultas frequentes
+- Usar **Entity Framework Core** com provider `MongoDB.EntityFrameworkCore`
+
+### Estrutura do Projeto
+
+```
+FCG.Catalog.Infrastructure.MongoDb/
+├── DependencyInjection/      # Registro de serviços (AddMongoDbInfrastructure)
+├── Persistence/
+│   ├── Attributes/
+│   │   └── BsonCollectionAttribute.cs   # Define nome da collection MongoDB
+│   └── Entities/
+│       ├── GameDetailDocument.cs         # Documento principal (detalhes do jogo)
+│       └── GameCacheEntity.cs           # Cache de jogos com preço calculado
+├── Repositories/
+│   └── GameDetailRepository.cs         # CRUD implementando interfaces do Domain
+├── MongoDbContext.cs                    # DbContext EF Core → MongoDB
+└── FCG.Catalog.Infrastructure.MongoDb.csproj
+```
+
+### Coleções MongoDB
+
+| Collection | Entidade | Propósito |
+|------------|----------|-----------|
+| `games_detail` | `GameDetailDocument` | Dados expandidos: promoções, requisitos de sistema, tags, screenshots, reviews, rating |
+| `games_cache` | `GameCacheEntity` | Cache de consulta: preço final, promoção ativa, contador de acesso |
+
+### Esquema do Documento `games_detail`
+
+```json
+{
+  "gameId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "title": "The Legend of Adventure",
+  "description": "Um jogo épico de aventura",
+  "price": 199.90,
+  "category": "Adventure",
+  "isActive": true,
+  "promotions": [
+    {
+      "promotionId": "9c8b7a6d-5e4f-3d2c-1b0a-9f8e7d6c5b4a",
+      "discountPercentage": 25,
+      "startDate": "2026-01-15T00:00:00Z",
+      "endDate": "2026-01-31T23:59:59Z"
+    }
+  ],
+  "systemRequirements": {
+    "minimumOs": "Windows 10",
+    "minimumProcessor": "Intel i5",
+    "minimumMemory": "8GB",
+    "minimumGraphics": "GTX 960",
+    "minimumStorage": "50GB",
+    "recommendedOs": "Windows 11",
+    "recommendedProcessor": "Intel i7",
+    "recommendedMemory": "16GB",
+    "recommendedGraphics": "RTX 3060",
+    "recommendedStorage": "50GB SSD"
+  },
+  "tags": ["open-world", "rpg", "adventure"],
+  "screenshots": [
+    {
+      "screenshotId": "7b9e2c1a-8f4d-4e5b-9c3d-1a2b3c4d5e6f",
+      "url": "https://cdn.fcg.com/screenshots/game1-1.jpg",
+      "description": "Gameplay em mundo aberto",
+      "displayOrder": 1,
+      "uploadedAt": "2026-01-18T10:30:00Z"
+    }
+  ],
+  "reviews": [
+    {
+      "reviewId": "5d4c3b2a-1e0f-9g8h-7i6j-5k4l3m2n1o0p",
+      "userId": "7b9e2c1a-8f4d-4e5b-9c3d-1a2b3c4d5e6f",
+      "userName": "João Silva",
+      "rating": 5,
+      "title": "Excelente jogo!",
+      "content": "História envolvente e gráficos impressionantes.",
+      "helpful": 42,
+      "notHelpful": 3,
+      "reviewedAt": "2026-01-20T15:00:00Z",
+      "isVerifiedPurchase": true
+    }
+  ],
+  "libraryCount": 128,
+  "averageRating": 4.7,
+  "totalReviews": 89,
+  "synchronizedAt": "2026-01-20T10:30:00Z",
+  "version": 1
+}
+```
+
+### Fluxos de Uso
+
+#### Criação de Jogo (feature/609)
+
+Quando um jogo é criado via `POST /v1/games`, o evento de domínio é disparado:
+
+```
+Game.Create()
+  → RaiseDomainEvent(GameCreatedEvent)
+  → GameCreatedMongoHandler (Application)
+  → IWriteOnlyGameDetailRepository.AddAsync()
+  → MongoDB (collection: games_detail)
+```
+
+O `GameCreatedMongoHandler` na camada Application consome o `GameCreatedEvent` e persiste automaticamente os dados expandidos no MongoDB, sem impactar a transação SQL.
+
+### Onde é Utilizado
+
+| Projeto | Uso |
+|---------|-----|
+| `FCG.Catalog.WebApi` | Registra serviços via `builder.Services.AddMongoDbInfrastructure()` (Program.cs:33) |
+| `FCG.Catalog.Application` | `GameCreatedMongoHandler` consome `GameCreatedEvent`; projeto referencia Infrastructure.MongoDb |
+| `FCG.Catalog.Domain` | Define contratos `IReadOnlyGameDetailRepository` e `IWriteOnlyGameDetailRepository` + entidade `GameDetail` |
+
+### Por que foi criado
+
+- **Desacoplamento**: Dados relacionais (SQL Server) separados de dados não-estruturados (MongoDB)
+- **Dados Ricos**: Armazenar reviews, screenshots, requisitos sem poluir o modelo relacional
+- **Cache Otimizado**: `games_cache` para consultas frequentes com preço final pré-calculado
+- **Escalabilidade**: MongoDB lida melhor com documentos complexos e crescentes (reviews, screenshots)
+
+### Dependências (NuGets)
+
+```xml
+<PackageReference Include="MongoDB.Driver" />
+<PackageReference Include="MongoDB.EntityFrameworkCore" />
+<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+```
+
+### Configuração
+
+A connection string do MongoDB é configurada via:
+
+```json
+{
+  "ConnectionStrings": {
+    "MongoConnection": "mongodb://localhost:27017"
+  }
+}
+```
+
+Ou via User-Secrets:
+```bash
+dotnet user-secrets set "ConnectionStrings:MongoConnection" "mongodb://localhost:27017"
+```
+
+A aplicação conecta automaticamente ao database `fcg_catalog`.
 
 ---
 

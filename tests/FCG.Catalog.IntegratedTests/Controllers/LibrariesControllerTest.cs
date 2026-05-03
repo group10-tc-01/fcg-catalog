@@ -31,6 +31,9 @@ namespace FCG.Catalog.IntegratedTests.Controllers
             var existingLibrary = Factory.CreatedLibraries.First();
             var token = GenerateToken(existingLibrary.UserId, "User");
 
+            Factory.MockLoggedUser.UserId = existingLibrary.UserId;
+            Factory.MockLoggedUser.Role = "User";
+
             // Act
             var result = await DoAuthenticatedGet(BaseUrl, token);
 
@@ -53,6 +56,9 @@ namespace FCG.Catalog.IntegratedTests.Controllers
             // Arrange
             var userIdWithoutLibrary = Guid.NewGuid();
             var token = GenerateToken(userIdWithoutLibrary, "User");
+
+            Factory.MockLoggedUser.UserId = userIdWithoutLibrary;
+            Factory.MockLoggedUser.Role = "User";
 
             // Act
             var result = await DoAuthenticatedGet(BaseUrl, token);
@@ -86,6 +92,9 @@ namespace FCG.Catalog.IntegratedTests.Controllers
         {
             // Arrange
             var token = GenerateToken(Guid.Empty, "User");
+            
+            Factory.MockLoggedUser.UserId = Guid.Empty;
+            Factory.MockLoggedUser.Role = "User";
 
             // Act
             var result = await DoAuthenticatedGet(BaseUrl, token);

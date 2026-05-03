@@ -1,4 +1,6 @@
-﻿using FCG.Catalog.CommomTestUtilities.Builders.Games;
+﻿using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.CommomTestUtilities.Builders.Games;
 using FCG.Catalog.CommomTestUtilities.Builders.Libraries;
 using FCG.Catalog.CommomTestUtilities.Builders.Promotions;
 using FCG.Catalog.Domain.Catalog.Entities.Games;
@@ -6,6 +8,8 @@ using FCG.Catalog.Domain.Catalog.Entities.Libraries;
 using FCG.Catalog.Domain.Catalog.Entities.Promotions;
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Repositories.Game;
+using FCG.Catalog.Domain.Services;
+using FCG.Catalog.Domain.Services.Repositories;
 using FCG.Catalog.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,8 +17,6 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Data.Common;
-using System.Diagnostics.CodeAnalysis;
 using Program = FCG.Catalog.WebApi.Program;
 
 namespace FCG.Catalog.IntegratedTests.Configurations
@@ -28,6 +30,8 @@ namespace FCG.Catalog.IntegratedTests.Configurations
         public List<Promotion> CreatedPromotions { get; private set; } = [];
         public TestGameSearchRepository GameSearchRepository { get; } = new();
 
+        public MockCatalogLoggedUser MockLoggedUser { get; private set; } = null!;
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Test").ConfigureServices(services =>
@@ -35,6 +39,10 @@ namespace FCG.Catalog.IntegratedTests.Configurations
                 RemoveEntityFrameworkServices(services);
                 RemoveKafkaServices(services);
                 ReplaceElasticsearchSearchRepository(services);
+
+                services.RemoveAll<ICatalogLoggedUser>();
+                MockLoggedUser = new MockCatalogLoggedUser();
+                services.AddSingleton<ICatalogLoggedUser>(MockLoggedUser);
 
                 _connection?.Dispose();
                 _connection = new SqliteConnection("Data Source=:memory:");
@@ -53,10 +61,9 @@ namespace FCG.Catalog.IntegratedTests.Configurations
 
         private static void RemoveEntityFrameworkServices(IServiceCollection services)
         {
-            var descriptorsToRemove = services.Where(d =>
-                d.ServiceType == typeof(DbContextOptions<FcgCatalogDbContext>) ||
-                d.ServiceType == typeof(FcgCatalogDbContext) ||
-                d.ServiceType.Namespace?.StartsWith("Microsoft.EntityFrameworkCore") == true)
+            var descriptorsToRemove = services
+                .Where(d => d.ServiceType == typeof(DbContextOptions<FcgCatalogDbContext>) ||
+                            d.ServiceType == typeof(FcgCatalogDbContext))
                 .ToList();
 
             foreach (var descriptor in descriptorsToRemove)
@@ -102,7 +109,6 @@ namespace FCG.Catalog.IntegratedTests.Configurations
         {
             var itemsQuantity = 3;
 
-
             CreatedLibraries = CreateLibraries(context, itemsQuantity);
             CreatedGames = CreateGames(context, itemsQuantity);
             CreatedPromotions = CreatePromotions(context, CreatedGames);
@@ -112,7 +118,7 @@ namespace FCG.Catalog.IntegratedTests.Configurations
         {
             var libraries = new List<Library>();
 
-            for (int i = 1; i <= itemsQuantity; i++)
+            for (var i = 1; i <= itemsQuantity; i++)
             {
                 var library = new LibraryBuilder().BuildWithUserId(Guid.NewGuid());
                 libraries.Add(library);
@@ -129,7 +135,7 @@ namespace FCG.Catalog.IntegratedTests.Configurations
             var games = new List<Game>();
             var gameBuilder = new GameBuilder();
 
-            for (int i = 1; i <= itemsQuantity; i++)
+            for (var i = 1; i <= itemsQuantity; i++)
             {
                 var game = gameBuilder.Build();
                 games.Add(game);
@@ -165,6 +171,23 @@ namespace FCG.Catalog.IntegratedTests.Configurations
                 _connection?.Dispose();
             }
             base.Dispose(disposing);
+        }
+    }
+    public class MockCatalogLoggedUser : ICatalogLoggedUser
+    {
+        public Guid UserId { get; set; } = Guid.NewGuid();
+        public string Role { get; set; } = "User";
+
+        public Task<LoggedUserInfo?> GetLoggedUserAsync()
+        {
+            // Assume que LoggedUserInfo tem propriedades UserId (Guid) e Role (string)
+            // Ajuste o construtor se LoggedUserInfo for um record com parâmetros
+            var userInfo = new LoggedUserInfo
+            {
+                Id = UserId,
+                Role = Role
+            };
+            return Task.FromResult<LoggedUserInfo?>(userInfo);
         }
     }
 
