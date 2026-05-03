@@ -14,6 +14,8 @@ COPY ["src/FCG.Catalog.Application/FCG.Catalog.Application.csproj", "src/FCG.Cat
 COPY ["src/FCG.Catalog.Domain/FCG.Catalog.Domain.csproj", "src/FCG.Catalog.Domain/"]
 COPY ["src/FCG.Catalog.Infrastructure.Auth/FCG.Catalog.Infrastructure.Auth.csproj", "src/FCG.Catalog.Infrastructure.Auth/"]
 COPY ["src/FCG.Catalog.Infrastructure.Elasticsearch/FCG.Catalog.Infrastructure.Elasticsearch.csproj", "src/FCG.Catalog.Infrastructure.Elasticsearch/"]
+COPY ["src/FCG.Catalog.Infrastructure.MongoDb/FCG.Catalog.Infrastructure.MongoDb.csproj", "src/FCG.Catalog.Infrastructure.MongoDb/"]
+COPY ["src/FCG.Catalog.Infrastructure.Redis/FCG.Catalog.Infrastructure.Redis.csproj", "src/FCG.Catalog.Infrastructure.Redis/"]
 COPY ["src/FCG.Catalog.Infrastructure.SqlServer/FCG.Catalog.Infrastructure.SqlServer.csproj", "src/FCG.Catalog.Infrastructure.SqlServer/"]
 COPY ["src/FCG.Catalog.Messages/FCG.Catalog.Messages.csproj", "src/FCG.Catalog.Messages/"]
 COPY ["src/FCG.Catalog.Infrastructure.Kafka/FCG.Catalog.Infrastructure.Kafka.csproj", "src/FCG.Catalog.Infrastructure.Kafka/"]

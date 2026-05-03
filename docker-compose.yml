@@ -147,6 +147,7 @@ services:
       - ElasticsearchSettings__IndexName=games
       - ElasticsearchSettings__Username=${ELASTICSEARCH_USERNAME:-}
       - ElasticsearchSettings__Password=${ELASTICSEARCH_PASSWORD:-}
+      - ConnectionStrings__MongoConnection=mongodb://${MONGO_INITDB_ROOT_USERNAME:-user}:${MONGO_INITDB_ROOT_PASSWORD:-pass}@mongodb:27017/fcg_catalog?authSource=admin
     ports:
       - "5000:8080"
     restart: on-failure
@@ -156,18 +157,16 @@ services:
     image: mongo:7
     hostname: mongodb
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${user:-user}
-      - MONGO_INITDB_ROOT_PASSWORD=${pass:-pass}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME:-user}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD:-pass}
     ports:
       - 27017:27017
     volumes:
       - ./init:/docker-entrypoint-initdb.d
       - mongo-data:/data/db
       - mongo-configdb:/data/configdb
-    depends_on: 
-      - sqlserver
     healthcheck:
-      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand(\"ping\")' --quiet || exit 1"]
+      test: ["CMD-SHELL", "mongosh --username \"$${MONGO_INITDB_ROOT_USERNAME}\" --password \"$${MONGO_INITDB_ROOT_PASSWORD}\" --authenticationDatabase admin --eval 'db.adminCommand(\"ping\")' --quiet || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 12

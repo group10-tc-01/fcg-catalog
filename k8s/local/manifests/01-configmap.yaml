@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fcg-catalog-local-config
+  namespace: fcg-catalog
+  labels:
+    app.kubernetes.io/name: fcg-catalog
+    environment: local
+data:
+  ASPNETCORE_ENVIRONMENT: "Docker"
+  ASPNETCORE_URLS: "http://+:8080"
+  KafkaSettings__BootstrapServers: "kafka-service.fcg-infra.svc.cluster.local:29092"
+  KafkaSettings__ClientId: "fcg-catalog"
+  KafkaSettings__UseSaslSsl: "false"
+  RedisSettings__ConnectionString: "redis-service.fcg-infra.svc.cluster.local:6379"
+  RedisSettings__InstanceName: "fcg-catalog:"
+  RedisSettings__DefaultTtlSeconds: "60"
+  ElasticsearchSettings__Uri: "http://elasticsearch-service.fcg-infra.svc.cluster.local:9200"
+  ElasticsearchSettings__IndexName: "games"
+  ElasticsearchSettings__Username: ""
+  ElasticsearchSettings__Password: ""
+  Observability__ServiceName: "FCG.Catalog"
+  Observability__EnableOtlpExporter: "false"
+  Observability__OtlpEndpoint: ""
+  JwtSettings__Issuer: "FCG-User"
+  JwtSettings__Audience: "FCG-Client"

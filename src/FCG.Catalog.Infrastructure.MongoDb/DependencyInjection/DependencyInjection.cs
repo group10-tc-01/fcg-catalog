@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FCG.Catalog.Infrastructure.MongoDb.DependencyInjection
 {
@@ -30,17 +29,14 @@ namespace FCG.Catalog.Infrastructure.MongoDb.DependencyInjection
                 throw new DomainException(ResourceMessages.MongoDbConnectionNotConfigured);
             }
 
-            // Registra IMongoClient como Singleton
             services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
 
-            // Registra IMongoDatabase como Scoped
             services.AddScoped(provider =>
             {
                 var client = provider.GetRequiredService<IMongoClient>();
                 return client.GetDatabase("fcg_catalog");
             });
 
-            // Registra DbContext para Entity Framework Core
             services.AddDbContext<MongoDbContext>(options =>
             {
                 options.UseMongoDB(mongoConnectionString, databaseName: "fcg_catalog");
