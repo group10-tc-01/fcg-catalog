@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FCG.Catalog.WebApi.Controllers.v1
 {
     [ExcludeFromCodeCoverage]
-    public class GamesController(IMediator mediator, ICatalogLoggedUser catalogLoggedUser) : FcgCatalogBaseController(mediator)
+    public class GamesController(IMediator mediator) : FcgCatalogBaseController(mediator)
     {
         [HttpPost]
         [Authorize(Roles = "Admin")]

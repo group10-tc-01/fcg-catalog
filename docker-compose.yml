@@ -134,6 +134,8 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
+      mongodb:
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=fcg_catalog;User Id=sa;Password=YourPassword123;TrustServerCertificate=True;
@@ -177,4 +179,6 @@ volumes:
   redis-data:
   zookeeper-data:
   zookeeper-logs:
-  elasticsearch-data:
+  elasticsearch-data:  
+  mongo-data:
+  mongo-configdb:

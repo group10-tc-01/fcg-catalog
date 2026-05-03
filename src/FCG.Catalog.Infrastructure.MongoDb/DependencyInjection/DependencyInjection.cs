@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FCG.Catalog.Domain.Exception;
+using FCG.Catalog.Domain.Repositories.GameDetail;
+using FCG.Catalog.Infrastructure.MongoDb.Repositories;
 using FCG.Catalog.Messages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +41,9 @@ namespace FCG.Catalog.Infrastructure.MongoDb.DependencyInjection
             {
                 options.UseMongoDB(mongoConnectionString, databaseName: "fcg_catalog");
             });
+
+            services.AddScoped<IWriteOnlyGameDetailRepository, GameDetailRepository>();
+            services.AddScoped<IReadOnlyGameDetailRepository, GameDetailRepository>();
         }
     }
 }
