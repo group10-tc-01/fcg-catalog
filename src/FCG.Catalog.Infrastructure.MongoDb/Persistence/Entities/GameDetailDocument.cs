@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using FCG.Catalog.Infrastructure.MongoDb.Persistence.Attributes;
 
 namespace FCG.Catalog.Infrastructure.MongoDb.Persistence.Entities
 {
     [ExcludeFromCodeCoverage]
+    [BsonCollection("games_detail")]
     public class GameDetailDocument
     {
         [BsonId]
