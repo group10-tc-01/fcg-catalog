@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Domain.Exception;
+﻿using System.Diagnostics.CodeAnalysis;
+using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Messages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,17 +27,14 @@ namespace FCG.Catalog.Infrastructure.MongoDb.DependencyInjection
                 throw new DomainException(ResourceMessages.MongoDbConnectionNotConfigured);
             }
 
-            // Registra IMongoClient como Singleton
             services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
 
-            // Registra IMongoDatabase como Scoped
             services.AddScoped(provider =>
             {
                 var client = provider.GetRequiredService<IMongoClient>();
                 return client.GetDatabase("fcg_catalog");
             });
 
-            // Registra DbContext para Entity Framework Core
             services.AddDbContext<MongoDbContext>(options =>
             {
                 options.UseMongoDB(mongoConnectionString, databaseName: "fcg_catalog");
