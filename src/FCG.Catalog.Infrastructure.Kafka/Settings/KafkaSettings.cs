@@ -27,12 +27,12 @@ namespace FCG.Catalog.Infrastructure.Kafka.Settings
 
     public class ProducerSettings
     {
-        public bool EnableIdempotence { get; set; } = true;
-        public Acks Acks { get; set; } = Acks.All;
-        public int MaxInFlight { get; set; } = 5;
+        public bool EnableIdempotence { get; set; } = false;
+        public Acks Acks { get; set; } = Acks.Leader;
+        public int MaxInFlight { get; set; } = 1;
         public int Retries { get; set; } = 3;
         public int RetryBackoffMs { get; set; } = 100;
-        public CompressionType CompressionType { get; set; } = CompressionType.Snappy;
+        public CompressionType CompressionType { get; set; } = CompressionType.None;
     }
 
     public class TopicsSettings
