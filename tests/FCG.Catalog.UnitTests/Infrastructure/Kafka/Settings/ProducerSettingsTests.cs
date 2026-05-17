@@ -12,12 +12,12 @@ public class ProducerSettingsTests
         var settings = new ProducerSettings();
 
         // Assert
-        Assert.True(settings.EnableIdempotence);
-        Assert.Equal(Acks.All, settings.Acks);
-        Assert.Equal(5, settings.MaxInFlight);
+        Assert.False(settings.EnableIdempotence);
+        Assert.Equal(Acks.Leader, settings.Acks);
+        Assert.Equal(1, settings.MaxInFlight);
         Assert.Equal(3, settings.Retries);
         Assert.Equal(100, settings.RetryBackoffMs);
-        Assert.Equal(CompressionType.Snappy, settings.CompressionType);
+        Assert.Equal(CompressionType.None, settings.CompressionType);
     }
 
     [Fact]
