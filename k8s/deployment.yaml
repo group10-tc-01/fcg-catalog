@@ -14,8 +14,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+      maxSurge: 0
+      maxUnavailable: 1
   template:
     metadata:
       labels:
@@ -80,6 +80,7 @@ spec:
               port: 8080
             initialDelaySeconds: 20
             periodSeconds: 10
+            timeoutSeconds: 10
             failureThreshold: 24
           livenessProbe:
             httpGet:
@@ -87,6 +88,7 @@ spec:
               port: 8080
             initialDelaySeconds: 45
             periodSeconds: 20
+            timeoutSeconds: 10
             failureThreshold: 6
       volumes:
         - name: secrets-store
