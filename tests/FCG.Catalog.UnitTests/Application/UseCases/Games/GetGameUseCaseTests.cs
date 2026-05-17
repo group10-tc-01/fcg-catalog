@@ -9,6 +9,7 @@ using FCG.Catalog.Domain.Exception;
 using FCG.Catalog.Domain.Models;
 using FCG.Catalog.Domain.Repositories.Game;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace FCG.Catalog.UnitTests.Application.UseCases.Games
@@ -221,7 +222,9 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
                 .Setup(cache => cache.GetGameByIdAsync(gameId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(cached);
 
-            var useCase = new GetGameIdUseCase(readRepoMock.Object, cacheMock.Object);
+            var loggerMock = new Mock<ILogger<GetGameIdUseCase>>();
+
+            var useCase = new GetGameIdUseCase(readRepoMock.Object, cacheMock.Object, loggerMock.Object);
 
             // Act
             var result = await useCase.Handle(input, CancellationToken.None);
@@ -258,7 +261,9 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
                     It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            var useCase = new GetGameIdUseCase(readRepoMock.Object, cacheMock.Object);
+            var loggerMock = new Mock<ILogger<GetGameIdUseCase>>();
+
+            var useCase = new GetGameIdUseCase(readRepoMock.Object, cacheMock.Object, loggerMock.Object);
 
             // Act
             var result = await useCase.Handle(input, CancellationToken.None);
@@ -290,7 +295,9 @@ namespace FCG.Catalog.UnitTests.Application.UseCases.Games
                 .Setup(cache => cache.GetGameByIdAsync(gameId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetGameIdOutput?)null);
 
-            var useCase = new GetGameIdUseCase(readRepoMock.Object, cacheMock.Object);
+            var loggerMock = new Mock<ILogger<GetGameIdUseCase>>();
+
+            var useCase = new GetGameIdUseCase(readRepoMock.Object, cacheMock.Object, loggerMock.Object);
 
             // Act
             Func<Task> act = async () => await useCase.Handle(input, CancellationToken.None);
