@@ -1,5 +1,4 @@
-﻿using FCG.Catalog.Domain.Catalog.Entities.Games;
-using FCG.Catalog.Infrastructure.MongoDb.Persistence.Entities;
+﻿using FCG.Catalog.Infrastructure.MongoDb.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.EntityFrameworkCore.Extensions;
 using System.Diagnostics.CodeAnalysis;
@@ -9,7 +8,6 @@ namespace FCG.Catalog.Infrastructure.MongoDb
     [ExcludeFromCodeCoverage]
     public class MongoDbContext : DbContext
     {
-        public DbSet<Game> Games { get; set; } = null!;
         public DbSet<GameDetailDocument> GamesDetail { get; set; } = null!;
         public DbSet<GameCacheEntity> GamesCache { get; set; } = null!;
 

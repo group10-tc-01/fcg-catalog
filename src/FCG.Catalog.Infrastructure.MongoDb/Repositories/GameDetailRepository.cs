@@ -51,6 +51,30 @@ namespace FCG.Catalog.Infrastructure.MongoDb.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task AddOrUpdateAsync(GameDetail gameDetail, CancellationToken cancellationToken = default)
+        {
+            var document = MapToDocument(gameDetail);
+
+            // Verifica se já existe para fazer Upsert
+            var existingDocument = await _context.GamesDetail
+                .Where(g => g.GameId == gameDetail.GameId) // Importante: use o GameId ou Id conforme mapeado
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (existingDocument is null)
+            {
+                await _context.GamesDetail.AddAsync(document, cancellationToken);
+            }
+            else
+            {
+                document.GameId = existingDocument.GameId;
+
+                _context.Entry(existingDocument).CurrentValues.SetValues(document);
+                // Ou se não tiver Tracking ativo: _context.GamesDetail.Update(document);
+            }
+
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
         public async Task DeleteAsync(Guid gameId, CancellationToken cancellationToken = default)
         {
             var document = await _context.GamesDetail
