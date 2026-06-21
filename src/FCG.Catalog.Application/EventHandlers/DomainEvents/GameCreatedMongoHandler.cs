@@ -42,6 +42,7 @@ namespace FCG.Catalog.Application.EventHandlers.DomainEvents
                     totalReviews: 0,
                     synchronizedAt: DateTime.UtcNow,
                     version: 1,
+                    // Não implementado ainda, mas já inicializado para evitar nulls
                     promotions: new List<PromotionInfo>(),
                     systemRequirements: null,
                     tags: new List<string>(),
@@ -49,8 +50,8 @@ namespace FCG.Catalog.Application.EventHandlers.DomainEvents
                     reviews: new List<ReviewInfo>()
                 );
 
-                // ✅ Usar o repository existente
-                await _gameDetailRepository.AddAsync(gameDetail, cancellationToken);
+                // ✅ Usar o repository existente com Upsert para garantir idempotência
+                await _gameDetailRepository.AddOrUpdateAsync(gameDetail, cancellationToken);
 
                 _logger.LogInformation(
                     "Dados expandidos do jogo {GameId} persistidos com sucesso no MongoDB",
